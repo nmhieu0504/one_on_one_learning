@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/pages/home_page.dart';
+import 'package:one_on_one_learning/pages/tutors_page.dart';
 import '../ui_data.dart';
 
 class PageNavigator extends StatefulWidget {
@@ -27,10 +28,7 @@ class PageNavigatorState extends State<PageNavigator> {
       'Index 2: Upcoming',
       style: optionStyle,
     ),
-    Text(
-      'Index 3: Tutors',
-      style: optionStyle,
-    ),
+    TutorsPage(),
     Text(
       'Index 4: Settings',
       style: optionStyle,
