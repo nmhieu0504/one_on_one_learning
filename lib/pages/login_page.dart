@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../ui_data.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'navigator_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage(this.title, {super.key});
@@ -22,8 +23,8 @@ class LoginPage extends StatelessWidget {
         padding: const EdgeInsets.all(40.0),
         children: <Widget>[
           Container(
+            margin: const EdgeInsets.only(top: 30),
             child: Image.asset(UIData.logoLogin, width: 200, height: 200),
-            margin: EdgeInsets.only(top: 30),
           ),
           const Center(
             child: Text('LET LEARN',
@@ -72,7 +73,14 @@ class LoginPage extends StatelessWidget {
             ],
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) {
+                  return const PageNavigator('Home Page');
+                }),
+              );
+            },
             child: const Text('Sign In'),
           ),
           Row(
