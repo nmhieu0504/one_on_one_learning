@@ -46,6 +46,8 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<key>NSAllowsArbitraryLoadsInWebContent</key>
+	<key>NSAllowsArbitraryLoads</key>
 	<true/>
 </dict>
 </plist>

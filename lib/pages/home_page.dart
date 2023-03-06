@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/pages/teacher_detail_page.dart';
 import '../../ui_data.dart';
 
 class HomePage extends StatelessWidget {
@@ -29,11 +30,11 @@ class HomePage extends StatelessWidget {
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: const BorderSide(color: Colors.blue)))),
+                          shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: const BorderSide(color: Colors.blue)))),
                       child: const Text(
                         'Book a lesson',
                         style: TextStyle(color: Colors.blue),
@@ -67,7 +68,12 @@ class HomePage extends StatelessWidget {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  debugPrint('Card tapped.');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return const TeacherPage();
+                    }),
+                  );
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

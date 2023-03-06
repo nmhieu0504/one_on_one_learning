@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/pages/teacher_detail_page.dart';
 import '../../ui_data.dart';
 
 class TutorsPage extends StatefulWidget {
@@ -22,9 +23,9 @@ class _TutorsPageState extends State<TutorsPage> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: false,
-                title: Container(                  
+                backgroundColor: Colors.white,
+                automaticallyImplyLeading: false,
+                title: Container(
                   margin: const EdgeInsets.all(20),
                   height: 40,
                   child: TextField(
@@ -59,45 +60,85 @@ class _TutorsPageState extends State<TutorsPage> {
                             physics: const ClampingScrollPhysics(),
                             children: <Widget>[
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('English', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'English',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('Vietnamese', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'Vietnamese',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('Chinese', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'Chinese',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('Japanese', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'Japanese',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('Korean', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'Korean',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('French', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'French',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('German', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'German',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('Spanish', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'Spanish',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('Italian', style: TextStyle(color: Colors.blue),)),
+                                  child: const Text(
+                                    'Italian',
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white),
                                   onPressed: onPressed,
-                                  child: const Text('Russian', style: TextStyle(color: Colors.blue),))
+                                  child: const Text(
+                                    'Russian',
+                                    style: TextStyle(color: Colors.blue),
+                                  ))
                             ]))))
           ];
         },
@@ -111,7 +152,12 @@ class _TutorsPageState extends State<TutorsPage> {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    debugPrint('Card tapped.');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                        return const TeacherPage();
+                      }),
+                    );
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
