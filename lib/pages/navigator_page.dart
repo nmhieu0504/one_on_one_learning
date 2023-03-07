@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/pages/home_page.dart';
+import 'package:one_on_one_learning/pages/schedule_page.dart';
 import 'package:one_on_one_learning/pages/tutors_page.dart';
 import '../ui_data.dart';
 
@@ -24,10 +25,7 @@ class PageNavigatorState extends State<PageNavigator> {
       'Index 1: Message',
       style: optionStyle,
     ),
-    Text(
-      'Index 2: Upcoming',
-      style: optionStyle,
-    ),
+    SchedulePage(),
     TutorsPage(),
     Text(
       'Index 4: Settings',
@@ -38,7 +36,7 @@ class PageNavigatorState extends State<PageNavigator> {
   static const List<String> _appBarTitles = <String>[
     'Home',
     'Message',
-    'Upcoming',
+    'Schedule',
     'Tutors',
     'Settings',
   ];
@@ -83,7 +81,7 @@ class PageNavigatorState extends State<PageNavigator> {
             icon: Icon(
               Icons.timer_outlined,
             ),
-            label: 'Upcoming',
+            label: 'Schedule',
           ),
           BottomNavigationBarItem(
             icon: Icon(
