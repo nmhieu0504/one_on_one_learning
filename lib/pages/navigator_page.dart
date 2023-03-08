@@ -16,7 +16,7 @@ class PageNavigator extends StatefulWidget {
 
 class PageNavigatorState extends State<PageNavigator> {
   int _selectedIndex = 0;
-  String _appBarTitle = 'Home';
+  String _appBarTitle = 'Tutors';
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -32,10 +32,10 @@ class PageNavigatorState extends State<PageNavigator> {
   ];
 
   static const List<String> _appBarTitles = <String>[
-    'Home',
-    'Message',
-    'Schedule',
     'Tutors',
+    'History',
+    'Schedule',
+    'Courses',
     'Settings',
   ];
 
@@ -68,15 +68,15 @@ class PageNavigatorState extends State<PageNavigator> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
+              Icons.groups,
             ),
-            label: 'Home',
+            label: 'Tutors',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.message,
+              Icons.history,
             ),
-            label: 'Message',
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -86,9 +86,9 @@ class PageNavigatorState extends State<PageNavigator> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.groups,
+              Icons.menu_book_sharp,
             ),
-            label: 'Tutors',
+            label: 'Courses',
           ),
           BottomNavigationBarItem(
             icon: Icon(
