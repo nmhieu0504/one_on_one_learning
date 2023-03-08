@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/pages/history_page.dart';
 import 'package:one_on_one_learning/pages/home_page.dart';
 import 'package:one_on_one_learning/pages/schedule_page.dart';
 import 'package:one_on_one_learning/pages/tutors_page.dart';
@@ -20,11 +21,8 @@ class PageNavigatorState extends State<PageNavigator> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-  HomePage(),
-    Text(
-      'Index 1: Message',
-      style: optionStyle,
-    ),
+    HomePage(),
+    HistoryPage(),
     SchedulePage(),
     TutorsPage(),
     Text(
@@ -53,11 +51,14 @@ class PageNavigatorState extends State<PageNavigator> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(_appBarTitle, style: const TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),),
+        title: Text(
+          _appBarTitle,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.white,
       ),
       body: Center(
