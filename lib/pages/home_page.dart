@@ -83,7 +83,6 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
                         leading: Image.asset(UIData.logoLogin),
