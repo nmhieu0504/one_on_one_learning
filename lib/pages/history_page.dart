@@ -134,17 +134,16 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: SizedBox(
                       width: double.infinity,
                       // height: 100,
-                      child: Container(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                            TextButton(
-                                onPressed: onPressed,
-                                child: const Text('Rating')),
-                            TextButton(
-                                onPressed: onPressed,
-                                child: const Text('Report')),
-                          ])),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                        TextButton(
+                            onPressed: onPressed,
+                            child: const Text('Rating')),
+                        TextButton(
+                            onPressed: onPressed,
+                            child: const Text('Report')),
+                      ]),
                     ),
                   ),
                 ],

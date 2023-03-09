@@ -11,7 +11,7 @@ class TutorsPage extends StatefulWidget {
 
 class _TutorsPageState extends State<TutorsPage> {
   void onPressed() {
-    print("Pressed");
+    debugPrint("Pressed");
   }
 
   @override

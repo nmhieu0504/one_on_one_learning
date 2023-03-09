@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/pages/courses_page.dart';
 import 'package:one_on_one_learning/pages/history_page.dart';
 import 'package:one_on_one_learning/pages/home_page.dart';
 import 'package:one_on_one_learning/pages/schedule_page.dart';
-import 'package:one_on_one_learning/pages/tutors_page.dart';
 import '../ui_data.dart';
 
 class PageNavigator extends StatefulWidget {
@@ -24,7 +24,7 @@ class PageNavigatorState extends State<PageNavigator> {
     HomePage(),
     HistoryPage(),
     SchedulePage(),
-    TutorsPage(),
+    CoursesPage(),
     Text(
       'Index 4: Settings',
       style: optionStyle,
