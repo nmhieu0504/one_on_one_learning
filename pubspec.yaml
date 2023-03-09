@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.4.0
   video_player: ^2.5.3
+  syncfusion_flutter_pdfviewer: ^20.4.53
 
 dev_dependencies:
   flutter_test:

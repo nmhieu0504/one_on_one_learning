@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/pages/lesson_page.dart';
 
 class CourseDetailPage extends StatelessWidget {
   const CourseDetailPage({super.key});
@@ -219,12 +220,12 @@ class CourseDetailPage extends StatelessWidget {
             child: InkWell(
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (BuildContext context) {
-                //     return const TeacherPage();
-                //   }),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return const LessonPage();
+                  }),
+                );
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +233,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '1. The Internet',
                         style: TextStyle(
@@ -269,7 +270,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '2. Artificial Intelligence (AI)',
                         style: TextStyle(
@@ -306,7 +307,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '3. Social Media',
                         style: TextStyle(
@@ -343,7 +344,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '4. Internet Privacy',
                         style: TextStyle(
@@ -380,7 +381,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '5. Live Streaming',
                         style: TextStyle(
@@ -417,7 +418,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '6. Coding',
                         style: TextStyle(
@@ -454,7 +455,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '7. Technology Transforming Healthcare',
                         style: TextStyle(
@@ -491,7 +492,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '8. Smart Home Technology',
                         style: TextStyle(
@@ -528,7 +529,7 @@ class CourseDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: const Text(
                         '9. Remote Work - A Dream Job?',
                         style: TextStyle(
