@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/pages/meeting_page.dart';
 import 'package:one_on_one_learning/pages/teacher_detail_page.dart';
 import '../../ui_data.dart';
 
@@ -30,7 +31,7 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (BuildContext context) {
-                            return const TeacherPage();
+                            return const MeetingPage();
                           }),
                         );
                       },

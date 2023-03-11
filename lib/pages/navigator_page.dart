@@ -61,8 +61,10 @@ class PageNavigatorState extends State<PageNavigator> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: SafeArea(
+        child: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
