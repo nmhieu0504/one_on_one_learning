@@ -38,6 +38,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   video_player: ^2.5.3
   syncfusion_flutter_pdfviewer: ^20.4.53
+  syncfusion_flutter_calendar: ^20.4.53
 
 dev_dependencies:
   flutter_test:

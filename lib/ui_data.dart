@@ -7,4 +7,6 @@ class UIData {
   static const String ebook = "$imageDir/ebook.jpeg";
 
   static const String searchIcon = "$iconDir/search.png";
+  static const String googleIcon = "$iconDir/google.png";
+  static const String facebookIcon = "$iconDir/facebook.png";
 }

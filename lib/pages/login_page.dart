@@ -11,14 +11,6 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(title, style: const TextStyle(
-      //     color: Colors.black,
-      //     fontSize: 20,
-      //     fontWeight: FontWeight.bold,
-      //   ),),
-      //   backgroundColor: Colors.white,
-      // ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(40.0),
@@ -73,7 +65,7 @@ class LoginPage extends StatelessWidget {
                 ),
               ],
             ),
-            ElevatedButton(
+            FilledButton(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -104,23 +96,35 @@ class LoginPage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        IconButton(
-                          constraints: const BoxConstraints.tightFor(
-                            width: 60,
-                            height: 50,
+                        Container(
+                          margin: const EdgeInsets.only(right: 10, left: 10),
+                          child: IconButton(
+                            constraints: const BoxConstraints.tightFor(
+                              width: 60,
+                              height: 50,
+                            ),
+                            onPressed: () {},
+                            tooltip: "Sign in with Facebook",
+                            icon: const Image(
+                              image: AssetImage(UIData.facebookIcon),
+                              color: null,
+                            ),
                           ),
-                          onPressed: () {},
-                          tooltip: "Sign in with Facebook",
-                          icon: const FaIcon(FontAwesomeIcons.facebook),
                         ),
-                        IconButton(
-                          constraints: const BoxConstraints.tightFor(
-                            width: 60,
-                            height: 50,
+                        Container(
+                          margin: const EdgeInsets.only(right: 10, left: 10),
+                          child: IconButton(
+                            constraints: const BoxConstraints.tightFor(
+                              width: 60,
+                              height: 50,
+                            ),
+                            onPressed: () {},
+                            tooltip: "Sign in with Google",
+                            icon: const Image(
+                              image: AssetImage(UIData.googleIcon),
+                              color: null,
+                            ),
                           ),
-                          onPressed: () {},
-                          tooltip: "Sign in with Google",
-                          icon: const FaIcon(FontAwesomeIcons.google),
                         ),
                       ],
                     ),

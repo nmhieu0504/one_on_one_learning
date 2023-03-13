@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/pages/booking_page.dart';
 import 'package:video_player/video_player.dart';
 import '../ui_data.dart';
 
@@ -28,6 +29,9 @@ class _TeacherPageState extends State<TeacherPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       debugShowCheckedModeBanner: false,
       title: 'Video Demo',
       home: Scaffold(
@@ -112,7 +116,13 @@ class _TeacherPageState extends State<TeacherPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const BookingPage()));
+                                },
                                 child: Container(
                                     margin: const EdgeInsets.only(
                                         top: 10, bottom: 10),
