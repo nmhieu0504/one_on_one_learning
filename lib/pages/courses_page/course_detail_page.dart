@@ -39,7 +39,7 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Text("Overview",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
               Expanded(
@@ -64,7 +64,7 @@ class CourseDetailPage extends StatelessWidget {
                   child: const Text(
                     'Why Did You Choose This Course?',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   )),
@@ -73,8 +73,15 @@ class CourseDetailPage extends StatelessWidget {
           Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 10, left: 20, right: 20),
-              child: const Text(
-                  "Our world is rapidly changing thanks to new technology, and the vocabulary needed to discuss modern life is evolving almost daily. In this course you will learn the most up-to-date terminology from expertly crafted lessons as well from your native-speaking tutor.")),
+              child: const Text.rich(
+                TextSpan(
+                    text:
+                        "Our world is rapidly changing thanks to new technology, and the vocabulary needed to discuss modern life is evolving almost daily. In this course you will learn the most up-to-date terminology from expertly crafted lessons as well from your native-speaking tutor."),
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              )),
           Container(
             margin: const EdgeInsets.only(left: 20, right: 20),
             child: Row(children: <Widget>[
@@ -88,7 +95,7 @@ class CourseDetailPage extends StatelessWidget {
                   child: const Text(
                     'Why Will You Learn?',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   )),
@@ -97,8 +104,15 @@ class CourseDetailPage extends StatelessWidget {
           Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 10, left: 20, right: 20),
-              child: const Text(
-                  "You will learn vocabulary related to timely topics like remote work, artificial intelligence, online privacy, and more. In addition to discussion questions, you will practice intermediate level speaking tasks such as using data to describe trends.")),
+              child: const Text.rich(
+                TextSpan(
+                    text:
+                        "You will learn vocabulary related to timely topics like remote work, artificial intelligence, online privacy, and more. In addition to discussion questions, you will practice intermediate level speaking tasks such as using data to describe trends."),
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              )),
           Container(
             margin: const EdgeInsets.all(20),
             child: Row(children: const <Widget>[
@@ -111,7 +125,7 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Text("Experience Level",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
               Expanded(
@@ -154,7 +168,7 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Text("Course Length",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
               Expanded(
@@ -197,7 +211,7 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Text("List Topics",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
               Expanded(

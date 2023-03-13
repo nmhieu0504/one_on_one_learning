@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/pages/meeting_page/meeting_page.dart';
 import 'package:one_on_one_learning/pages/tutor_page/teacher_detail_page.dart';
+import 'package:one_on_one_learning/pages/tutor_page/tutors_page.dart';
 import 'package:one_on_one_learning/ui_data/ui_data.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   void onPressed() {}
 
   @override
@@ -62,7 +68,14 @@ class HomePage extends StatelessWidget {
               style:
                   TextStyle(fontSize: 18, decoration: TextDecoration.underline),
             ),
-            TextButton(onPressed: onPressed, child: const Text('See all >'))
+            TextButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return const TutorsPage();
+                  }));
+                },
+                child: const Text('See all >'))
           ],
         ),
       ),
@@ -84,12 +97,33 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    ListTile(
-                        leading: Image.asset(UIData.logoLogin),
-                        title: const Text('Abby'),
-                        subtitle: Column(children: <Widget>[
-                          Row(
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: ListTile(
+                          leading: Image.asset(UIData.logoLogin),
+                          title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                const Text('Abby',
+                                    style: TextStyle(fontSize: 18)),
+                                Row(children: <Widget>[
+                                  const Icon(
+                                    Icons.flag,
+                                    color: Colors.blue,
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 5),
+                                    child: const Text(
+                                      'Philippines',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ),
+                                ])
+                              ]),
+                          subtitle: Row(
                             children: const <Widget>[
                               Icon(
                                 Icons.star,
@@ -113,30 +147,42 @@ class HomePage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Row(
-                            children: <Widget>[
-                              TextButton(
+                          trailing: IconButton(
+                            icon: const Icon(Icons.favorite_border_rounded),
+                            onPressed: () {
+                              debugPrint('Favorite button pressed.');
+                            },
+                          )),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, right: 20),
+                      child: Wrap(
+                          alignment: WrapAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              child: OutlinedButton(
                                 onPressed: onPressed,
                                 child: const Text('English'),
                               ),
-                              TextButton(
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              child: OutlinedButton(
                                 onPressed: onPressed,
                                 child: const Text('Vietnamese'),
                               ),
-                            ],
-                          ),
-                        ]),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.favorite_border_rounded),
-                          onPressed: () {
-                            debugPrint('Favorite button pressed.');
-                          },
-                        )),
+                            ),
+                          ]),
+                    ),
                     Container(
-                      padding: const EdgeInsets.all(10),
-                      child: const Text(
-                          'I was a customer service sales executive for 3 years before I become an ESL teacher I am trained to deliver excellent service to my clients so I can help you with business English dealing with customers or in sales-related jobs and a lot'),
-                    )
+                        padding: const EdgeInsets.all(15),
+                        child: const Text.rich(
+                          TextSpan(
+                              text:
+                                  'I was a customer service sales executive for 3 years before I become an ESL teacher I am trained to deliver excellent service to my clients so I can help you with business English dealing with customers or in sales-related jobs and a lot'),
+                          textAlign: TextAlign.justify,
+                        ))
                   ],
                 ),
               ),

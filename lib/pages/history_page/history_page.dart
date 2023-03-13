@@ -17,7 +17,7 @@ class _HistoryPageState extends State<HistoryPage> {
       Container(
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.blueGrey[50],
+          color: Colors.blueGrey[100],
           borderRadius: BorderRadius.circular(10),
           boxShadow: const <BoxShadow>[
             BoxShadow(
@@ -49,7 +49,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: const Text(
                       '19:00 - 21:00',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -70,28 +70,32 @@ class _HistoryPageState extends State<HistoryPage> {
                 //     }),
                 //   );
                 // },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: Image.asset(UIData.logoLogin),
-                      title: const Text('Abby'),
-                      subtitle: Column(children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            TextButton(
-                              onPressed: onPressed,
-                              child: const Text('English'),
-                            ),
-                            TextButton(
-                              onPressed: onPressed,
-                              child: const Text('Vietnamese'),
-                            ),
-                          ],
+                child: Container(
+                  margin: const EdgeInsets.all(15),
+                  child: ListTile(
+                    leading: Image.asset(UIData.logoLogin),
+                    title: const Text(
+                      'Abby',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    subtitle: Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      child: Row(children: <Widget>[
+                        const Icon(
+                          Icons.flag,
+                          color: Colors.blue,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 5),
+                          child: const Text(
+                            'Philippines',
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal, fontSize: 16),
+                          ),
                         ),
                       ]),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -107,7 +111,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       'Lesson review',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -137,13 +141,19 @@ class _HistoryPageState extends State<HistoryPage> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                        TextButton(
-                            onPressed: onPressed,
-                            child: const Text('Rating')),
-                        TextButton(
-                            onPressed: onPressed,
-                            child: const Text('Report')),
-                      ]),
+                            Container(
+                              margin: const EdgeInsets.only(left: 5, right: 5),
+                              child: TextButton(
+                                  onPressed: onPressed,
+                                  child: const Text('Rating')),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 5, right: 5),
+                              child: TextButton(
+                                  onPressed: onPressed,
+                                  child: const Text('Report')),
+                            ),
+                          ]),
                     ),
                   ),
                 ],

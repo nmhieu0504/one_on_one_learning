@@ -12,7 +12,7 @@ class SchedulePage extends StatelessWidget {
       Container(
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.blueGrey[50],
+          color: Colors.blueGrey[100],
           borderRadius: BorderRadius.circular(10),
           boxShadow: const <BoxShadow>[
             BoxShadow(
@@ -45,7 +45,7 @@ class SchedulePage extends StatelessWidget {
                       '1 lesson',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -65,28 +65,32 @@ class SchedulePage extends StatelessWidget {
                 //     }),
                 //   );
                 // },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: Image.asset(UIData.logoLogin),
-                      title: const Text('Abby'),
-                      subtitle: Column(children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            TextButton(
-                              onPressed: onPressed,
-                              child: const Text('English'),
-                            ),
-                            TextButton(
-                              onPressed: onPressed,
-                              child: const Text('Vietnamese'),
-                            ),
-                          ],
+                child: Container(
+                  margin: const EdgeInsets.all(15),
+                  child: ListTile(
+                    leading: Image.asset(UIData.logoLogin),
+                    title: const Text(
+                      'Abby',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    subtitle: Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      child: Row(children: <Widget>[
+                        const Icon(
+                          Icons.flag,
+                          color: Colors.blue,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 5),
+                          child: const Text(
+                            'Philippines',
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal, fontSize: 16),
+                          ),
                         ),
                       ]),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -96,20 +100,43 @@ class SchedulePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
-                    '19:00 - 21:00',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text(
+                          '19:00 - 21:00',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        OutlinedButton(
+                          style: ButtonStyle(
+                            side: MaterialStateProperty.all<BorderSide>(
+                              const BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          child: Row(children: const <Widget>[
+                            Icon(Icons.delete, color: Colors.red),
+                            Text('Cancel', style: TextStyle(color: Colors.red)),
+                          ]),
+                          onPressed: () {},
+                        ),
+                      ]),
                   Container(
                     margin: const EdgeInsets.only(top: 5, bottom: 5),
                     child: const Text(
                       'Lesson request',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
                     ),
                   ),

@@ -3,7 +3,6 @@ import 'package:one_on_one_learning/pages/courses_page/courses_page.dart';
 import 'package:one_on_one_learning/pages/history_page/history_page.dart';
 import 'package:one_on_one_learning/pages/home_page/home_page.dart';
 import 'package:one_on_one_learning/pages/schedule_page/schedule_page.dart';
-import '../ui_data/ui_data.dart';
 
 class PageNavigator extends StatefulWidget {
   const PageNavigator(this.title, {super.key});
@@ -67,6 +66,7 @@ class PageNavigatorState extends State<PageNavigator> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
@@ -101,9 +101,9 @@ class PageNavigatorState extends State<PageNavigator> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.blue,
-        selectedIconTheme: const IconThemeData(color: Colors.blue),
-        unselectedIconTheme: const IconThemeData(color: Colors.grey),
+        // selectedItemColor: Colors.blue,
+        // selectedIconTheme: const IconThemeData(color: Colors.blue),
+        // unselectedIconTheme: const IconThemeData(color: Colors.grey),
       ),
     );
   }

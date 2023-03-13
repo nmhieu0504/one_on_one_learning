@@ -57,21 +57,18 @@ class _TeacherPageState extends State<TeacherPage> {
                         leading: Image.asset(UIData.logoLogin),
                         title: const Text(
                           'Abby',
-                          style: TextStyle(),
+                          style: TextStyle(fontSize: 18),
                         ),
-                        subtitle: Column(children: <Widget>[
-                          Row(children: const <Widget>[Text("Teacher")]),
-                          Row(
+                        subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  child: const Text('English')),
+                                  margin: const EdgeInsets.only(top: 3),
+                                  child: const Text("Teacher")),
                               Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  child: const Text('Vietnamese')),
-                            ],
-                          ),
-                        ]),
+                                  margin: const EdgeInsets.only(top: 3),
+                                  child: const Text("Philippines")),
+                            ]),
                         trailing: Column(
                           children: <Widget>[
                             // Container(
@@ -115,7 +112,7 @@ class _TeacherPageState extends State<TeacherPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              ElevatedButton(
+                              FilledButton(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -174,28 +171,25 @@ class _TeacherPageState extends State<TeacherPage> {
                                       color: Colors.blue)),
                             ),
                             Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              child: Row(
-                                children: <Widget>[
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white),
-                                      onPressed: onPressed,
-                                      child: const Text(
-                                        'English',
-                                        style: TextStyle(color: Colors.blue),
-                                      )),
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white),
-                                      onPressed: onPressed,
-                                      child: const Text(
-                                        'Vietnamese',
-                                        style: TextStyle(color: Colors.blue),
-                                      )),
-                                ],
-                              ),
-                            )
+                              child: Wrap(
+                                  alignment: WrapAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      child: OutlinedButton(
+                                        onPressed: onPressed,
+                                        child: const Text('English'),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      child: OutlinedButton(
+                                        onPressed: onPressed,
+                                        child: const Text('Vietnamese'),
+                                      ),
+                                    ),
+                                  ]),
+                            ),
                           ]),
                     ),
                     Container(

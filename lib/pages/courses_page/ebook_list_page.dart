@@ -36,12 +36,14 @@ class EBookList extends StatelessWidget {
                           top: 10, bottom: 0, left: 10, right: 10),
                       child: const Text("What a world 1",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                          "For teenagers who have an excellent vocabulary background and brilliant communication skills."),
+                        "For teenagers who have an excellent vocabulary background and brilliant communication skills.",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
@@ -83,12 +85,14 @@ class EBookList extends StatelessWidget {
                           top: 10, bottom: 0, left: 10, right: 10),
                       child: const Text("What a world 1",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                          "For teenagers who have an excellent vocabulary background and brilliant communication skills."),
+                        "For teenagers who have an excellent vocabulary background and brilliant communication skills.",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(

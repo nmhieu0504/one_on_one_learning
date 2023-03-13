@@ -19,7 +19,7 @@ class CoursesList extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 20),
                 child: const Text("English For Traveling",
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
@@ -42,12 +42,14 @@ class CoursesList extends StatelessWidget {
                           top: 10, bottom: 0, left: 10, right: 10),
                       child: const Text("Life in the Internet Age",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                          "Let's discuss how technology is changing the way we live"),
+                        "Let's discuss how technology is changing the way we live",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
@@ -71,7 +73,7 @@ class CoursesList extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 20),
                 child: const Text("English For Beginners",
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
@@ -94,12 +96,14 @@ class CoursesList extends StatelessWidget {
                           top: 10, bottom: 0, left: 10, right: 10),
                       child: const Text("Life in the Internet Age",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                          "Let's discuss how technology is changing the way we live"),
+                        "Let's discuss how technology is changing the way we live",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
@@ -123,7 +127,7 @@ class CoursesList extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 20),
                 child: const Text("Business English",
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
@@ -146,12 +150,14 @@ class CoursesList extends StatelessWidget {
                           top: 10, bottom: 0, left: 10, right: 10),
                       child: const Text("Life in the Internet Age",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                          "Let's discuss how technology is changing the way we live"),
+                        "Let's discuss how technology is changing the way we live",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
@@ -175,7 +181,7 @@ class CoursesList extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 20),
                 child: const Text("English For Kids",
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
@@ -198,12 +204,14 @@ class CoursesList extends StatelessWidget {
                           top: 10, bottom: 0, left: 10, right: 10),
                       child: const Text("Life in the Internet Age",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                          "Let's discuss how technology is changing the way we live"),
+                        "Let's discuss how technology is changing the way we live",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
