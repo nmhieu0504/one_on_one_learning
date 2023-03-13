@@ -17,15 +17,8 @@ class _HistoryPageState extends State<HistoryPage> {
       Container(
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.blueGrey[100],
+          border: Border.all(color: const Color.fromARGB(255, 74, 20, 140)),
           borderRadius: BorderRadius.circular(10),
-          boxShadow: const <BoxShadow>[
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 5,
-              offset: Offset(0, 5),
-            ),
-          ],
         ),
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -58,6 +51,13 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ),
             Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
               margin: const EdgeInsets.only(bottom: 20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(
@@ -101,7 +101,7 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(bottom: 10),
+              // padding: const EdgeInsets.only(bottom: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -134,6 +134,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                   ),
                   Card(
+                    margin: const EdgeInsets.only(bottom: 0),
                     elevation: 0,
                     child: SizedBox(
                       width: double.infinity,

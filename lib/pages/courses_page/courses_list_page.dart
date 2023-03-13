@@ -11,7 +11,7 @@ class CoursesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(children: <Widget>[
       Container(
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 14, right: 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -21,6 +21,13 @@ class CoursesList extends StatelessWidget {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              elevation: 0,
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(
@@ -46,16 +53,16 @@ class CoursesList extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      child: const Text(
+                      child: Text(
                         "Let's discuss how technology is changing the way we live",
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16, color: Colors.grey[900]),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
                           top: 0, bottom: 10, left: 10, right: 10),
                       child: const Text("Intermerdiate - 10 lessons",
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -65,7 +72,7 @@ class CoursesList extends StatelessWidget {
         ),
       ),
       Container(
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 14, right: 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -75,6 +82,13 @@ class CoursesList extends StatelessWidget {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              elevation: 0,
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(
@@ -100,16 +114,16 @@ class CoursesList extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      child: const Text(
+                      child: Text(
                         "Let's discuss how technology is changing the way we live",
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16, color: Colors.grey[900]),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
                           top: 0, bottom: 10, left: 10, right: 10),
                       child: const Text("Intermerdiate - 10 lessons",
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -119,7 +133,7 @@ class CoursesList extends StatelessWidget {
         ),
       ),
       Container(
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 14, right: 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -129,6 +143,13 @@ class CoursesList extends StatelessWidget {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              elevation: 0,
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(
@@ -154,16 +175,16 @@ class CoursesList extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      child: const Text(
+                      child: Text(
                         "Let's discuss how technology is changing the way we live",
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16, color: Colors.grey[900]),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
                           top: 0, bottom: 10, left: 10, right: 10),
                       child: const Text("Intermerdiate - 10 lessons",
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -173,7 +194,7 @@ class CoursesList extends StatelessWidget {
         ),
       ),
       Container(
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 14, right: 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -183,6 +204,13 @@ class CoursesList extends StatelessWidget {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
             Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              elevation: 0,
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(
@@ -208,16 +236,16 @@ class CoursesList extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      child: const Text(
+                      child: Text(
                         "Let's discuss how technology is changing the way we live",
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16, color: Colors.grey[900]),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
                           top: 0, bottom: 10, left: 10, right: 10),
                       child: const Text("Intermerdiate - 10 lessons",
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),

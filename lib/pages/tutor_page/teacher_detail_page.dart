@@ -43,10 +43,18 @@ class _TeacherPageState extends State<TeacherPage> {
                 )
               : Container(),
           Card(
-            margin: const EdgeInsets.only(top: 20, bottom: 20),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+            ),
+            margin:
+                const EdgeInsets.only(top: 20, bottom: 20, left: 10, right: 10),
             clipBehavior: Clip.hardEdge,
             child: InkWell(
-              // splashColor: Colors.blue.withAlpha(30),
+              // splashcolor: Colors.purple[900].withAlpha(30),
               // onTap: () {},
               child: Container(
                 margin: const EdgeInsets.all(10),
@@ -62,48 +70,42 @@ class _TeacherPageState extends State<TeacherPage> {
                         subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Container(
-                                  margin: const EdgeInsets.only(top: 3),
-                                  child: const Text("Teacher")),
+                              Row(
+                                children: <Widget>[
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.yellow,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.yellow,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.yellow,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.yellow,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.yellow,
+                                  ),
+                                  Container(
+                                      margin: const EdgeInsets.only(left: 5),
+                                      child: const Text("(17)"))
+                                ],
+                              ),
                               Container(
                                   margin: const EdgeInsets.only(top: 3),
                                   child: const Text("Philippines")),
                             ]),
-                        trailing: Column(
-                          children: <Widget>[
-                            // Container(
-                            //   child: Row(
-                            //     children: const <Widget>[
-                            //       Icon(
-                            //         Icons.star,
-                            //         color: Colors.yellow,
-                            //       ),
-                            //       Icon(
-                            //         Icons.star,
-                            //         color: Colors.yellow,
-                            //       ),
-                            //       Icon(
-                            //         Icons.star,
-                            //         color: Colors.yellow,
-                            //       ),
-                            //       Icon(
-                            //         Icons.star,
-                            //         color: Colors.yellow,
-                            //       ),
-                            //       Icon(
-                            //         Icons.star,
-                            //         color: Colors.yellow,
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                            IconButton(
-                              icon: const Icon(Icons.favorite_border_rounded),
-                              onPressed: () {
-                                debugPrint('Favorite button pressed.');
-                              },
-                            )
-                          ],
+                        trailing: IconButton(
+                          icon: const Icon(Icons.favorite_border_rounded),
+                          onPressed: () {
+                            debugPrint('Favorite button pressed.');
+                          },
                         )),
                     Center(
                       child: Column(children: <Widget>[
@@ -164,32 +166,30 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Languages',
+                              child: Text('Languages',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
-                            Container(
-                              child: Wrap(
-                                  alignment: WrapAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 10),
-                                      child: OutlinedButton(
-                                        onPressed: onPressed,
-                                        child: const Text('English'),
-                                      ),
+                            Wrap(
+                                alignment: WrapAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: OutlinedButton(
+                                      onPressed: onPressed,
+                                      child: const Text('English'),
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 10),
-                                      child: OutlinedButton(
-                                        onPressed: onPressed,
-                                        child: const Text('Vietnamese'),
-                                      ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: OutlinedButton(
+                                      onPressed: onPressed,
+                                      child: const Text('Vietnamese'),
                                     ),
-                                  ]),
-                            ),
+                                  ),
+                                ]),
                           ]),
                     ),
                     Container(
@@ -199,11 +199,11 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Education',
+                              child: Text('Education',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
@@ -219,11 +219,11 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Experience',
+                              child: Text('Experience',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
@@ -239,11 +239,11 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Intersts',
+                              child: Text('Interests',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
@@ -259,11 +259,11 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Profession',
+                              child: Text('Profession',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
@@ -279,11 +279,11 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Specialties',
+                              child: Text('Specialties',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
@@ -299,11 +299,11 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Courses',
+                              child: Text('Courses',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
@@ -319,11 +319,11 @@ class _TeacherPageState extends State<TeacherPage> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text('Rating and Comments (0)',
+                              child: Text('Rating and Comments (0)',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue)),
+                                      color: Colors.purple[900])),
                             ),
                             Container(
                               margin: const EdgeInsets.only(bottom: 10),

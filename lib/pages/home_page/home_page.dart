@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return ListView(children: <Widget>[
       Container(
-        color: Colors.blue[800],
+        color: Colors.purple[900],
         child: Center(
           child: SizedBox(
             height: 300,
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
                   ),
-                  ElevatedButton(
+                  FilledButton(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -41,17 +41,8 @@ class _HomePageState extends State<HomePage> {
                           }),
                         );
                       },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.blue)))),
                       child: const Text(
                         'Book a lesson',
-                        style: TextStyle(color: Colors.blue),
                       ))
                 ]),
           ),
@@ -84,6 +75,14 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             Card(
+              elevation: 0,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
               margin: const EdgeInsets.only(bottom: 20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(

@@ -22,7 +22,6 @@ class _CoursesPageState extends State<CoursesPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TabBar(
-        indicatorSize: TabBarIndicatorSize.label,
         isScrollable: true,
         controller: _tabController,
         labelColor: Colors.black,

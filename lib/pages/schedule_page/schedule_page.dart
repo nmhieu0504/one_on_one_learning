@@ -12,15 +12,8 @@ class SchedulePage extends StatelessWidget {
       Container(
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.blueGrey[100],
+          border: Border.all(color: const Color.fromARGB(255, 74, 20, 140)),
           borderRadius: BorderRadius.circular(10),
-          boxShadow: const <BoxShadow>[
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 5,
-              offset: Offset(0, 5),
-            ),
-          ],
         ),
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -53,6 +46,13 @@ class SchedulePage extends StatelessWidget {
               ),
             ),
             Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
               margin: const EdgeInsets.only(bottom: 20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(

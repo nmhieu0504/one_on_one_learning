@@ -15,6 +15,13 @@ class EBookList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              elevation: 0,
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(
@@ -49,7 +56,7 @@ class EBookList extends StatelessWidget {
                       margin: const EdgeInsets.only(
                           top: 0, bottom: 10, left: 10, right: 10),
                       child: const Text("Beginner",
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -64,6 +71,13 @@ class EBookList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              elevation: 0,
               margin: const EdgeInsets.all(20),
               clipBehavior: Clip.hardEdge,
               child: InkWell(
@@ -98,7 +112,7 @@ class EBookList extends StatelessWidget {
                       margin: const EdgeInsets.only(
                           top: 0, bottom: 10, left: 10, right: 10),
                       child: const Text("Beginner",
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
