@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/courses_page.dart';
-import 'package:one_on_one_learning/pages/history_page.dart';
-import 'package:one_on_one_learning/pages/home_page.dart';
-import 'package:one_on_one_learning/pages/schedule_page.dart';
-import '../ui_data.dart';
+import 'package:one_on_one_learning/pages/courses_page/courses_page.dart';
+import 'package:one_on_one_learning/pages/history_page/history_page.dart';
+import 'package:one_on_one_learning/pages/home_page/home_page.dart';
+import 'package:one_on_one_learning/pages/schedule_page/schedule_page.dart';
+import '../ui_data/ui_data.dart';
 
 class PageNavigator extends StatefulWidget {
   const PageNavigator(this.title, {super.key});
@@ -70,9 +70,9 @@ class PageNavigatorState extends State<PageNavigator> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.groups,
+              Icons.home,
             ),
-            label: 'Tutors',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -92,12 +92,12 @@ class PageNavigatorState extends State<PageNavigator> {
             ),
             label: 'Courses',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings,
-            ),
-            label: 'Settings',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.settings,
+          //   ),
+          //   label: 'Settings',
+          // ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

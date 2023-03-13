@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/teacher_detail_page.dart';
-import '../../ui_data.dart';
+import 'package:one_on_one_learning/pages/tutor_page/teacher_detail_page.dart';
+import '../../ui_data/ui_data.dart';
 
 class TutorsPage extends StatefulWidget {
   const TutorsPage({super.key});

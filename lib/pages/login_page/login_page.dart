@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../ui_data.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'navigator_page.dart';
+import 'package:one_on_one_learning/ui_data/ui_data.dart';
+import '../navigator_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage(this.title, {super.key});

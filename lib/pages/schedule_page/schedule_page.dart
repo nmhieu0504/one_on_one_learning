@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../ui_data.dart';
+import '../../ui_data/ui_data.dart';
 
-class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+class SchedulePage extends StatelessWidget {
+  const SchedulePage({super.key});
 
-  @override
-  State<HistoryPage> createState() => _HistoryPageState();
-}
-
-class _HistoryPageState extends State<HistoryPage> {
   void onPressed() {}
 
   @override
@@ -45,12 +40,12 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 5, bottom: 5),
+                    margin: const EdgeInsets.only(top: 5),
                     child: const Text(
-                      '19:00 - 21:00',
+                      '1 lesson',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.black54,
                       ),
                     ),
                   ),
@@ -97,14 +92,21 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(bottom: 10, top: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  const Text(
+                    '19:00 - 21:00',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 5, bottom: 5),
                     child: const Text(
-                      'Lesson review',
+                      'Lesson request',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black54,
@@ -124,26 +126,8 @@ class _HistoryPageState extends State<HistoryPage> {
                       // height: 100,
                       child: Container(
                           margin: const EdgeInsets.only(
-                              top: 25, bottom: 30, left: 10, right: 10),
-                          child: const Text(
-                              'Review from tutor\nSession 1: 16:30 - 16:55\nNice to see you again in my class I really like her she is smart and attentive she loves participating in the class she can speak confidently she is comfortable in the class. today we study plants and their needs we stop at page 12')),
-                    ),
-                  ),
-                  Card(
-                    elevation: 0,
-                    child: SizedBox(
-                      width: double.infinity,
-                      // height: 100,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                        TextButton(
-                            onPressed: onPressed,
-                            child: const Text('Rating')),
-                        TextButton(
-                            onPressed: onPressed,
-                            child: const Text('Report')),
-                      ]),
+                              top: 30, bottom: 30, left: 10, right: 10),
+                          child: const Text('I want to learn English')),
                     ),
                   ),
                 ],

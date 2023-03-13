@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/course_detail_page.dart';
-import '../ui_data.dart';
+import 'package:one_on_one_learning/pages/courses_page/course_detail_page.dart';
+import 'package:one_on_one_learning/ui_data/ui_data.dart';
 
 class CoursesList extends StatelessWidget {
   const CoursesList({super.key});

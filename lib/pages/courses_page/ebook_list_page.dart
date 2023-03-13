@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../ui_data.dart';
+import 'package:one_on_one_learning/ui_data/ui_data.dart';
 
 class EBookList extends StatelessWidget {
   const EBookList({super.key});

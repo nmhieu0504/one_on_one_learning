@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/meeting_page.dart';
-import 'package:one_on_one_learning/pages/teacher_detail_page.dart';
-import '../../ui_data.dart';
+import 'package:one_on_one_learning/pages/meeting_page/meeting_page.dart';
+import 'package:one_on_one_learning/pages/tutor_page/teacher_detail_page.dart';
+import 'package:one_on_one_learning/ui_data/ui_data.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
