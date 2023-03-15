@@ -3,14 +3,14 @@ import 'package:one_on_one_learning/pages/booking_page/booking_page.dart';
 import 'package:video_player/video_player.dart';
 import 'package:one_on_one_learning/ui_data/ui_data.dart';
 
-class TeacherPage extends StatefulWidget {
-  const TeacherPage({super.key});
+class TutorPage extends StatefulWidget {
+  const TutorPage({super.key});
 
   @override
-  State<TeacherPage> createState() => _TeacherPageState();
+  State<TutorPage> createState() => TutorPageState();
 }
 
-class _TeacherPageState extends State<TeacherPage> {
+class TutorPageState extends State<TutorPage> {
   late VideoPlayerController _controller;
 
   void onPressed() {}

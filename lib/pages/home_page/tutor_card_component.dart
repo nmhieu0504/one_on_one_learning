@@ -35,7 +35,7 @@ class _TutorCardState extends State<TutorCard> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return const TeacherPage();
+                    return const TutorPage();
                   }),
                 );
               },

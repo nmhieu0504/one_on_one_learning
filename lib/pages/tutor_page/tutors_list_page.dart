@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/pages/tutor_page/tutor_detail_page.dart';
 import '../../ui_data/ui_data.dart';
 
-class TutorsPage extends StatefulWidget {
-  const TutorsPage({super.key});
+class TutorsListPage extends StatefulWidget {
+  const TutorsListPage({super.key});
 
   @override
-  State<TutorsPage> createState() => _TutorsPageState();
+  State<TutorsListPage> createState() => _TutorsListPageState();
 }
 
-class _TutorsPageState extends State<TutorsPage> {
+class _TutorsListPageState extends State<TutorsListPage> {
   void onPressed() {
     debugPrint("Pressed");
   }
@@ -98,7 +98,7 @@ class _TutorsPageState extends State<TutorsPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (BuildContext context) {
-                            return const TeacherPage();
+                            return const TutorPage();
                           }),
                         );
                       },

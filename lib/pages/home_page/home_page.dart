@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
-                    return const TutorsPage();
+                    return const TutorsListPage();
                   }));
                 },
                 child: const Text('See all >'))

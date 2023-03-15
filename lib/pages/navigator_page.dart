@@ -4,16 +4,16 @@ import 'package:one_on_one_learning/pages/history_page/history_page.dart';
 import 'package:one_on_one_learning/pages/home_page/home_page.dart';
 import 'package:one_on_one_learning/pages/schedule_page/schedule_page.dart';
 
-class PageNavigator extends StatefulWidget {
-  const PageNavigator(this.title, {super.key});
+class NavigatorPage extends StatefulWidget {
+  const NavigatorPage(this.title, {super.key});
 
   final String title;
 
   @override
-  State<PageNavigator> createState() => PageNavigatorState();
+  State<NavigatorPage> createState() => NavigatorStatePage();
 }
 
-class PageNavigatorState extends State<PageNavigator> {
+class NavigatorStatePage extends State<NavigatorPage> {
   int _selectedIndex = 0;
   String _appBarTitle = 'Tutors';
 
