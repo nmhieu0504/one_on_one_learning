@@ -43,8 +43,24 @@ class _TeacherPageState extends State<TeacherPage> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      title: 'Video Demo',
       home: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          automaticallyImplyLeading: false,
+          title: const Text(
+            'Abby',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         body: ListView(children: <Widget>[
           _controller.value.isInitialized
               ? AspectRatio(

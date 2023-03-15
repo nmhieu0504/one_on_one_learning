@@ -134,8 +134,8 @@ class _BookingPageState extends State<BookingPage> {
                         vertical: 4.0,
                       ),
                       child: FilledButton(
-                        child: Text('${value[index]}'),
                         onPressed: isOdd(index) ? null : onPressed,
+                        child: Text('${value[index]}'),
                       ),
                     );
                   },
