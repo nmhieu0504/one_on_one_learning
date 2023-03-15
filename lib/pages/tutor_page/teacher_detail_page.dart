@@ -19,11 +19,21 @@ class _TeacherPageState extends State<TeacherPage> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4')
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    );
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.setLooping(true);
+    _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -39,7 +49,15 @@ class _TeacherPageState extends State<TeacherPage> {
           _controller.value.isInitialized
               ? AspectRatio(
                   aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      VideoPlayer(_controller),
+                      ClosedCaption(text: _controller.value.caption.text),
+                      _ControlsOverlay(controller: _controller),
+                      VideoProgressIndicator(_controller, allowScrubbing: true),
+                    ],
+                  ),
                 )
               : Container(),
           Card(
@@ -338,25 +356,55 @@ class _TeacherPageState extends State<TeacherPage> {
             ),
           ),
         ]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              _controller.value.isPlaying
-                  ? _controller.pause()
-                  : _controller.play();
-            });
-          },
-          child: Icon(
-            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-          ),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     setState(() {
+        //       _controller.value.isPlaying
+        //           ? _controller.pause()
+        //           : _controller.play();
+        //     });
+        //   },
+        //   child: Icon(
+        //     _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+        //   ),
+        // ),
       ),
     );
   }
+}
+
+class _ControlsOverlay extends StatelessWidget {
+  const _ControlsOverlay({required this.controller});
+
+  final VideoPlayerController controller;
 
   @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 50),
+          reverseDuration: const Duration(milliseconds: 200),
+          child: controller.value.isPlaying
+              ? const SizedBox.shrink()
+              : Container(
+                  color: Colors.black26,
+                  child: const Center(
+                    child: Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      size: 100.0,
+                      semanticLabel: 'Play',
+                    ),
+                  ),
+                ),
+        ),
+        GestureDetector(
+          onTap: () {
+            controller.value.isPlaying ? controller.pause() : controller.play();
+          },
+        ),
+      ],
+    );
   }
 }

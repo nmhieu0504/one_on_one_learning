@@ -2,7 +2,7 @@
     package="com.example.one_on_one_learning">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="one_on_one_learning"
+        android:label="Let Learn"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

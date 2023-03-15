@@ -1,5 +1,10 @@
+// Copyright 2019 Aleksander Woźniak
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+import './utils.dart';
 
 class BookingPage extends StatefulWidget {
   const BookingPage({super.key});
@@ -9,98 +14,142 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
+  late final ValueNotifier<List<Event>> _selectedEvents;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
+      .toggledOff; // Can be toggled on/off by longpressing a date
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+  }
+
+  @override
+  void dispose() {
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    // Implementation example
+    return kEvents[day] ?? [];
+  }
+
+  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+    // Implementation example
+    final days = daysInRange(start, end);
+
+    return [
+      for (final d in days) ..._getEventsForDay(d),
+    ];
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+        _rangeStart = null; // Important to clean those
+        _rangeEnd = null;
+        _rangeSelectionMode = RangeSelectionMode.toggledOff;
+      });
+
+      _selectedEvents.value = _getEventsForDay(selectedDay);
+    }
+  }
+
+  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
+    setState(() {
+      _selectedDay = null;
+      _focusedDay = focusedDay;
+      _rangeStart = start;
+      _rangeEnd = end;
+      _rangeSelectionMode = RangeSelectionMode.toggledOn;
+    });
+
+    // `start` or `end` could be null
+    if (start != null && end != null) {
+      _selectedEvents.value = _getEventsForRange(start, end);
+    } else if (start != null) {
+      _selectedEvents.value = _getEventsForDay(start);
+    } else if (end != null) {
+      _selectedEvents.value = _getEventsForDay(end);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: SfCalendar(
-        firstDayOfWeek: 1,
-        view: CalendarView.workWeek,
-        dataSource: MeetingDataSource(_getDataSource()),
-        // by default the month appointment display mode set as Indicator, we can
-        // change the display mode as appointment using the appointment display
-        // mode property
-        monthViewSettings: const MonthViewSettings(
-            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+      appBar: AppBar(
+        title: const Text('Booking Details'),
       ),
-    ));
+      body: Column(
+        children: [
+          TableCalendar<Event>(
+            firstDay: kFirstDay,
+            lastDay: kLastDay,
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            rangeStartDay: _rangeStart,
+            rangeEndDay: _rangeEnd,
+            calendarFormat: _calendarFormat,
+            rangeSelectionMode: _rangeSelectionMode,
+            eventLoader: _getEventsForDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarStyle: const CalendarStyle(
+              // Use `CalendarStyle` to customize the UI
+              outsideDaysVisible: false,
+            ),
+            onDaySelected: _onDaySelected,
+            onRangeSelected: _onRangeSelected,
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              }
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
+          ),
+          const SizedBox(height: 8.0),
+          Expanded(
+            child: ValueListenableBuilder<List<Event>>(
+              valueListenable: _selectedEvents,
+              builder: (context, value, _) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 4.0,
+                      ),
+                      child: FilledButton(
+                        child: Text('${value[index]}'),
+                        onPressed: isOdd(index) ? null : onPressed,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  List<Meeting> _getDataSource() {
-    final List<Meeting> meetings = <Meeting>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    meetings.add(Meeting(
-        'Conference', startTime, endTime, const Color(0xFF0F8644), false));
-    return meetings;
+  bool isOdd(int index) => index % 2 == 1;
+  void onPressed() {
+    debugPrint('onPressed');
   }
-}
-
-/// An object to set the appointment collection data source to calendar, which
-/// used to map the custom appointment data to the calendar appointment, and
-/// allows to add, remove or reset the appointment collection.
-class MeetingDataSource extends CalendarDataSource {
-  /// Creates a meeting data source, which used to set the appointment
-  /// collection to the calendar
-  MeetingDataSource(List<Meeting> source) {
-    appointments = source;
-  }
-
-  @override
-  DateTime getStartTime(int index) {
-    return _getMeetingData(index).from;
-  }
-
-  @override
-  DateTime getEndTime(int index) {
-    return _getMeetingData(index).to;
-  }
-
-  @override
-  String getSubject(int index) {
-    return _getMeetingData(index).eventName;
-  }
-
-  @override
-  Color getColor(int index) {
-    return _getMeetingData(index).background;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return _getMeetingData(index).isAllDay;
-  }
-
-  Meeting _getMeetingData(int index) {
-    final dynamic meeting = appointments![index];
-    late final Meeting meetingData;
-    if (meeting is Meeting) {
-      meetingData = meeting;
-    }
-
-    return meetingData;
-  }
-}
-
-/// Custom business object class which contains properties to hold the detailed
-/// information about the event data which will be rendered in calendar.
-class Meeting {
-  /// Creates a meeting class with required details.
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  /// Event name which is equivalent to subject property of [Appointment].
-  String eventName;
-
-  /// From which is equivalent to start time property of [Appointment].
-  DateTime from;
-
-  /// To which is equivalent to end time property of [Appointment].
-  DateTime to;
-
-  /// Background which is equivalent to color property of [Appointment].
-  Color background;
-
-  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
-  bool isAllDay;
 }

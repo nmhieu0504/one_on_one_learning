@@ -32,6 +32,7 @@ class LoginPage extends StatelessWidget {
                 height: 50,
                 child: TextField(
                   decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -46,6 +47,7 @@ class LoginPage extends StatelessWidget {
                 height: 50,
                 child: TextField(
                   decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -66,6 +68,7 @@ class LoginPage extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) {

@@ -26,14 +26,13 @@ class _TutorsPageState extends State<TutorsPage> {
               SliverAppBar(
                   backgroundColor: Colors.white,
                   automaticallyImplyLeading: false,
-                  title: Container(
-                    margin: const EdgeInsets.all(20),
+                  title: SizedBox(
                     height: 40,
                     child: TextField(
                       textAlignVertical: TextAlignVertical.bottom,
                       cursorColor: Colors.grey,
                       decoration: InputDecoration(
-                          fillColor: Colors.grey[300],
+                          fillColor: Colors.grey[200],
                           filled: true,
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -52,89 +51,70 @@ class _TutorsPageState extends State<TutorsPage> {
                   expandedHeight: 100.0,
                   forceElevated: innerBoxIsScrolled,
                   bottom: PreferredSize(
-                      preferredSize: const Size.fromHeight(50),
+                      preferredSize: const Size.fromHeight(30),
                       child: SizedBox(
-                          height: 50,
+                          height: 30,
                           child: ListView(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
                               physics: const ClampingScrollPhysics(),
                               children: <Widget>[
+                                // SegmentedButton(segments: segments, selected: selected),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'English',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'Vietnamese',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'Chinese',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'Japanese',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'Korean',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'French',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'German',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'Spanish',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'Italian',
                                       style: TextStyle(color: Colors.blue),
                                     )),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white),
                                     onPressed: onPressed,
                                     child: const Text(
                                       'Russian',
@@ -148,6 +128,13 @@ class _TutorsPageState extends State<TutorsPage> {
               itemCount: 10,
               itemBuilder: (BuildContext context, int index) {
                 return Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                  ),
                   margin: const EdgeInsets.only(bottom: 20),
                   clipBehavior: Clip.hardEdge,
                   child: InkWell(
@@ -163,36 +150,43 @@ class _TutorsPageState extends State<TutorsPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        ListTile(
-                            leading: Image.asset(UIData.logoLogin),
-                            title: const Text('Abby'),
-                            subtitle: Row(
-                              children: <Widget>[
-                                TextButton(
-                                  onPressed: onPressed,
-                                  child: const Text('English'),
-                                ),
-                                TextButton(
-                                  onPressed: onPressed,
-                                  child: const Text('Vietnamese'),
-                                ),
-                              ],
-                            ),
-                            trailing: RichText(
-                                text: const TextSpan(
-                                    text: '5.0  ',
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 18),
-                                    children: [
-                                  WidgetSpan(
-                                      child: Icon(
-                                    Icons.star,
-                                    color: Colors.yellow,
-                                    size: 18,
-                                  ))
-                                ]))),
                         Container(
-                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(
+                              top: 10, left: 10, right: 10),
+                          child: ListTile(
+                              leading: Image.asset(UIData.logoLogin),
+                              title: const Text(
+                                'Abby',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              subtitle: Row(
+                                children: <Widget>[
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: const Text('English'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: const Text('Vietnamese'),
+                                  ),
+                                ],
+                              ),
+                              trailing: RichText(
+                                  text: const TextSpan(
+                                      text: '5.0  ',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 18),
+                                      children: [
+                                    WidgetSpan(
+                                        child: Icon(
+                                      Icons.star,
+                                      color: Colors.yellow,
+                                      size: 18,
+                                    ))
+                                  ]))),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(15),
                           child: const Text(
                               'I was a customer service sales executive for 3 years before I become an ESL teacher I am trained to deliver excellent service to my clients so I can help you with business English dealing with customers or in sales-related jobs and a lot'),
                         )
