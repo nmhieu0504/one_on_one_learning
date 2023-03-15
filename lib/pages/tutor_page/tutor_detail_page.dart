@@ -57,7 +57,7 @@ class _TeacherPageState extends State<TeacherPage> {
             style: TextStyle(
               color: Colors.black,
               fontSize: 20,
-              fontWeight: FontWeight.bold,
+              // fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -191,8 +191,12 @@ class _TeacherPageState extends State<TeacherPage> {
                     ),
                     Container(
                         padding: const EdgeInsets.all(10),
-                        child: const Text(
-                            "Hello! My name is April Baldo, you can just call me Teacher April. I am an English teacher and currently teaching in senior high school. I have been teaching grammar and literature for almost 10 years. I am fond of reading and teaching literature as one way of knowing one’s beliefs and culture. I am friendly and full of positivity. I love teaching because I know each student has something to bring on. Molding them to become an individual is a great success.")),
+                        child: const Text.rich(
+                          TextSpan(
+                              text:
+                                  'Hello! My name is April Baldo, you can just call me Teacher April. I am an English teacher and currently teaching in senior high school. I have been teaching grammar and literature for almost 10 years. I am fond of reading and teaching literature as one way of knowing one’s beliefs and culture. I am friendly and full of positivity. I love teaching because I know each student has something to bring on. Molding them to become an individual is a great success.'),
+                          textAlign: TextAlign.justify,
+                        )),
                     Container(
                       margin: const EdgeInsets.all(10),
                       child: Column(
@@ -240,10 +244,12 @@ class _TeacherPageState extends State<TeacherPage> {
                                       color: Colors.purple[900])),
                             ),
                             Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text(
-                                  "Bachelor's Degree in English Language and Literature"),
-                            )
+                                margin: const EdgeInsets.only(bottom: 10),
+                                child: const Text.rich(
+                                  TextSpan(
+                                      text:
+                                          "Bachelor's Degree in English Language and Literature"),
+                                ))
                           ]),
                     ),
                     Container(
@@ -260,10 +266,12 @@ class _TeacherPageState extends State<TeacherPage> {
                                       color: Colors.purple[900])),
                             ),
                             Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              child: const Text(
-                                  "I have been teaching grammar and literature for almost 10 years. I am fond of reading and teaching literature as one way of knowing one’s beliefs and culture. I am friendly and full of positivity. I love teaching because I know each student has something to bring on. Molding them to become an individual is a great success."),
-                            )
+                                margin: const EdgeInsets.only(bottom: 10),
+                                child: const Text.rich(
+                                    TextSpan(
+                                        text:
+                                            "I have been teaching grammar and literature for almost 10 years. I am fond of reading and teaching literature as one way of knowing one’s beliefs and culture. I am friendly and full of positivity. I love teaching because I know each student has something to bring on. Molding them to become an individual is a great success."),
+                                    textAlign: TextAlign.justify))
                           ]),
                     ),
                     Container(

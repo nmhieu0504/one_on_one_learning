@@ -101,6 +101,9 @@ class PageNavigatorState extends State<PageNavigator> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        // selectedItemColor: Colors.blue,
+        // selectedIconTheme: const IconThemeData(color: Colors.blue),
+        // unselectedIconTheme: const IconThemeData(color: Colors.grey),
       ),
     );
   }

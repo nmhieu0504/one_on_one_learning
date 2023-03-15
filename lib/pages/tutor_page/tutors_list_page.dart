@@ -103,7 +103,7 @@ class _TutorsPageState extends State<TutorsPage> {
                         );
                       },
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(
                             margin: const EdgeInsets.only(
@@ -114,24 +114,27 @@ class _TutorsPageState extends State<TutorsPage> {
                                   'Abby',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: const Text('English'),
+                                subtitle: Row(children: <Widget>[
+                                  const Icon(
+                                    Icons.flag,
+                                    color: Colors.blue,
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 5),
+                                    child: const Text(
+                                      'Philippines',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: const Text('Vietnamese'),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ]),
                                 trailing: RichText(
-                                    text: const TextSpan(
-                                        text: '5.0  ',
+                                    text: TextSpan(
+                                        text: '5.0 ',
                                         style: TextStyle(
-                                            color: Colors.red, fontSize: 18),
-                                        children: [
+                                            color: Colors.purple[800],
+                                            fontSize: 18),
+                                        children: const [
                                       WidgetSpan(
                                           child: Icon(
                                         Icons.star,
@@ -141,10 +144,35 @@ class _TutorsPageState extends State<TutorsPage> {
                                     ]))),
                           ),
                           Container(
-                            padding: const EdgeInsets.all(15),
-                            child: const Text(
-                                'I was a customer service sales executive for 3 years before I become an ESL teacher I am trained to deliver excellent service to my clients so I can help you with business English dealing with customers or in sales-related jobs and a lot'),
-                          )
+                            margin: const EdgeInsets.only(left: 20, right: 20),
+                            child: Wrap(
+                                alignment: WrapAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: OutlinedButton(
+                                      onPressed: onPressed,
+                                      child: const Text('English'),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: OutlinedButton(
+                                      onPressed: onPressed,
+                                      child: const Text('Vietnamese'),
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                          Container(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 10, top: 10),
+                              child: const Text.rich(
+                                TextSpan(
+                                    text:
+                                        'I was a customer service sales executive for 3 years before I become an ESL teacher I am trained to deliver excellent service to my clients so I can help you with business English dealing with customers or in sales-related jobs and a lot'),
+                                textAlign: TextAlign.justify,
+                              ))
                         ],
                       ),
                     ),
