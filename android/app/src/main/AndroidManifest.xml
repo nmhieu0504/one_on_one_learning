@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.one_on_one_learning">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="one_on_one_learning"
+        android:label="Let Learn"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -29,6 +30,6 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
-            android:value="2" />
+            android:value="2" />        
     </application>
 </manifest>
