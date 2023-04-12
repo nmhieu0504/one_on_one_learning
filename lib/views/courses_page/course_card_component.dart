@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/courses_page/course_detail_page.dart';
-import 'package:one_on_one_learning/utils/ui_data/ui_data.dart';
+import 'package:one_on_one_learning/utils/ui_data.dart';
 
 class CourseCardComponent extends StatelessWidget {
   const CourseCardComponent({super.key});

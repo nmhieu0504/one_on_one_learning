@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/tutor_page/tutor_detail_page.dart';
-import 'package:one_on_one_learning/utils/ui_data/ui_data.dart';
+import 'package:one_on_one_learning/utils/ui_data.dart';
 
 class TutorCard extends StatefulWidget {
   const TutorCard({super.key});

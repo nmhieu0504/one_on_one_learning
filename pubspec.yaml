@@ -42,6 +42,7 @@ dependencies:
   booking_calendar: ^1.1.9
   table_calendar: ^3.0.8
   jitsi_meet_wrapper: ^0.0.6
+  motion_toast: ^2.6.6
 
 dev_dependencies:
   flutter_test:

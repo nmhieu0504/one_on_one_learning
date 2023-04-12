@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
 import 'package:video_player/video_player.dart';
-import 'package:one_on_one_learning/utils/ui_data/ui_data.dart';
+import 'package:one_on_one_learning/utils/ui_data.dart';
 
 class TutorPage extends StatefulWidget {
   const TutorPage({super.key});
