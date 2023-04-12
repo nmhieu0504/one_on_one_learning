@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../ui_data/ui_data.dart';
+import '../../utils/ui_data/ui_data.dart';
 
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});

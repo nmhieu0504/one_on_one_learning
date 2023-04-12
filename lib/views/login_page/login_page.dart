@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/ui_data/ui_data.dart';
+import 'package:one_on_one_learning/utils/ui_data/ui_data.dart';
 import '../navigator_page.dart';
 
 class LoginPage extends StatelessWidget {
