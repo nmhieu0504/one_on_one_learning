@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/tutor_page/tutor_detail_page.dart';
+import 'package:one_on_one_learning/views/tutor_page/tutor_detail_page.dart';
 import '../../ui_data/ui_data.dart';
 
 class TutorsListPage extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/courses_page/courses_page.dart';
-import 'package:one_on_one_learning/pages/history_page/history_page.dart';
-import 'package:one_on_one_learning/pages/home_page/home_page.dart';
-import 'package:one_on_one_learning/pages/schedule_page/schedule_page.dart';
+import 'package:one_on_one_learning/views/courses_page/courses_page.dart';
+import 'package:one_on_one_learning/views/history_page/history_page.dart';
+import 'package:one_on_one_learning/views/home_page/home_page.dart';
+import 'package:one_on_one_learning/views/schedule_page/schedule_page.dart';
 
 class NavigatorPage extends StatefulWidget {
   const NavigatorPage(this.title, {super.key});

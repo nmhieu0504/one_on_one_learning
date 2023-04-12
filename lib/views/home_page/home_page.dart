@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/home_page/tutor_card_component.dart';
-import 'package:one_on_one_learning/pages/meeting_page/meeting_page.dart';
-import 'package:one_on_one_learning/pages/tutor_page/tutors_list_page.dart';
+import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
+import 'package:one_on_one_learning/views/meeting_page/meeting_page.dart';
+import 'package:one_on_one_learning/views/tutor_page/tutors_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

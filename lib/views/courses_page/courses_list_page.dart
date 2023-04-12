@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/courses_page/course_card_component.dart';
+import 'package:one_on_one_learning/views/courses_page/course_card_component.dart';
 
 class CoursesList extends StatelessWidget {
   const CoursesList({super.key});

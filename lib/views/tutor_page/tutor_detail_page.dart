@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/booking_page/booking_page.dart';
+import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
 import 'package:video_player/video_player.dart';
 import 'package:one_on_one_learning/ui_data/ui_data.dart';
 

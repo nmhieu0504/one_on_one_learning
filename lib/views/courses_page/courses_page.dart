@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/courses_page/courses_list_page.dart';
-import 'package:one_on_one_learning/pages/courses_page/ebook_list_page.dart';
+import 'package:one_on_one_learning/views/courses_page/courses_list_page.dart';
+import 'package:one_on_one_learning/views/courses_page/ebook_list_page.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});

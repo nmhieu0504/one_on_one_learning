@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/courses_page/course_topic_component.dart';
+import 'package:one_on_one_learning/views/courses_page/course_topic_component.dart';
 
 class CourseDetailPage extends StatelessWidget {
   const CourseDetailPage({super.key});

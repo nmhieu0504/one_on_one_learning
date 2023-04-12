@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/pages/lesson_page/lesson_page.dart';
+import 'package:one_on_one_learning/views/lesson_page/lesson_page.dart';
 
 class TopicCardComponent extends StatelessWidget {
   const TopicCardComponent(this.title, {super.key});
