@@ -101,9 +101,6 @@ class NavigatorStatePage extends State<NavigatorPage> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        // selectedItemColor: Colors.blue,
-        // selectedIconTheme: const IconThemeData(color: Colors.blue),
-        // unselectedIconTheme: const IconThemeData(color: Colors.grey),
       ),
     );
   }

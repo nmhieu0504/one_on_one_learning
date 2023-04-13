@@ -4,40 +4,41 @@ import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:one_on_one_learning/views/register_page/register_page.dart';
+import 'package:one_on_one_learning/views/login_page/login_page.dart';
 
 import '../navigator_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
   bool _loading = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _rePasswordController = TextEditingController();
 
-  Future<bool> _signIn() async {
+  Future<bool> _signUp() async {
     setState(() {
       _loading = true;
     });
-    final response = await http.post(Uri.parse(API_URL.LOGIN), body: {
+    final response = await http.post(Uri.parse(API_URL.REGISTER), body: {
       "email": _emailController.text,
       "password": _passwordController.text,
+      "source": "null"
     });
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print(response.body);
       return true;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
+      print(response.body);
       return false;
     }
   }
@@ -137,102 +138,79 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: _obscureText,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text('Forgot Password?'),
-                    ),
-                  ],
-                ),
-                FilledButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      bool result = await _signIn();
-                      if (result) {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                            return const NavigatorPage('Home Page');
-                          }),
-                        );
-                      } else {
-                        setState(() {
-                          _loading = false;
-                        });
-                        _displayDeleteMotionToast();
+                Container(
+                  margin: const EdgeInsets.only(top: 5, bottom: 5),
+                  child: TextFormField(
+                    style: const TextStyle(fontSize: 16),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please re-enter your password';
                       }
-                    }
-                  },
-                  child: const Text('Sign In'),
+                      if (value != _passwordController.text) {
+                        return 'Password does not match';
+                      }
+                      return null;
+                    },
+                    controller: _rePasswordController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      labelText: 'Re-enter password',
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.deepPurple),
+                      ),
+                    ),
+                    obscureText: _obscureText,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  child: FilledButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        bool result = await _signUp();
+                        if (result) {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                              return const NavigatorPage('Home Page');
+                            }),
+                          );
+                        } else {
+                          setState(() {
+                            _loading = false;
+                          });
+                          _displayDeleteMotionToast();
+                        }
+                      }
+                    },
+                    child: const Text('Sign Up'),
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text('Don\'t have an account?'),
+                    const Text('Already have an account?'),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                            return const RegisterPage();
-                          }),
-                        );
+                        Navigator.pop(context);
                       },
-                      child: const Text('Sign Up'),
+                      child: const Text('Sign In'),
                     ),
                   ],
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: <Widget>[
-                      const Text('Or Sign In With'),
-                      Container(
-                        margin: const EdgeInsets.only(top: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              margin:
-                                  const EdgeInsets.only(right: 10, left: 10),
-                              child: IconButton(
-                                constraints: const BoxConstraints.tightFor(
-                                  width: 60,
-                                  height: 50,
-                                ),
-                                onPressed: () {},
-                                tooltip: "Sign in with Facebook",
-                                icon: const Image(
-                                  image: AssetImage(UIData.facebookIcon),
-                                  color: null,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin:
-                                  const EdgeInsets.only(right: 10, left: 10),
-                              child: IconButton(
-                                constraints: const BoxConstraints.tightFor(
-                                  width: 60,
-                                  height: 50,
-                                ),
-                                onPressed: () {},
-                                tooltip: "Sign in with Google",
-                                icon: const Image(
-                                  image: AssetImage(UIData.googleIcon),
-                                  color: null,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
             _loading
