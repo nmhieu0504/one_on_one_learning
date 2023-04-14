@@ -9,4 +9,6 @@ class UIData {
   static const String searchIcon = "$iconDir/search.png";
   static const String googleIcon = "$iconDir/google.png";
   static const String facebookIcon = "$iconDir/facebook.png";
+
+  static const String emailVerify = "$imageDir/email_verify.jpg";
 }

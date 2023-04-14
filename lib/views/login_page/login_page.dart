@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';

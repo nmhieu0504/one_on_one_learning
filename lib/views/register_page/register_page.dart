@@ -1,12 +1,13 @@
+// ignore_for_file: avoid_print, depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:one_on_one_learning/views/login_page/login_page.dart';
+import 'package:one_on_one_learning/views/register_page/active_email.dart';
 
-import '../navigator_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -46,12 +47,12 @@ class RegisterPageState extends State<RegisterPage> {
   void _displayDeleteMotionToast() {
     MotionToast.error(
       title: const Text(
-        'Invalid',
+        'Error',
         style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),
-      description: const Text('Wrong email or password'),
+      description: const Text('Email has already taken'),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -185,7 +186,7 @@ class RegisterPageState extends State<RegisterPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (BuildContext context) {
-                              return const NavigatorPage('Home Page');
+                              return ActiveEmail(email: _emailController.text);
                             }),
                           );
                         } else {

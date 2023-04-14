@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'views/login_page/login_page.dart';
 
 void main() {

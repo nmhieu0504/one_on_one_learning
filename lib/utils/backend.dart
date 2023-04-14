@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, camel_case_types
+
 class API_URL {
   static const String BASE_URL = "https://sandbox.api.lettutor.com";
 
