@@ -5,9 +5,7 @@ import 'package:one_on_one_learning/views/home_page/home_page.dart';
 import 'package:one_on_one_learning/views/schedule_page/schedule_page.dart';
 
 class NavigatorPage extends StatefulWidget {
-  const NavigatorPage(this.title, {super.key});
-
-  final String title;
+  const NavigatorPage({super.key});
 
   @override
   State<NavigatorPage> createState() => NavigatorStatePage();
