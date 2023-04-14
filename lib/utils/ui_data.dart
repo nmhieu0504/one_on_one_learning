@@ -10,5 +10,7 @@ class UIData {
   static const String googleIcon = "$iconDir/google.png";
   static const String facebookIcon = "$iconDir/facebook.png";
 
-  static const String emailVerify = "$imageDir/email_verify.jpg";
+  static const String emailVerify = "$imageDir/email_verify.png";
+  static const String registerImng = "$imageDir/register_img.png";
+  static const String forgetPasswordImg = "$imageDir/forget_password_img.png";
 }

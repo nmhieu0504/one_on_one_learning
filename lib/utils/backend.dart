@@ -5,4 +5,5 @@ class API_URL {
 
   static const String LOGIN = "$BASE_URL/auth/login";
   static const String REGISTER = "$BASE_URL/auth/register";
+  static const String FORGET_PASSWORD = "$BASE_URL/user/forgotPassword";
 }

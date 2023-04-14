@@ -6,6 +6,7 @@ import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
+import 'package:one_on_one_learning/views/forget_password_page/forget_password_page.dart';
 import 'package:one_on_one_learning/views/register_page/register_page.dart';
 
 import '../navigator_page.dart';
@@ -143,7 +144,14 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return const ForgetPasswordPage();
+                          }),
+                        );
+                      },
                       child: const Text('Forgot Password?'),
                     ),
                   ],

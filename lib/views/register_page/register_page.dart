@@ -69,11 +69,11 @@ class RegisterPageState extends State<RegisterPage> {
               padding: const EdgeInsets.all(40.0),
               children: <Widget>[
                 Container(
-                  margin: const EdgeInsets.only(top: 30),
-                  child: Image.asset(UIData.logoLogin, width: 200, height: 200),
+                  margin: const EdgeInsets.only(top: 30, bottom: 15),
+                  child: Image.asset(UIData.registerImng, width: 200, height: 200),
                 ),
                 const Center(
-                  child: Text('LET LEARN',
+                  child: Text('REGISTER',
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
