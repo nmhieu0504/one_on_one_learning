@@ -3,7 +3,21 @@ import 'package:one_on_one_learning/views/tutor_page/tutor_detail_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 
 class TutorCard extends StatefulWidget {
-  const TutorCard({super.key});
+  final String? avatar;
+  final String name;
+  final String? country;
+  final int? rating;
+  final String specialties;
+  final String bio;
+  const TutorCard({
+    Key? key,
+    required this.avatar,
+    required this.name,
+    required this.country,
+    this.rating,
+    required this.specialties,
+    required this.bio,
+  }) : super(key: key);
 
   @override
   State<TutorCard> createState() => _TutorCardState();
@@ -11,6 +25,38 @@ class TutorCard extends StatefulWidget {
 
 class _TutorCardState extends State<TutorCard> {
   void onPressed() {}
+
+  List<Widget> _showRating() {
+    List<Widget> list = [];
+    for (int i = 0; i < widget.rating!; i++) {
+      list.add(const Icon(
+        Icons.star,
+        color: Colors.yellow,
+      ));
+    }
+    return list;
+  }
+
+  List<Widget> _showSpecialties() {
+    List<Widget> list = [];
+    for (int i = 0; i < widget.specialties.split(",").length; i++) {
+      list.add(Container(
+        margin: const EdgeInsets.only(right: 10),
+        child: OutlinedButton(
+          onPressed: onPressed,
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.blue,
+            side: const BorderSide(color: Colors.blue),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+          ),
+          child: Text(widget.specialties.split(",")[i]),
+        ),
+      ));
+    }
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +91,17 @@ class _TutorCardState extends State<TutorCard> {
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     child: ListTile(
-                        leading: Image.asset(UIData.logoLogin),
+                        leading:
+                            // widget.avatar == null ?
+                            const CircleAvatar(
+                          backgroundImage: AssetImage(UIData.logoLogin),
+                        ),
+                        // : Image.asset(widget.avatar!),
                         title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              const Text('Abby',
-                                  style: TextStyle(fontSize: 18)),
+                              Text(widget.name,
+                                  style: const TextStyle(fontSize: 18)),
                               Row(children: <Widget>[
                                 const Icon(
                                   Icons.flag,
@@ -58,38 +109,24 @@ class _TutorCardState extends State<TutorCard> {
                                 ),
                                 Container(
                                   margin: const EdgeInsets.only(left: 5),
-                                  child: const Text(
-                                    'Philippines',
-                                    style: TextStyle(
+                                  child: Text(
+                                    widget.country == null
+                                        ? 'No information'
+                                        : widget.country!,
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.normal),
                                   ),
                                 ),
                               ])
                             ]),
-                        subtitle: Row(
-                          children: const <Widget>[
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                          ],
-                        ),
+                        subtitle: widget.rating == null
+                            ? Container(
+                                margin: const EdgeInsets.only(top: 5),
+                                child: const Text('No rating yet'),
+                              )
+                            : Row(
+                                children: _showRating(),
+                              ),
                         trailing: IconButton(
                           icon: const Icon(Icons.favorite_border_rounded),
                           onPressed: () {
@@ -99,30 +136,17 @@ class _TutorCardState extends State<TutorCard> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),
-                    child:
-                        Wrap(alignment: WrapAlignment.start, children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        child: OutlinedButton(
-                          onPressed: onPressed,
-                          child: const Text('English'),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        child: OutlinedButton(
-                          onPressed: onPressed,
-                          child: const Text('Vietnamese'),
-                        ),
-                      ),
-                    ]),
+                    child: Wrap(
+                        alignment: WrapAlignment.start,
+                        children: _showSpecialties()),
                   ),
                   Container(
                       padding: const EdgeInsets.all(15),
-                      child: const Text.rich(
+                      child: Text.rich(
                         TextSpan(
                             text:
-                                'I was a customer service sales executive for 3 years before I become an ESL teacher I am trained to deliver excellent service to my clients so I can help you with business English dealing with customers or in sales-related jobs and a lot'),
+                                // '${widget.bio.substring(0, 100)}... See more'),
+                                widget.bio),
                         textAlign: TextAlign.justify,
                       ))
                 ],

@@ -7,7 +7,6 @@ import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/forget_password_page/check_email.dart';
-import 'package:one_on_one_learning/views/register_page/active_email.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
