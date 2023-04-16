@@ -98,7 +98,7 @@ class _TutorsListPageState extends State<TutorsListPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (BuildContext context) {
-                            return const TutorPage();
+                            return const TutorPage(userId: "THIS IS THE ID",);
                           }),
                         );
                       },

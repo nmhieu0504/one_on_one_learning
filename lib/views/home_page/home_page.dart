@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     List<Widget> list = [];
     for (int i = 0; i < 10; i++) {
       list.add(TutorCard(
+        userId: _data["tutors"]["rows"][i]["userId"],
         avatar: _data["tutors"]["rows"][i]["avatar"],
         name: _data["tutors"]["rows"][i]["name"],
         country: _data["tutors"]["rows"][i]["country"],

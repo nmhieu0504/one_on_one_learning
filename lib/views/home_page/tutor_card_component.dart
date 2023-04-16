@@ -3,6 +3,7 @@ import 'package:one_on_one_learning/views/tutor_page/tutor_detail_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 
 class TutorCard extends StatefulWidget {
+  final String userId;
   final String? avatar;
   final String name;
   final String? country;
@@ -11,6 +12,7 @@ class TutorCard extends StatefulWidget {
   final String bio;
   const TutorCard({
     Key? key,
+    required this.userId,
     required this.avatar,
     required this.name,
     required this.country,
@@ -51,11 +53,24 @@ class _TutorCardState extends State<TutorCard> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
-          child: Text(widget.specialties.split(",")[i]),
+          child: Text(widget.specialties.split(",")[i],
+              style: const TextStyle(fontSize: 12)),
         ),
       ));
     }
     return list;
+  }
+
+  Widget validateImage() {
+    try {
+      return Image.network(
+        widget.avatar!,
+        errorBuilder: (context, error, stackTrace) =>
+            Image.asset(UIData.logoLogin),
+      );
+    } catch (e) {
+      return Image.asset(UIData.logoLogin);
+    }
   }
 
   @override
@@ -81,7 +96,7 @@ class _TutorCardState extends State<TutorCard> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return const TutorPage();
+                    return TutorPage(userId: widget.userId);
                   }),
                 );
               },
@@ -92,11 +107,9 @@ class _TutorCardState extends State<TutorCard> {
                     margin: const EdgeInsets.only(top: 10),
                     child: ListTile(
                         leading:
-                            // widget.avatar == null ?
-                            const CircleAvatar(
-                          backgroundImage: AssetImage(UIData.logoLogin),
-                        ),
-                        // : Image.asset(widget.avatar!),
+                            //  widget.avatar == null ?
+                            Image.asset(UIData.logoLogin),
+                        // : validateImage(),
                         title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -122,7 +135,9 @@ class _TutorCardState extends State<TutorCard> {
                         subtitle: widget.rating == null
                             ? Container(
                                 margin: const EdgeInsets.only(top: 5),
-                                child: const Text('No rating yet'),
+                                child: const Text('Rating not available',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic)),
                               )
                             : Row(
                                 children: _showRating(),
