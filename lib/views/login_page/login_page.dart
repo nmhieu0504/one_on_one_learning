@@ -83,10 +83,30 @@ class _LoginPageState extends State<LoginPage> {
         String? str = await sharePref.getString("refresh_token_exp");
         DateTime exp = DateTime.parse(str!);
         if (now.isBefore(exp)) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const NavigatorPage()),
-          );
+          () async {
+            String? token = await sharePref.getString("refresh_token");
+            var response = await http.post(Uri.parse(API_URL.REFRESH_TOKEN),
+                headers: {"Content-Type": "application/json"},
+                body: jsonEncode({"refreshToken": token ?? '', "timezone": 7}));
+
+            if (response.statusCode == 200) {
+              print(response.body);
+              var data = jsonDecode(response.body);
+              sharePref.saveString(
+                  "access_token", data["tokens"]["access"]["token"]);
+              sharePref.saveString(
+                  "access_token_exp", data["tokens"]["access"]["expires"]);
+              sharePref.saveString(
+                  "refresh_token", data["tokens"]["refresh"]["token"]);
+              sharePref.saveString(
+                  "refresh_token_exp", data["tokens"]["refresh"]["expires"]);
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const NavigatorPage()),
+              );
+            }
+          }();
         }
       } else {
         setState(() {
