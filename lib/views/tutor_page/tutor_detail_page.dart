@@ -7,6 +7,7 @@ import 'package:video_player/video_player.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/backend.dart';
+import '../../utils/language_map.dart';
 
 class TutorPage extends StatefulWidget {
   final String userId;
@@ -93,6 +94,18 @@ class TutorPageState extends State<TutorPage> {
     return list;
   }
 
+  String specialtiesUltis(String text) {
+    if (!text.contains("-")) {
+      return text.toUpperCase();
+    }
+    List<String> words = text.split("-");
+    String result = "";
+    for (String word in words) {
+      result += "${word.substring(0, 1).toUpperCase()}${word.substring(1)} ";
+    }
+    return result.trim();
+  }
+
   List<Widget> _showSpecialties() {
     List<Widget> list = [];
     for (int i = 0; i < specialties.split(",").length; i++) {
@@ -107,7 +120,7 @@ class TutorPageState extends State<TutorPage> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
-          child: Text(specialties.split(",")[i],
+          child: Text(specialtiesUltis(specialties.split(",")[i]),
               style: const TextStyle(fontSize: 12)),
         ),
       ));
@@ -129,7 +142,7 @@ class TutorPageState extends State<TutorPage> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
-          child: Text(languages.split(",")[i],
+          child: Text(languagesMap[languages.split(",")[i]]!,
               style: const TextStyle(fontSize: 12)),
         ),
       ));

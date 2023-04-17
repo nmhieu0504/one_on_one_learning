@@ -39,6 +39,18 @@ class _TutorCardState extends State<TutorCard> {
     return list;
   }
 
+  String specialtiesUltis(String text) {
+    if(!text.contains("-")){
+      return text.toUpperCase();
+    }
+    List<String> words = text.split("-");
+    String result = "";
+    for (String word in words) {
+      result += "${word.substring(0, 1).toUpperCase()}${word.substring(1)} ";
+    }
+    return result.trim();
+  }
+
   List<Widget> _showSpecialties() {
     List<Widget> list = [];
     for (int i = 0; i < widget.specialties.split(",").length; i++) {
@@ -53,7 +65,7 @@ class _TutorCardState extends State<TutorCard> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
-          child: Text(widget.specialties.split(",")[i],
+          child: Text(specialtiesUltis( widget.specialties.split(",")[i]),
               style: const TextStyle(fontSize: 12)),
         ),
       ));
