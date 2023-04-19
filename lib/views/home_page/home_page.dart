@@ -38,21 +38,13 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  List<Widget> _showTutorList() {
-    List<Widget> list = [];
-    for (int i = 0; i < 10; i++) {
-      list.add(TutorCard(
-        userId: _data["tutors"]["rows"][i]["userId"],
-        avatar: _data["tutors"]["rows"][i]["avatar"],
-        name: _data["tutors"]["rows"][i]["name"],
-        country: _data["tutors"]["rows"][i]["country"],
-        rating: _data["tutors"]["rows"][i]["rating"]?.toInt(),
-        specialties: _data["tutors"]["rows"][i]["specialties"],
-        bio: _data["tutors"]["rows"][i]["bio"],
-      ));
-    }
-    return list;
-  }
+  // List<Widget> _showTutorList() {
+  //   List<Widget> list = [];
+  //   for (int i = 0; i < 10; i++) {
+  //     list.add();
+  //   }
+  //   return list;
+  // }
 
   @override
   void initState() {
@@ -119,7 +111,21 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            ..._showTutorList(),
+            ListView.builder(
+                shrinkWrap: true,
+                physics: const ScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return TutorCard(
+                    userId: _data["tutors"]["rows"][index]["userId"],
+                    avatar: _data["tutors"]["rows"][index]["avatar"],
+                    name: _data["tutors"]["rows"][index]["name"],
+                    country: _data["tutors"]["rows"][index]["country"],
+                    rating: _data["tutors"]["rows"][index]["rating"]?.toInt(),
+                    specialties: _data["tutors"]["rows"][index]["specialties"],
+                    bio: _data["tutors"]["rows"][index]["bio"],
+                  );
+                },
+                itemCount: 10),
           ]);
   }
 }

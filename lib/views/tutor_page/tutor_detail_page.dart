@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
@@ -80,12 +81,32 @@ class TutorPageState extends State<TutorPage> {
     _controller.initialize().then((value) => setState(() {}));
   }
 
+  Widget _buildAvatar() {
+    if (avatar == null) {
+      return Image.asset(UIData.logoLogin);
+    } else {
+      return Avatar(
+        loader: Container(),
+        sources: [NetworkSource(avatar!)],
+        name: name,
+        shape: AvatarShape.rectangle(
+            50, 50, const BorderRadius.all(Radius.circular(20.0))),
+      );
+    }
+  }
+
   List<Widget> _showRating() {
     List<Widget> list = [];
     for (int i = 0; i < rating!; i++) {
       list.add(const Icon(
         Icons.star,
         color: Colors.yellow,
+      ));
+    }
+    while (list.length < 5) {
+      list.add(const Icon(
+        Icons.star,
+        color: Colors.grey,
       ));
     }
     list.add(Container(
@@ -131,6 +152,7 @@ class TutorPageState extends State<TutorPage> {
   List<Widget> _showLanguage() {
     List<Widget> list = [];
     for (int i = 0; i < languages.split(",").length; i++) {
+      if (languagesMap[languages.split(",")[i]] == null) continue;
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: OutlinedButton(
@@ -239,7 +261,7 @@ class TutorPageState extends State<TutorPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           ListTile(
-                              leading: Image.asset(UIData.logoLogin),
+                              leading: _buildAvatar(),
                               title: Text(
                                 name,
                                 style: const TextStyle(fontSize: 18),

@@ -1,3 +1,4 @@
+import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/tutor_page/tutor_detail_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
@@ -36,11 +37,30 @@ class _TutorCardState extends State<TutorCard> {
         color: Colors.yellow,
       ));
     }
+    while (list.length < 5) {
+      list.add(const Icon(
+        Icons.star,
+        color: Colors.grey,
+      ));
+    }
     return list;
   }
 
+  Widget _buildAvatar() {
+    if (widget.avatar == null) {
+      return Image.asset(UIData.logoLogin);
+    } else {
+      return Avatar(
+        sources: [NetworkSource(widget.avatar!)],
+        name: widget.name,
+        shape: AvatarShape.rectangle(
+            50, 50, const BorderRadius.all(Radius.circular(20.0))),
+      );
+    }
+  }
+
   String specialtiesUltis(String text) {
-    if(!text.contains("-")){
+    if (!text.contains("-")) {
       return text.toUpperCase();
     }
     List<String> words = text.split("-");
@@ -65,24 +85,12 @@ class _TutorCardState extends State<TutorCard> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
-          child: Text(specialtiesUltis( widget.specialties.split(",")[i]),
+          child: Text(specialtiesUltis(widget.specialties.split(",")[i]),
               style: const TextStyle(fontSize: 12)),
         ),
       ));
     }
     return list;
-  }
-
-  Widget validateImage() {
-    try {
-      return Image.network(
-        widget.avatar!,
-        errorBuilder: (context, error, stackTrace) =>
-            Image.asset(UIData.logoLogin),
-      );
-    } catch (e) {
-      return Image.asset(UIData.logoLogin);
-    }
   }
 
   @override
@@ -118,10 +126,7 @@ class _TutorCardState extends State<TutorCard> {
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     child: ListTile(
-                        leading:
-                            //  widget.avatar == null ?
-                            Image.asset(UIData.logoLogin),
-                        // : validateImage(),
+                        leading: _buildAvatar(),
                         title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -139,7 +144,8 @@ class _TutorCardState extends State<TutorCard> {
                                         ? 'No information'
                                         : widget.country!,
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.normal),
+                                        fontWeight: FontWeight.normal,
+                                        fontStyle: FontStyle.italic),
                                   ),
                                 ),
                               ])
