@@ -23,33 +23,107 @@ class _HomePageState extends State<HomePage> {
   bool _getMoreData = false;
   int _page = 1;
 
+  bool _vietnameseTutorChip = false;
+  bool _nativeTutorChip = false;
+  bool _foreignTutorChip = false;
+
+  final TextEditingController _datePickerController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  DateTime? _selectedDate;
+
+  final List<String> _specialtiesList = [
+    'ALL',
+    'business-english',
+    'conversational-english',
+    'english-for-kids',
+    'ielts',
+    'starters',
+    'movers',
+    'flyers',
+    'ket',
+    'pet',
+    'toefl',
+    'toeic'
+  ];
+  String _selectedSpecialties = 'ALL';
+
+  final List<String> _nationalityTutorList = [
+    "Vietnamese Tutor",
+    "Foreign Tutor",
+    "Native English Tutor"
+  ];
+
   final List<TutorCard> _tutorList = [];
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+
+  dynamic checkNationality() {
+    if (_vietnameseTutorChip == _nativeTutorChip &&
+        _nativeTutorChip == _foreignTutorChip) {
+      return {};
+    } else if (_vietnameseTutorChip) {
+      if (_nativeTutorChip) {
+        return {"isVietNamese": true, "isNative": true};
+      } else {
+        if (_foreignTutorChip) {
+          return {"isNative": false};
+        } else {
+          return {"isVietNamese": true};
+        }
+      }
+    } else if (!_vietnameseTutorChip) {
+      if (_nativeTutorChip) {
+        if (!_foreignTutorChip) {
+          return {"isNative": true};
+        } else {
+          return {"isVietNamese": false};
+        }
+      } else {
+        return {"isVietNamese": false, "isNative": false};
+      }
+    }
+  }
 
   Future<void> _loadTutorList() async {
     SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
-    final response = await http.get(
-        Uri.parse(API_URL.GET_TUTOR_LIST + _page.toString()),
+    String specialtiesChosen;
+    if (_selectedSpecialties == "ALL") {
+      specialtiesChosen = "";
+    } else {
+      specialtiesChosen = _selectedSpecialties;
+    }
+    var body = {
+      "filters": {
+        "specialties": [specialtiesChosen],
+        "nationality": checkNationality(),
+        "tutoringTimeAvailable": []
+      },
+      "search": _searchController.text,
+      "page": _page,
+      "perPage": 10
+    };
+    print("body: $body");
+    final response = await http.post(Uri.parse(API_URL.SEARCH_TUTOR),
         headers: <String, String>{
           "Authorization": "Bearer $token",
-        });
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(body));
     _page++;
 
     if (response.statusCode == 200) {
       print(response.body);
-      var _data = jsonDecode(response.body);
-
+      var data = jsonDecode(response.body);
       setState(() {
-        for (int index = 0; index < _data["tutors"]["rows"].length; index++) {
+        for (int index = 0; index < data["rows"].length; index++) {
           _tutorList.add(TutorCard(
-            userId: _data["tutors"]["rows"][index]["userId"],
-            avatar: _data["tutors"]["rows"][index]["avatar"],
-            name: _data["tutors"]["rows"][index]["name"],
-            country: _data["tutors"]["rows"][index]["country"],
-            rating: _data["tutors"]["rows"][index]["rating"]?.toInt(),
-            specialties: _data["tutors"]["rows"][index]["specialties"],
-            bio: _data["tutors"]["rows"][index]["bio"],
+            userId: data["rows"][index]["userId"],
+            avatar: data["rows"][index]["avatar"],
+            name: data["rows"][index]["name"],
+            country: data["rows"][index]["country"],
+            rating: data["rows"][index]["rating"]?.toInt(),
+            specialties: data["rows"][index]["specialties"],
+            bio: data["rows"][index]["bio"],
           ));
         }
         _loading = false;
@@ -72,26 +146,116 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  String specialtiesUltis(String text) {
+    if (!text.contains("-")) {
+      return text.toUpperCase();
+    }
+    List<String> words = text.split("-");
+    String result = "";
+    for (String word in words) {
+      result += "${word.substring(0, 1).toUpperCase()}${word.substring(1)} ";
+    }
+    return result.trim();
+  }
+
+  Widget _specialtiesFilter() {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Wrap(
+          spacing: 10,
+          children: _specialtiesList.map((value) {
+            return FilterChip(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              label: Text(specialtiesUltis(value)),
+              onSelected: (bool isSlected) {
+                setState(() {
+                  if (isSlected) {
+                    _selectedSpecialties = value;
+                  } else {
+                    _selectedSpecialties = "";
+                  }
+                });
+              },
+              selected: _selectedSpecialties == value,
+            );
+          }).toList(),
+        ));
+  }
+
+  Widget _nationalityTutorFilter() {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Wrap(
+            spacing: 10,
+            children: _nationalityTutorList.map((value) {
+              return FilterChip(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  label: Text(value),
+                  onSelected: (bool isSlected) {
+                    setState(() {
+                      switch (value) {
+                        case "Vietnamese Tutor":
+                          _vietnameseTutorChip = isSlected;
+                          break;
+                        case "Native English Tutor":
+                          _nativeTutorChip = isSlected;
+                          break;
+                        case "Foreign Tutor":
+                          _foreignTutorChip = isSlected;
+                          break;
+                      }
+                    });
+                  },
+                  selected: value == "Vietnamese Tutor"
+                      ? _vietnameseTutorChip
+                      : value == "Foreign Tutor"
+                          ? _foreignTutorChip
+                          : _nativeTutorChip);
+            }).toList()));
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate ?? DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now());
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _datePickerController.text =
+            "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
+  }
+
   Widget _buildFilter() {
     return SingleChildScrollView(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          const Text("Tutor Name"),
+          Container(
+              margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: const Text(
+                "Tutor Name",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
           Container(
             margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: SizedBox(
               height: 40,
               child: TextField(
+                controller: _searchController,
                 textAlignVertical: TextAlignVertical.bottom,
-                cursorColor: Colors.grey,
                 decoration: InputDecoration(
-                    fillColor: Colors.grey[200],
-                    filled: true,
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none),
+                        borderRadius: BorderRadius.circular(30)),
                     hintText: 'Search',
                     hintStyle:
                         const TextStyle(color: Colors.grey, fontSize: 16),
@@ -103,6 +267,87 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          _nationalityTutorFilter(),
+          Container(
+              margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: const Text(
+                "Select available tutoring time",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+          Container(
+            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: SizedBox(
+              height: 40,
+              child: TextField(
+                textAlignVertical: TextAlignVertical.bottom,
+                textAlign: TextAlign.center,
+                controller: _datePickerController,
+                onTap: () {
+                  _selectDate(context);
+                },
+                decoration: InputDecoration(
+                  suffixIcon: const Icon(Icons.calendar_month_outlined),
+                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+                  hintText: "Pick a date",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
+                readOnly: true,
+              ),
+            ),
+          ),
+          Container(
+              margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: const Text(
+                "Specialties",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+          _specialtiesFilter(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                child: OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedSpecialties = "ALL";
+                        _vietnameseTutorChip = false;
+                        _nativeTutorChip = false;
+                        _foreignTutorChip = false;
+                        _datePickerController.text = "";
+                        _selectedDate = null;
+                        _searchController.text = "";
+                      });
+                    },
+                    child: const Text(
+                      'Reset Filter',
+                    )),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
+                child: FilledButton(
+                    onPressed: () {
+                      _tutorList.clear();
+                      _loadTutorList();
+                      _page = 1;
+                      setState(() {
+                        _isFilter = false;
+                        _loading = true;
+                      });
+                    },
+                    child: const Text(
+                      'Apply',
+                    )),
+              ),
+            ],
+          )
         ]));
   }
 

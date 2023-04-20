@@ -76,9 +76,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
         ],
       ),      
       body: SafeArea(
-        child: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
