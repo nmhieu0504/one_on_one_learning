@@ -46,7 +46,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(      
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -107,12 +107,6 @@ class NavigatorStatePage extends State<NavigatorPage> {
             ),
             label: 'Courses',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(
-          //     Icons.settings,
-          //   ),
-          //   label: 'Settings',
-          // ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
