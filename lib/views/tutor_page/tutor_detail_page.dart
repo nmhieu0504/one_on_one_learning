@@ -1,12 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
-import 'package:video_player/video_player.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
+import 'package:one_on_one_learning/views/tutor_page/tutor_video.dart';
 import '../../utils/backend.dart';
 import '../../utils/language_map.dart';
 
@@ -20,7 +22,7 @@ class TutorPage extends StatefulWidget {
 
 class TutorPageState extends State<TutorPage> {
   final SharePref sharePref = SharePref();
-  late VideoPlayerController _controller;
+  late final String videoURL;
   late final String? avatar;
   late final String name;
   late final String? country;
@@ -39,8 +41,6 @@ class TutorPageState extends State<TutorPage> {
   void onPressed() {}
 
   Future<void> _loadData() async {
-    print(API_URL.GET_TUTOR_DETAIL + widget.userId);
-
     String? token = await sharePref.getString("access_token");
 
     final response = await http.get(
@@ -51,6 +51,7 @@ class TutorPageState extends State<TutorPage> {
       print(response.body);
       // ignore: no_leading_underscores_for_local_identifiers
       var _data = jsonDecode(response.body);
+      videoURL = _data["video"];
       avatar = _data["User"]["avatar"];
       name = _data["User"]["name"];
       country = _data["User"]["country"];
@@ -65,20 +66,10 @@ class TutorPageState extends State<TutorPage> {
       courses = _data["User"]["courses"];
       totalFeedback = _data["totalFeedback"];
 
-      _initVideo(_data["video"]);
       setState(() {
         _loadingData = false;
       });
     }
-  }
-
-  void _initVideo(String url) {
-    _controller = VideoPlayerController.network(
-      url,
-      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-    );
-    _controller.setLooping(true);
-    _controller.initialize().then((value) => setState(() {}));
   }
 
   Widget _buildAvatar() {
@@ -195,7 +186,6 @@ class TutorPageState extends State<TutorPage> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
   }
 
   @override
@@ -226,21 +216,7 @@ class TutorPageState extends State<TutorPage> {
                 ),
               ),
               body: ListView(children: <Widget>[
-                _controller.value.isInitialized
-                    ? AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: <Widget>[
-                            VideoPlayer(_controller),
-                            ClosedCaption(text: _controller.value.caption.text),
-                            _ControlsOverlay(controller: _controller),
-                            VideoProgressIndicator(_controller,
-                                allowScrubbing: true),
-                          ],
-                        ),
-                      )
-                    : Container(),
+                TutorVideo(url: videoURL),
                 Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -502,55 +478,7 @@ class TutorPageState extends State<TutorPage> {
                   ),
                 ),
               ]),
-              // floatingActionButton: FloatingActionButton(
-              //   onPressed: () {
-              //     setState(() {
-              //       _controller.value.isPlaying
-              //           ? _controller.pause()
-              //           : _controller.play();
-              //     });
-              //   },
-              //   child: Icon(
-              //     _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              //   ),
-              // ),
             ),
-    );
-  }
-}
-
-class _ControlsOverlay extends StatelessWidget {
-  const _ControlsOverlay({required this.controller});
-
-  final VideoPlayerController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 50),
-          reverseDuration: const Duration(milliseconds: 200),
-          child: controller.value.isPlaying
-              ? const SizedBox.shrink()
-              : Container(
-                  color: Colors.black26,
-                  child: const Center(
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 100.0,
-                      semanticLabel: 'Play',
-                    ),
-                  ),
-                ),
-        ),
-        GestureDetector(
-          onTap: () {
-            controller.value.isPlaying ? controller.pause() : controller.play();
-          },
-        ),
-      ],
     );
   }
 }
