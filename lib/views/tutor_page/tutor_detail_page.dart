@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
@@ -37,8 +39,15 @@ class TutorPageState extends State<TutorPage> {
   late final List<dynamic> courses;
   late final int? totalFeedback;
   bool _loadingData = true;
+  final TextEditingController _reportController = TextEditingController();
 
-  void onPressed() {}
+  final _reportItems = [
+    "This tutor is annoying me",
+    "This profile is pretending be someone or is fake",
+    "Inappropriate profile photo"
+  ];
+
+  List<String> _selectedRepotItems = [];
 
   Future<void> _loadData() async {
     String? token = await sharePref.getString("access_token");
@@ -70,6 +79,58 @@ class TutorPageState extends State<TutorPage> {
         _loadingData = false;
       });
     }
+  }
+
+  Future<void> _sendReport() async {
+    String? token = await sharePref.getString("access_token");
+
+    _selectedRepotItems.add(_reportController.text);
+    final response = await http.post(Uri.parse(API_URL.REPORT_TUTOR),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({
+          "tutorId": widget.userId,
+          "content": _selectedRepotItems.join("\n")
+        }));
+
+    _reportController.clear();
+    _selectedRepotItems.clear();
+    if (response.statusCode == 200) {
+      print(response.body);
+      // ignore: no_leading_underscores_for_local_identifiers
+      _displaySuccessMotionToast();
+    }
+  }
+
+  void _displayErrorMotionToast() {
+    MotionToast.error(
+      title: const Text(
+        'Invalid',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      description:
+          const Text('Please provide us some information about your report'),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
+  }
+
+  void _displaySuccessMotionToast() {
+    MotionToast.success(
+      title: const Text(
+        'Success',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      description: const Text('Your report has been sent'),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
   }
 
   Widget _buildAvatar() {
@@ -124,7 +185,7 @@ class TutorPageState extends State<TutorPage> {
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: OutlinedButton(
-          onPressed: onPressed,
+          onPressed: () {},
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.blue,
             side: const BorderSide(color: Colors.blue),
@@ -147,7 +208,7 @@ class TutorPageState extends State<TutorPage> {
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: OutlinedButton(
-          onPressed: onPressed,
+          onPressed: () {},
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.blue,
             side: const BorderSide(color: Colors.blue),
@@ -169,7 +230,7 @@ class TutorPageState extends State<TutorPage> {
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: TextButton(
-          onPressed: onPressed,
+          onPressed: () {},
           child: Text(courses[i]["name"], style: const TextStyle(fontSize: 12)),
         ),
       ));
@@ -310,7 +371,113 @@ class TutorPageState extends State<TutorPage> {
                                           margin: const EdgeInsets.only(top: 5),
                                           child: const Text('Report')),
                                     ]),
-                                    onPressed: () {},
+                                    onPressed: () => showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            SingleChildScrollView(
+                                              child: AlertDialog(
+                                                title: Text('Report $name',
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      const Text(
+                                                          "Help us understand what's happening?",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 10),
+                                                          child: ListBody(
+                                                            children:
+                                                                _reportItems
+                                                                    .map((item) =>
+                                                                        StatefulBuilder(
+                                                                          builder: (context, setState) => CheckboxListTile(
+                                                                              value: _selectedRepotItems.contains(item),
+                                                                              title: Text(item, style: const TextStyle(fontWeight: FontWeight.normal)),
+                                                                              controlAffinity: ListTileControlAffinity.leading,
+                                                                              onChanged: (isChecked) => setState(() {
+                                                                                    if (isChecked!) {
+                                                                                      _selectedRepotItems.add(item);
+                                                                                    } else {
+                                                                                      _selectedRepotItems.remove(item);
+                                                                                    }
+                                                                                  })),
+                                                                        ))
+                                                                    .toList(),
+                                                          )),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(top: 10),
+                                                        child: TextField(
+                                                          controller:
+                                                              _reportController,
+                                                          maxLines: 5,
+                                                          decoration: const InputDecoration(
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                              hintText:
+                                                                  'Enter your report here'),
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                actions: <Widget>[
+                                                  FilledButton(
+                                                    style:
+                                                        FilledButton.styleFrom(
+                                                      textStyle:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .labelLarge,
+                                                    ),
+                                                    child: const Text(
+                                                      'Ok',
+                                                      style: TextStyle(
+                                                          fontSize: 16),
+                                                    ),
+                                                    onPressed: () {
+                                                      if (_selectedRepotItems
+                                                              .isEmpty &&
+                                                          _reportController
+                                                              .text.isEmpty) {
+                                                        _displayErrorMotionToast();
+                                                      } else {
+                                                        _sendReport();
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      }
+                                                    },
+                                                  ),
+                                                  FilledButton(
+                                                    style:
+                                                        FilledButton.styleFrom(
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                      textStyle:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .labelLarge,
+                                                    ),
+                                                    child: const Text('Cancel',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16)),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
                                   ),
                                 ],
                               ),

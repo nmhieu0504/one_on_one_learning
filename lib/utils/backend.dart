@@ -11,4 +11,6 @@ class API_URL {
   static const String GET_TUTOR_LIST = "$BASE_URL/tutor/more?perPage=10&page=";
   static const String GET_TUTOR_DETAIL = "$BASE_URL/tutor/";
   static const String SEARCH_TUTOR = "$BASE_URL/tutor/search";
+
+  static const String REPORT_TUTOR = "$BASE_URL/report";
 }
