@@ -13,4 +13,5 @@ class API_URL {
   static const String SEARCH_TUTOR = "$BASE_URL/tutor/search";
 
   static const String REPORT_TUTOR = "$BASE_URL/report";
+  static const String ADD_TO_FAVOURITE = "$BASE_URL/user/manageFavoriteTutor";
 }

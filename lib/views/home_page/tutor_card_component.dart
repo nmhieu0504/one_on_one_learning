@@ -1,7 +1,15 @@
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
+
 import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/tutor_page/tutor_detail_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
+import 'package:http/http.dart' as http;
+
+import '../../utils/backend.dart';
+import '../../utils/share_pref.dart';
 
 class TutorCard extends StatefulWidget {
   final String userId;
@@ -11,15 +19,18 @@ class TutorCard extends StatefulWidget {
   final int? rating;
   final String specialties;
   final String bio;
-  const TutorCard({
+  bool isFavourite;
+
+  TutorCard({
     Key? key,
     required this.userId,
     required this.avatar,
     required this.name,
     required this.country,
-    this.rating,
+    required this.rating,
     required this.specialties,
     required this.bio,
+    required this.isFavourite,
   }) : super(key: key);
 
   @override
@@ -27,7 +38,24 @@ class TutorCard extends StatefulWidget {
 }
 
 class _TutorCardState extends State<TutorCard> {
+  final SharePref sharePref = SharePref();
+
   void onPressed() {}
+
+  Future<void> _modifyFavourite() async {
+    String? token = await sharePref.getString("access_token");
+
+    final response = await http.post(Uri.parse(API_URL.ADD_TO_FAVOURITE),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({"tutorId": widget.userId}));
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    }
+  }
 
   List<Widget> _showRating() {
     List<Widget> list = [];
@@ -161,9 +189,17 @@ class _TutorCardState extends State<TutorCard> {
                                 children: _showRating(),
                               ),
                         trailing: IconButton(
-                          icon: const Icon(Icons.favorite_border_rounded),
+                          iconSize: 35,
+                          icon: Icon(Icons.favorite_sharp,
+                              color: widget.isFavourite
+                                  ? Colors.red
+                                  : Colors.grey),
                           onPressed: () {
-                            debugPrint('Favorite button pressed.');
+                            setState(() {
+                              widget.isFavourite = !widget.isFavourite;
+                            });
+                            _modifyFavourite();
+                            debugPrint('Favourite button pressed.');
                           },
                         )),
                   ),

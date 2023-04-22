@@ -38,6 +38,7 @@ class TutorPageState extends State<TutorPage> {
   late final String specialties;
   late final List<dynamic> courses;
   late final int? totalFeedback;
+  late bool isFavorite = false;
   bool _loadingData = true;
   final TextEditingController _reportController = TextEditingController();
 
@@ -74,6 +75,7 @@ class TutorPageState extends State<TutorPage> {
       specialties = _data["specialties"];
       courses = _data["User"]["courses"];
       totalFeedback = _data["totalFeedback"];
+      isFavorite = _data["isFavorite"];
 
       setState(() {
         _loadingData = false;
@@ -100,11 +102,29 @@ class TutorPageState extends State<TutorPage> {
     if (response.statusCode == 200) {
       print(response.body);
       // ignore: no_leading_underscores_for_local_identifiers
-      _displaySuccessMotionToast();
+      _displaySuccessMotionToast('Your report has been sent');
     }
   }
 
-  void _displayErrorMotionToast() {
+  Future<void> _modifyFavourite() async {
+    String? token = await sharePref.getString("access_token");
+
+    final response = await http.post(Uri.parse(API_URL.ADD_TO_FAVOURITE),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({"tutorId": widget.userId}));
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      // ignore: no_leading_underscores_for_local_identifiers
+      _displaySuccessMotionToast(
+          isFavorite ? 'Add to favourite' : 'Remove from favourite');
+    }
+  }
+
+  void _displayErrorMotionToast(String str) {
     MotionToast.error(
       title: const Text(
         'Invalid',
@@ -112,14 +132,13 @@ class TutorPageState extends State<TutorPage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      description:
-          const Text('Please provide us some information about your report'),
+      description: Text(str),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
   }
 
-  void _displaySuccessMotionToast() {
+  void _displaySuccessMotionToast(String str) {
     MotionToast.success(
       title: const Text(
         'Success',
@@ -127,7 +146,7 @@ class TutorPageState extends State<TutorPage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      description: const Text('Your report has been sent'),
+      description: Text(str),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -322,9 +341,16 @@ class TutorPageState extends State<TutorPage> {
                                         child: Text(country ?? "")),
                                   ]),
                               trailing: IconButton(
-                                icon: const Icon(Icons.favorite_border_rounded),
+                                iconSize: 35,
+                                icon: Icon(Icons.favorite_sharp,
+                                    color:
+                                        isFavorite ? Colors.red : Colors.grey),
                                 onPressed: () {
-                                  debugPrint('Favorite button pressed.');
+                                  setState(() {
+                                    isFavorite = !isFavorite;
+                                  });
+                                  _modifyFavourite();
+                                  debugPrint('Favourite button pressed.');
                                 },
                               )),
                           Center(
@@ -448,7 +474,8 @@ class TutorPageState extends State<TutorPage> {
                                                               .isEmpty &&
                                                           _reportController
                                                               .text.isEmpty) {
-                                                        _displayErrorMotionToast();
+                                                        _displayErrorMotionToast(
+                                                            "Please give us more information about your report.");
                                                       } else {
                                                         _sendReport();
                                                         Navigator.of(context)
@@ -471,6 +498,9 @@ class TutorPageState extends State<TutorPage> {
                                                             color: Colors.white,
                                                             fontSize: 16)),
                                                     onPressed: () {
+                                                      _reportController.clear();
+                                                      _selectedRepotItems
+                                                          .clear();
                                                       Navigator.of(context)
                                                           .pop();
                                                     },

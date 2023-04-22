@@ -124,6 +124,7 @@ class _HomePageState extends State<HomePage> {
             rating: data["rows"][index]["rating"]?.toInt(),
             specialties: data["rows"][index]["specialties"],
             bio: data["rows"][index]["bio"],
+            isFavourite: data["rows"][index]["isfavoritetutor"] == "1",
           ));
         }
         _loading = false;
