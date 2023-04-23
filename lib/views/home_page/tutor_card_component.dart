@@ -9,6 +9,7 @@ import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 
 import '../../utils/backend.dart';
+import '../../utils/countries_lis.dart';
 import '../../utils/share_pref.dart';
 
 class TutorCard extends StatefulWidget {
@@ -170,7 +171,9 @@ class _TutorCardState extends State<TutorCard> {
                                   child: Text(
                                     widget.country == null
                                         ? 'No information'
-                                        : widget.country!,
+                                        : widget.country!.length > 2
+                                            ? widget.country!
+                                            : getCountryName(widget.country!),
                                     style: const TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontStyle: FontStyle.italic),

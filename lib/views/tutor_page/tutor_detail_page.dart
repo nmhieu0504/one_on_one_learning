@@ -12,7 +12,9 @@ import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/tutor_page/tutor_video.dart';
 import '../../utils/backend.dart';
+import '../../utils/countries_lis.dart';
 import '../../utils/language_map.dart';
+import '../reviews_page/review_page.dart';
 
 class TutorPage extends StatefulWidget {
   final String userId;
@@ -254,6 +256,10 @@ class TutorPageState extends State<TutorPage> {
         ),
       ));
     }
+    if (list.isEmpty) {
+      list.add(const Text("No courses",
+          style: TextStyle(fontStyle: FontStyle.italic)));
+    }
     return list;
   }
 
@@ -338,7 +344,9 @@ class TutorPageState extends State<TutorPage> {
                                           ),
                                     Container(
                                         margin: const EdgeInsets.only(top: 3),
-                                        child: Text(country ?? "")),
+                                        child: Text(getCountryName(country),
+                                            style: const TextStyle(
+                                                fontStyle: FontStyle.italic))),
                                   ]),
                               trailing: IconButton(
                                 iconSize: 35,
@@ -383,12 +391,18 @@ class TutorPageState extends State<TutorPage> {
                                 children: <Widget>[
                                   TextButton(
                                     child: Column(children: <Widget>[
-                                      const Icon(Icons.message),
+                                      const Icon(Icons.reviews_sharp),
                                       Container(
                                           margin: const EdgeInsets.only(top: 5),
-                                          child: const Text('Message')),
+                                          child: const Text('Reviews')),
                                     ]),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ReviewPage(
+                                                  userID: widget.userId)));
+                                    },
                                   ),
                                   TextButton(
                                     child: Column(children: <Widget>[
@@ -649,26 +663,6 @@ class TutorPageState extends State<TutorPage> {
                                   ..._showCourses()
                                 ]),
                           ),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Rating and Comments (0)',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: const Text(
-                                        "Bachelor's Degree in English Language and Literature"),
-                                  )
-                                ]),
-                          )
                         ],
                       ),
                     ),
