@@ -1,10 +1,8 @@
-// Copyright 2019 Aleksander Woźniak
-// SPDX-License-Identifier: Apache-2.0
+// ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
-
-import './utils.dart';
+import 'package:booking_calendar/booking_calendar.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class BookingPage extends StatefulWidget {
   const BookingPage({super.key});
@@ -14,142 +12,84 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
-      .toggledOff; // Can be toggled on/off by longpressing a date
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
+  final now = DateTime.now();
+  late BookingService mockBookingService;
+  List<DateTimeRange> converted = [];
 
   @override
   void initState() {
     super.initState();
-
-    _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    initializeDateFormatting();
+    mockBookingService = BookingService(
+        serviceName: 'Booking Service',
+        serviceDuration: 60,
+        bookingStart: DateTime(now.year, now.month, now.day, 0, 0, 0),
+        bookingEnd: DateTime(now.year, now.month, now.day, 23, 59, 59));
   }
 
-  @override
-  void dispose() {
-    _selectedEvents.dispose();
-    super.dispose();
+  Stream<dynamic>? getBookingStreamMock(
+      {required DateTime end, required DateTime start}) {
+    print("DATE CHANGED");
+    return Stream.value([]);
   }
 
-  List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
+  Future<dynamic> uploadBookingMock(
+      {required BookingService newBooking}) async {
+    // await Future.delayed(const Duration(seconds: 1));
+    converted.add(DateTimeRange(
+        start: newBooking.bookingStart, end: newBooking.bookingEnd));
+    print('${newBooking.toJson()} has been uploaded');
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = daysInRange(start, end);
+  List<DateTimeRange> convertStreamResultMock({required dynamic streamResult}) {
+    ///here you can parse the streamresult and convert to [List<DateTimeRange>]
+    ///take care this is only mock, so if you add today as disabledDays it will still be visible on the first load
+    ///disabledDays will properly work with real data
 
-    return [
-      for (final d in days) ..._getEventsForDay(d),
-    ];
-  }
+    DateTime tomorrow = now.add(const Duration(days: 1));
+    DateTime second = now.add(const Duration(minutes: 55));
+    DateTime third = now.subtract(const Duration(minutes: 240));
+    DateTime fourth = now.subtract(const Duration(minutes: 500));
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        _rangeStart = null; // Important to clean those
-        _rangeEnd = null;
-        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-      });
+    // converted.add(
+    //     DateTimeRange(start: now, end: now.add(const Duration(minutes: 30))));
+    // converted.add(DateTimeRange(
+    //     start: second, end: second.add(const Duration(minutes: 23))));
+    // converted.add(DateTimeRange(
+    //     start: third, end: third.add(const Duration(minutes: 15))));
+    // converted.add(DateTimeRange(
+    //     start: fourth, end: fourth.add(const Duration(minutes: 50))));
 
-      _selectedEvents.value = _getEventsForDay(selectedDay);
-    }
-  }
+    converted.add(DateTimeRange(
+        start: DateTime(now.year, now.month, now.day, 0, 0, 0),
+        end: DateTime(now.year, now.month, now.day, 5, 0, 0)));
 
-  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
-    setState(() {
-      _selectedDay = null;
-      _focusedDay = focusedDay;
-      _rangeStart = start;
-      _rangeEnd = end;
-      _rangeSelectionMode = RangeSelectionMode.toggledOn;
-    });
-
-    // `start` or `end` could be null
-    if (start != null && end != null) {
-      _selectedEvents.value = _getEventsForRange(start, end);
-    } else if (start != null) {
-      _selectedEvents.value = _getEventsForDay(start);
-    } else if (end != null) {
-      _selectedEvents.value = _getEventsForDay(end);
-    }
+    //book whole day example
+    converted.add(DateTimeRange(
+        start: DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 5, 0),
+        end: DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 0)));
+    return converted;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking Details'),
+        title: const Text('Booking Schedule'),
       ),
-      body: Column(
-        children: [
-          TableCalendar<Event>(
-            firstDay: kFirstDay,
-            lastDay: kLastDay,
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            rangeStartDay: _rangeStart,
-            rangeEndDay: _rangeEnd,
-            calendarFormat: _calendarFormat,
-            rangeSelectionMode: _rangeSelectionMode,
-            eventLoader: _getEventsForDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            calendarStyle: const CalendarStyle(
-              // Use `CalendarStyle` to customize the UI
-              outsideDaysVisible: false,
-            ),
-            onDaySelected: _onDaySelected,
-            onRangeSelected: _onRangeSelected,
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-          ),
-          const SizedBox(height: 8.0),
-          Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      child: FilledButton(
-                        onPressed: isOdd(index) ? null : onPressed,
-                        child: Text('${value[index]}'),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+      body: Center(
+        child: BookingCalendar(
+          bookingService: mockBookingService,
+          convertStreamResultToDateTimeRanges: convertStreamResultMock,
+          getBookingStream: getBookingStreamMock,
+          uploadBooking: uploadBookingMock,
+          loadingWidget: const Text('Fetching data...'),
+          uploadingWidget: const CircularProgressIndicator(),
+          locale: 'en_EN',
+          wholeDayIsBookedWidget: const Center(
+              child: Text('Sorry, for this day everything is booked')),
+        ),
       ),
     );
-  }
-
-  bool isOdd(int index) => index % 2 == 1;
-  void onPressed() {
-    debugPrint('onPressed');
   }
 }
