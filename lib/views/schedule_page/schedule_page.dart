@@ -4,8 +4,6 @@ import '../../utils/ui_data.dart';
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});
 
-  void onPressed() {}
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

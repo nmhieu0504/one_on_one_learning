@@ -16,4 +16,6 @@ class API_URL {
   static const String ADD_TO_FAVOURITE = "$BASE_URL/user/manageFavoriteTutor";
   static const String GET_REVIEWS = "$BASE_URL/feedback/v2/";
   static const String GET_TUTOR_SCHEDULE = "$BASE_URL/schedule?";
+
+  static const String GET_HISTORY_INFO = "$BASE_URL/booking/list/student?";
 }

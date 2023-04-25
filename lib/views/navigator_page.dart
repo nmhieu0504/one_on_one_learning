@@ -20,8 +20,8 @@ class NavigatorStatePage extends State<NavigatorPage> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    HistoryPage(),
     SchedulePage(),
+    HistoryPage(),
     CoursesPage(),
     Text(
       'Index 4: Settings',
@@ -31,8 +31,8 @@ class NavigatorStatePage extends State<NavigatorPage> {
 
   static const List<String> _appBarTitles = <String>[
     'Tutors',
-    'History',
     'Schedule',
+    'History',
     'Courses',
     'Settings',
   ];
@@ -46,7 +46,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(      
+    return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -74,7 +74,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
             },
           ),
         ],
-      ),      
+      ),
       body: SafeArea(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -89,15 +89,15 @@ class NavigatorStatePage extends State<NavigatorPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.history,
-            ),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
               Icons.timer_outlined,
             ),
             label: 'Schedule',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.history,
+            ),
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(
