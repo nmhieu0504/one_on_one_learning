@@ -1,12 +1,11 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
-import 'package:one_on_one_learning/models/history.dart';
-import 'package:one_on_one_learning/services/history_services.dart';
+import 'package:one_on_one_learning/models/schedule.dart';
+import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:intl/intl.dart';
 
 import '../../utils/countries_lis.dart';
-import '../../utils/ui_data.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -21,12 +20,12 @@ class _HistoryPageState extends State<HistoryPage> {
 
   int _page = 1;
   final ScrollController _scrollController = ScrollController();
-  List<HistoryModel> _dataList = [];
+  List<ScheduleModel> _dataList = [];
 
   @override
   void initState() {
     super.initState();
-    HistoryServices.loadData(_page++, 20).then((value) {
+    ScheduleServices.loadHistoryData(_page++, 20).then((value) {
       setState(() {
         _dataList.addAll(value);
         _loading = false;
@@ -38,7 +37,7 @@ class _HistoryPageState extends State<HistoryPage> {
         setState(() {
           _getMoreData = true;
         });
-        HistoryServices.loadData(_page++, 20).then((value) {
+        ScheduleServices.loadHistoryData(_page++, 20).then((value) {
           setState(() {
             _dataList.addAll(value);
             _getMoreData = false;
@@ -96,7 +95,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            DateFormat.yMMMMd('en_US')
+                            DateFormat("EEE, dd MMM yyyy")
                                 .format(_dataList[index].date),
                             style: const TextStyle(
                               fontSize: 20,
@@ -129,16 +128,8 @@ class _HistoryPageState extends State<HistoryPage> {
                       clipBehavior: Clip.hardEdge,
                       child: InkWell(
                         splashColor: Colors.blue.withAlpha(30),
-                        // onTap: () {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(builder: (BuildContext context) {
-                        //       return const TeacherPage();
-                        //     }),
-                        //   );
-                        // },
                         child: Container(
-                          margin: const EdgeInsets.all(15),
+                          margin: const EdgeInsets.fromLTRB(0, 15, 15, 15),
                           child: ListTile(
                             leading: Image.network(
                               _dataList[index].avatar,

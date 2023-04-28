@@ -414,112 +414,119 @@ class TutorPageState extends State<TutorPage> {
                                     onPressed: () => showDialog<String>(
                                         context: context,
                                         builder: (BuildContext context) =>
-                                            SingleChildScrollView(
-                                              child: AlertDialog(
-                                                title: Text('Report $name',
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                content: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      const Text(
-                                                          "Help us understand what's happening?",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      Container(
+                                            Center(
+                                              child: SingleChildScrollView(
+                                                child: AlertDialog(
+                                                  title: Text('Report $name',
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  content: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        const Text(
+                                                            "Help us understand what's happening?",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 10),
+                                                            child: ListBody(
+                                                              children:
+                                                                  _reportItems
+                                                                      .map((item) =>
+                                                                          StatefulBuilder(
+                                                                            builder: (context, setState) => CheckboxListTile(
+                                                                                value: _selectedRepotItems.contains(item),
+                                                                                title: Text(item, style: const TextStyle(fontWeight: FontWeight.normal)),
+                                                                                controlAffinity: ListTileControlAffinity.leading,
+                                                                                onChanged: (isChecked) => setState(() {
+                                                                                      if (isChecked!) {
+                                                                                        _selectedRepotItems.add(item);
+                                                                                      } else {
+                                                                                        _selectedRepotItems.remove(item);
+                                                                                      }
+                                                                                    })),
+                                                                          ))
+                                                                      .toList(),
+                                                            )),
+                                                        Container(
                                                           margin:
                                                               const EdgeInsets
                                                                       .only(
                                                                   top: 10),
-                                                          child: ListBody(
-                                                            children:
-                                                                _reportItems
-                                                                    .map((item) =>
-                                                                        StatefulBuilder(
-                                                                          builder: (context, setState) => CheckboxListTile(
-                                                                              value: _selectedRepotItems.contains(item),
-                                                                              title: Text(item, style: const TextStyle(fontWeight: FontWeight.normal)),
-                                                                              controlAffinity: ListTileControlAffinity.leading,
-                                                                              onChanged: (isChecked) => setState(() {
-                                                                                    if (isChecked!) {
-                                                                                      _selectedRepotItems.add(item);
-                                                                                    } else {
-                                                                                      _selectedRepotItems.remove(item);
-                                                                                    }
-                                                                                  })),
-                                                                        ))
-                                                                    .toList(),
-                                                          )),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(top: 10),
-                                                        child: TextField(
-                                                          controller:
-                                                              _reportController,
-                                                          maxLines: 5,
-                                                          decoration: const InputDecoration(
-                                                              border:
-                                                                  OutlineInputBorder(),
-                                                              hintText:
-                                                                  'Enter your report here'),
+                                                          child: TextField(
+                                                            controller:
+                                                                _reportController,
+                                                            maxLines: 3,
+                                                            decoration: const InputDecoration(
+                                                                border:
+                                                                    OutlineInputBorder(),
+                                                                hintText:
+                                                                    'Enter your report here'),
+                                                          ),
                                                         ),
+                                                      ]),
+                                                  actions: <Widget>[
+                                                    FilledButton(
+                                                      style: FilledButton
+                                                          .styleFrom(
+                                                        textStyle:
+                                                            Theme.of(context)
+                                                                .textTheme
+                                                                .labelLarge,
                                                       ),
-                                                    ]),
-                                                actions: <Widget>[
-                                                  FilledButton(
-                                                    style:
-                                                        FilledButton.styleFrom(
-                                                      textStyle:
-                                                          Theme.of(context)
-                                                              .textTheme
-                                                              .labelLarge,
+                                                      child: const Text(
+                                                        'Ok',
+                                                        style: TextStyle(
+                                                            fontSize: 16),
+                                                      ),
+                                                      onPressed: () {
+                                                        if (_selectedRepotItems
+                                                                .isEmpty &&
+                                                            _reportController
+                                                                .text.isEmpty) {
+                                                          _displayErrorMotionToast(
+                                                              "Please give us more information about your report.");
+                                                        } else {
+                                                          _sendReport();
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      },
                                                     ),
-                                                    child: const Text(
-                                                      'Ok',
-                                                      style: TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                    onPressed: () {
-                                                      if (_selectedRepotItems
-                                                              .isEmpty &&
-                                                          _reportController
-                                                              .text.isEmpty) {
-                                                        _displayErrorMotionToast(
-                                                            "Please give us more information about your report.");
-                                                      } else {
-                                                        _sendReport();
+                                                    FilledButton(
+                                                      style: FilledButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colors.grey,
+                                                        textStyle:
+                                                            Theme.of(context)
+                                                                .textTheme
+                                                                .labelLarge,
+                                                      ),
+                                                      child: const Text(
+                                                          'Cancel',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16)),
+                                                      onPressed: () {
+                                                        _reportController
+                                                            .clear();
+                                                        _selectedRepotItems
+                                                            .clear();
                                                         Navigator.of(context)
                                                             .pop();
-                                                      }
-                                                    },
-                                                  ),
-                                                  FilledButton(
-                                                    style:
-                                                        FilledButton.styleFrom(
-                                                      backgroundColor:
-                                                          Colors.grey,
-                                                      textStyle:
-                                                          Theme.of(context)
-                                                              .textTheme
-                                                              .labelLarge,
+                                                      },
                                                     ),
-                                                    child: const Text('Cancel',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16)),
-                                                    onPressed: () {
-                                                      _reportController.clear();
-                                                      _selectedRepotItems
-                                                          .clear();
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             )),
                                   ),

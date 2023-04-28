@@ -1,4 +1,4 @@
-class HistoryModel {
+class ScheduleModel {
   final DateTime date;
   final String avatar;
   final String name;
@@ -22,37 +22,38 @@ class HistoryModel {
   final String? lesson;
   final String? page;
   final String? lessonProgress;
+  final String? scheduleDetailId;
   final bool classReview;
 
-  HistoryModel({
-    required this.date,
-    required this.avatar,
-    required this.name,
-    required this.country,
-    required this.startTimestamp,
-    required this.endTimestamp,
-    required this.studentRequest,
-    required this.lessonStatus,
-    required this.behaviorRating,
-    required this.listeningRating,
-    required this.speakingRating,
-    required this.vocabularyRating,
-    required this.behaviorComment,
-    required this.listeningComment,
-    required this.speakingComment,
-    required this.vocabularyComment,
-    required this.overallComment,
-    required this.classReview,
-    required this.homeworkComment,
-    required this.book,
-    required this.unit,
-    required this.lesson,
-    required this.page,
-    required this.lessonProgress,
-  });
+  ScheduleModel(
+      {required this.date,
+      required this.avatar,
+      required this.name,
+      required this.country,
+      required this.startTimestamp,
+      required this.endTimestamp,
+      required this.studentRequest,
+      required this.lessonStatus,
+      required this.behaviorRating,
+      required this.listeningRating,
+      required this.speakingRating,
+      required this.vocabularyRating,
+      required this.behaviorComment,
+      required this.listeningComment,
+      required this.speakingComment,
+      required this.vocabularyComment,
+      required this.overallComment,
+      required this.classReview,
+      required this.homeworkComment,
+      required this.book,
+      required this.unit,
+      required this.lesson,
+      required this.page,
+      required this.lessonProgress,
+      this.scheduleDetailId});
 
-  factory HistoryModel.fromJson(Map<String, dynamic> json) {
-    return HistoryModel(
+  factory ScheduleModel.fromJson(Map<String, dynamic> json) {
+    return ScheduleModel(
       date: json['date'],
       avatar: json['avatar'],
       name: json['name'],
@@ -77,6 +78,7 @@ class HistoryModel {
       page: json['page'],
       lessonProgress: json['lessonProgress'],
       classReview: json['classReview'],
+      scheduleDetailId: json['scheduleDetailId'],
     );
   }
 
@@ -106,6 +108,7 @@ class HistoryModel {
       'page': page,
       'lessonProgress': lessonProgress,
       'classReview': classReview,
+      'scheduleDetailId': scheduleDetailId,
     };
   }
 }

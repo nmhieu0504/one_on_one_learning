@@ -17,5 +17,6 @@ class API_URL {
   static const String GET_REVIEWS = "$BASE_URL/feedback/v2/";
   static const String GET_TUTOR_SCHEDULE = "$BASE_URL/schedule?";
 
-  static const String GET_HISTORY_INFO = "$BASE_URL/booking/list/student?";
+  static const String GET_SCHEDULE_INFO = "$BASE_URL/booking/list/student?";
+  static const String DELETE_SCHEDULE = "$BASE_URL/booking/schedule-detail";
 }
