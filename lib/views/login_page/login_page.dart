@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _displayDeleteMotionToast() {
+  void _displayErrorMotionToast() {
     MotionToast.error(
       title: const Text(
         'Invalid',
@@ -245,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
                               setState(() {
                                 _loading = false;
                               });
-                              _displayDeleteMotionToast();
+                              _displayErrorMotionToast();
                             }
                           }
                         },
