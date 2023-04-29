@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/models/course.dart';
 import 'package:one_on_one_learning/views/courses_page/course_detail_page.dart';
 
 class CourseCardComponent extends StatelessWidget {
-  String name;
-  String description;
-  String level;
-  String imageUrl;
-  int numberOfTopics;
+  final Course course;
 
-  CourseCardComponent(
-      {super.key,
-      required this.name,
-      required this.description,
-      required this.level,
-      required this.imageUrl,
-      required this.numberOfTopics});
+  const CourseCardComponent({
+    super.key,
+    required this.course,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,32 +28,34 @@ class CourseCardComponent extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (BuildContext context) {
-              return const CourseDetailPage();
+              return CourseDetailPage(
+                course: course,
+              );
             }),
           );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Image.network(imageUrl),
+            Image.network(course.imageUrl),
             Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 0, left: 10, right: 10),
-              child: Text(name,
+              child: Text(course.name,
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)),
             ),
             Container(
               padding: const EdgeInsets.all(10),
               child: Text(
-                description,
+                course.description,
                 style: TextStyle(fontSize: 16, color: Colors.grey[900]),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(
                   top: 0, bottom: 10, left: 10, right: 10),
-              child: Text("$level - $numberOfTopics lessons",
+              child: Text("${course.level} - ${course.numberOfTopics} lessons",
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold)),
             ),

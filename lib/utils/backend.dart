@@ -21,4 +21,5 @@ class API_URL {
   static const String DELETE_SCHEDULE = "$BASE_URL/booking/schedule-detail";
 
   static const String GET_COURSES_LIST = "$BASE_URL/course?page=1&size=100";
+  static const String GET_COURSE_DETAIL = "$BASE_URL/course";
 }

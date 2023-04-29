@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/models/course.dart';
 import 'package:one_on_one_learning/views/courses_page/course_topic_component.dart';
 
 class CourseDetailPage extends StatelessWidget {
-  const CourseDetailPage({super.key});
+  final Course course;
+  const CourseDetailPage({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +75,10 @@ class CourseDetailPage extends StatelessWidget {
           Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 10, left: 20, right: 20),
-              child: const Text.rich(
-                TextSpan(
-                    text:
-                        "Our world is rapidly changing thanks to new technology, and the vocabulary needed to discuss modern life is evolving almost daily. In this course you will learn the most up-to-date terminology from expertly crafted lessons as well from your native-speaking tutor."),
+              child: Text.rich(
+                TextSpan(text: course.reason),
                 textAlign: TextAlign.justify,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               )),
@@ -104,12 +104,10 @@ class CourseDetailPage extends StatelessWidget {
           Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 10, left: 20, right: 20),
-              child: const Text.rich(
-                TextSpan(
-                    text:
-                        "You will learn vocabulary related to timely topics like remote work, artificial intelligence, online privacy, and more. In addition to discussion questions, you will practice intermediate level speaking tasks such as using data to describe trends."),
+              child: Text.rich(
+                TextSpan(text: course.purpose),
                 textAlign: TextAlign.justify,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               )),
@@ -147,9 +145,9 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Container(
                   margin: const EdgeInsets.only(left: 10),
-                  child: const Text(
-                    'Intermediate',
-                    style: TextStyle(
+                  child: Text(
+                    course.level,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -190,9 +188,9 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Container(
                   margin: const EdgeInsets.only(left: 10),
-                  child: const Text(
-                    '9 topics',
-                    style: TextStyle(
+                  child: Text(
+                    "${course.numberOfTopics} topics",
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -223,15 +221,17 @@ class CourseDetailPage extends StatelessWidget {
               ),
             ]),
           ),
-          const TopicCardComponent("1. The Internet"),
-          const TopicCardComponent("2. Artificial Intelligence"),
-          const TopicCardComponent("3. Social Media"),
-          const TopicCardComponent("4. Internet Privacy"),
-          const TopicCardComponent("5. Live Streaming"),
-          const TopicCardComponent("6. Coding"),
-          const TopicCardComponent("7. Technology Transforming Healthcare"),
-          const TopicCardComponent("8. Smart Home Technology"),
-          const TopicCardComponent("9. Remote Work - A Dream Job?"),
+          ListView.builder(
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              itemCount: course.topics.length,
+              itemBuilder: (context, index) {
+                return TopicCardComponent(
+                  title:
+                      "${course.topics[index]["orderCourse"] + 1}. ${course.topics[index]["name"]}",
+                  url: course.topics[index]["nameFile"],
+                );
+              }),
         ],
       ),
     );

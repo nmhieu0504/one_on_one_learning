@@ -3,6 +3,8 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:one_on_one_learning/services/course_service.dart';
 import 'package:one_on_one_learning/views/courses_page/course_card_component.dart';
 
+import '../../models/course.dart';
+
 class CoursesList extends StatefulWidget {
   const CoursesList({super.key});
 
@@ -11,7 +13,7 @@ class CoursesList extends StatefulWidget {
 }
 
 class _CoursesListState extends State<CoursesList> {
-  var coursesList = [];
+  List<Course> coursesList = [];
   List<String> courseCategories = [
     "English For Traveling",
     "English For Beginners",
@@ -37,6 +39,11 @@ class _CoursesListState extends State<CoursesList> {
     CoursesService.loadCoursesList().then((value) {
       setState(() {
         coursesList.addAll(value);
+        for (var element in coursesList) {
+          element.level = levelList[int.parse(element.level)];
+          element.topics
+              .sort((a, b) => a["orderCourse"].compareTo(b["orderCourse"]));
+        }
         _loading = false;
       });
     });
@@ -53,7 +60,7 @@ class _CoursesListState extends State<CoursesList> {
         ? const Center(child: CircularProgressIndicator())
         : GroupedListView<dynamic, String>(
             elements: coursesList,
-            groupBy: (element) => element['categories'],
+            groupBy: (element) => element.categories,
             // groupComparator: (value1, value2) => value2.compareTo(value1),
             // itemComparator: (item1, item2) => item1['name'].compareTo(item2['name']),
             groupSeparatorBuilder: (String value) => Container(
@@ -68,11 +75,7 @@ class _CoursesListState extends State<CoursesList> {
             ),
             itemBuilder: (context, element) {
               return CourseCardComponent(
-                name: element['name'],
-                description: element['description'],
-                level: levelList[int.parse(element['level'])],
-                imageUrl: element['imageUrl'],
-                numberOfTopics: element['numberOfTopics'],
+                course: element,
               );
             },
           );

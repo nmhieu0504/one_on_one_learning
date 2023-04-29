@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class LessonPage extends StatefulWidget {
-  const LessonPage({super.key});
+  final String url;
+  final String tittle;
+  const LessonPage({super.key, required this.url, required this.tittle});
 
   @override
   State<LessonPage> createState() => _LessonPageState();
@@ -24,8 +26,7 @@ class _LessonPageState extends State<LessonPage> {
           color: Colors.black, //change your color here
         ),
         backgroundColor: Colors.white,
-        title: const Text('1. The Internet',
-            style: TextStyle(color: Colors.black)),
+        title: Text(widget.tittle, style: const TextStyle(color: Colors.black)),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -40,7 +41,7 @@ class _LessonPageState extends State<LessonPage> {
         ],
       ),
       body: SfPdfViewer.network(
-        'https://api.app.lettutor.com/file/be4c3df8-3b1b-4c8f-a5cc-75a8e2e6626afileThe%20Internet.pdf',
+        widget.url,
         key: _pdfViewerKey,
       ),
     );

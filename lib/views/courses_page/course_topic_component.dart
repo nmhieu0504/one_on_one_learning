@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/lesson_page/lesson_page.dart';
 
 class TopicCardComponent extends StatelessWidget {
-  const TopicCardComponent(this.title, {super.key});
-
   final String title;
+  final String url;
+
+  const TopicCardComponent({super.key, required this.title, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,10 @@ class TopicCardComponent extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (BuildContext context) {
-              return const LessonPage();
+              return LessonPage(
+                url: url,
+                tittle: title,
+              );
             }),
           );
         },

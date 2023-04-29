@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
+import 'package:one_on_one_learning/models/course.dart';
+
 import '../models/schedule.dart';
 import '../utils/backend.dart';
 import '../utils/share_pref.dart';
@@ -18,7 +20,7 @@ class CoursesService {
     if (response.statusCode == 200) {
       print(response.body);
       var res = jsonDecode(response.body);
-      var dataList = [];
+      List<Course> dataList = [];
       for (var element in res["data"]["rows"]) {
         Map<String, dynamic> data = {};
 
@@ -28,8 +30,12 @@ class CoursesService {
         data["imageUrl"] = element["imageUrl"];
         data["numberOfTopics"] = element["topics"].length;
         data["categories"] = element["categories"][0]["title"];
+        data["id"] = element["id"];
+        data["reason"] = element["reason"];
+        data["purpose"] = element["purpose"];
+        data["topics"] = element["topics"];
 
-        dataList.add(data);
+        dataList.add(Course.fromJson(data));
       }
       return dataList;
     }
