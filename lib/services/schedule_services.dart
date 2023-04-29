@@ -84,8 +84,8 @@ class ScheduleServices {
       List<ScheduleModel> dataList = [];
       for (var element in res["data"]["rows"]) {
         Map<String, dynamic> data = {};
-        print(element["scheduleDetailId"]);
-        data["scheduleDetailId"] = element["scheduleDetailId"];
+
+        data["scheduleDetailId"] = element["id"];
         data["studentRequest"] = element["studentRequest"];
         data["date"] = DateTime.parse(
             element["scheduleDetailInfo"]["scheduleInfo"]["date"]);
@@ -139,7 +139,7 @@ class ScheduleServices {
           "scheduleDetailId": scheduleDetailId,
           "cancelInfo": {"cancelReasonId": cancelReasonId, "note": note}
         }));
-    print(response.body);
+
     print("delete: $scheduleDetailId");
     if (response.statusCode == 200) {
       print(response.body);
