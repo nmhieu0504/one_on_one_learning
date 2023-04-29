@@ -20,7 +20,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   int _page = 1;
   final ScrollController _scrollController = ScrollController();
-  List<ScheduleModel> _dataList = [];
+  final List<ScheduleModel> _dataList = [];
 
   @override
   void initState() {

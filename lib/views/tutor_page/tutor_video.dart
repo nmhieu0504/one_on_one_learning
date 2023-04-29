@@ -34,7 +34,7 @@ class _TutorVideoState extends State<TutorVideo> {
     return VisibilityDetector(
       key: ObjectKey(flickManager),
       onVisibilityChanged: (visibility) {
-        if (visibility.visibleFraction == 0 && this.mounted) {
+        if (visibility.visibleFraction == 0 && mounted) {
           flickManager.flickControlManager?.autoPause();
         } else if (visibility.visibleFraction == 1) {
           flickManager.flickControlManager?.autoResume();

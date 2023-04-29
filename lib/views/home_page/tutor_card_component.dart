@@ -23,7 +23,7 @@ class TutorCard extends StatefulWidget {
   bool isFavourite;
 
   TutorCard({
-    Key? key,
+    super.key,
     required this.userId,
     required this.avatar,
     required this.name,
@@ -32,7 +32,7 @@ class TutorCard extends StatefulWidget {
     required this.specialties,
     required this.bio,
     required this.isFavourite,
-  }) : super(key: key);
+  });
 
   @override
   State<TutorCard> createState() => _TutorCardState();

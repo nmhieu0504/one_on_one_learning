@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'package:one_on_one_learning/models/course.dart';
 
-import '../models/schedule.dart';
 import '../utils/backend.dart';
 import '../utils/share_pref.dart';
 import 'package:http/http.dart' as http;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/schedule.dart';
 import '../../services/schedule_services.dart';
 import '../../utils/countries_lis.dart';
-import '../../utils/ui_data.dart';
 import 'package:intl/intl.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -25,7 +24,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
   int _page = 1;
   final ScrollController _scrollController = ScrollController();
-  List<ScheduleModel> _dataList = [];
+  final List<ScheduleModel> _dataList = [];
 
   final TextEditingController _cancelController = TextEditingController();
 

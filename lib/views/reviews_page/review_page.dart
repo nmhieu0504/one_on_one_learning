@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/models/reviews.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
@@ -94,9 +96,9 @@ class _ReviewPageState extends State<ReviewPage> {
                           leading: CircleAvatar(
                             backgroundImage:
                                 NetworkImage(reviews[index].avatar),
-                                onBackgroundImageError: (exception, stackTrace) {
-                                  print("Error");
-                                },
+                            onBackgroundImageError: (exception, stackTrace) {
+                              print("Error");
+                            },
                           ),
                           title: Text(
                               "${reviews[index].name}   ${reviews[index].createdAt}"),
