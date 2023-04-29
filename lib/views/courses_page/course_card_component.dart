@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/courses_page/course_detail_page.dart';
-import 'package:one_on_one_learning/utils/ui_data.dart';
 
 class CourseCardComponent extends StatelessWidget {
-  const CourseCardComponent({super.key});
+  String name;
+  String description;
+  String level;
+  String imageUrl;
+  int numberOfTopics;
+
+  CourseCardComponent(
+      {super.key,
+      required this.name,
+      required this.description,
+      required this.level,
+      required this.imageUrl,
+      required this.numberOfTopics});
 
   @override
   Widget build(BuildContext context) {
@@ -30,25 +41,27 @@ class CourseCardComponent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Image.asset(UIData.course),
+            Image.network(imageUrl),
             Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 0, left: 10, right: 10),
-              child: const Text("Life in the Internet Age",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              child: Text(name,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
             ),
             Container(
               padding: const EdgeInsets.all(10),
               child: Text(
-                "Let's discuss how technology is changing the way we live",
+                description,
                 style: TextStyle(fontSize: 16, color: Colors.grey[900]),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(
                   top: 0, bottom: 10, left: 10, right: 10),
-              child: const Text("Intermerdiate - 10 lessons",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              child: Text("$level - $numberOfTopics lessons",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           ],
         ),

@@ -19,4 +19,6 @@ class API_URL {
 
   static const String GET_SCHEDULE_INFO = "$BASE_URL/booking/list/student?";
   static const String DELETE_SCHEDULE = "$BASE_URL/booking/schedule-detail";
+
+  static const String GET_COURSES_LIST = "$BASE_URL/course?page=1&size=100";
 }
