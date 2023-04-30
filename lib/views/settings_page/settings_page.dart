@@ -11,6 +11,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   SharePref sharePref = SharePref();
+  bool _isDarkMode = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,25 +20,71 @@ class _SettingsPageState extends State<SettingsPage> {
           title: const Text('Settings'),
         ),
         body: SingleChildScrollView(
-            child: Column(children: <Widget>[
-          Center(
-            child: FilledButton(
-                onPressed: () {
-                  sharePref.removeString('access_token');
-                  sharePref.removeString('refresh_token');
-                  sharePref.removeString('access_token_exp');
-                  sharePref.removeString('refresh_token_exp');
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return const LoginPage();
-                  }));
-                },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.red)),
-                child: const Text('Sign out',
-                    style: TextStyle(fontSize: 20, color: Colors.white))),
-          ),
-        ])));
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    child: const Text("General",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.language,
+                      size: 30,
+                    ),
+                    title: const Text('Language'),
+                    subtitle: const Text('English'),
+                    onTap: () {
+                      // Handle language selection
+                    },
+                  ),
+                  ListTile(
+                      leading: const Icon(
+                        Icons.dark_mode,
+                        size: 30,
+                      ),
+                      title: const Text('Dark mode'),
+                      trailing: Switch(
+                        onChanged: (value) {},
+                        value: _isDarkMode,
+                      )),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
+                    child: const Text("Account",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.person,
+                      size: 30,
+                    ),
+                    title: const Text('Profile'),
+                    onTap: () {
+                      // Handle profile navigation
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.logout,
+                      size: 30,
+                    ),
+                    title: const Text('Log out'),
+                    onTap: () {
+                      sharePref.removeString('access_token');
+                      sharePref.removeString('refresh_token');
+                      sharePref.removeString('access_token_exp');
+                      sharePref.removeString('refresh_token_exp');
+                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const LoginPage();
+                      }));
+                    },
+                  ),
+                ])));
   }
 }
