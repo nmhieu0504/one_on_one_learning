@@ -1,24 +1,24 @@
 class User {
-  late final String id;
-  late final String email;
-  late final String name;
-  late final String avatar;
-  late final String country;
-  late final String phone;
-  late final List<String> roles;
-  late final String language;
-  late final String birthday;
-  late final bool isActivated;
-  late final Map<String, dynamic> walletInfo;
-  late final List<Map<String, dynamic>> courses;
-  late final String requireNote;
-  late final String level;
-  late final List<Map<String, dynamic>> learnTopics;
-  late final List<Map<String, dynamic>> testPreparations;
-  late final bool isPhoneActivated;
-  late final double timezone;
-  late final String studySchedule;
-  late final bool canSendMessage;
+  final String id;
+  final String email;
+  final String name;
+  final String avatar;
+  final String phone;
+  final List<String> roles;
+  final bool isActivated;
+  final Map<String, dynamic> walletInfo;
+  final List<Map<String, dynamic>> learnTopics;
+  final List<Map<String, dynamic>> testPreparations;
+  final int timezone;
+  final bool canSendMessage;
+  final String? studySchedule;
+  final String? birthday;
+  final String? level;
+  final String? country;
+  final List<Map<String, dynamic>>? courses;
+  final bool? isPhoneActivated;
+  final String? language;
+  final String? requireNote;
 
   User({
     required this.id,
@@ -56,7 +56,9 @@ class User {
       birthday: json['birthday'],
       isActivated: json['isActivated'],
       walletInfo: json['walletInfo'],
-      courses: List<Map<String, dynamic>>.from(json['courses']),
+      courses: json['courses'] == null
+          ? null
+          : List<Map<String, dynamic>>.from(json['courses']),
       requireNote: json['requireNote'],
       level: json['level'],
       learnTopics: List<Map<String, dynamic>>.from(json['learnTopics']),

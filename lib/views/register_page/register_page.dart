@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
@@ -7,7 +9,6 @@ import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/register_page/active_email.dart';
-
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -29,11 +30,17 @@ class RegisterPageState extends State<RegisterPage> {
     setState(() {
       _loading = true;
     });
-    final response = await http.post(Uri.parse(API_URL.REGISTER), body: {
-      "email": _emailController.text,
-      "password": _passwordController.text,
-      "source": "null"
-    });
+    final response = await http.post(Uri.parse(API_URL.REGISTER),
+        headers: {
+          "Content-Type": "application/json",
+          "Origin": "https://sandbox.app.lettutor.com",
+          "Referer": "https://sandbox.app.lettutor.com",
+        },
+        body: jsonEncode({
+          "email": _emailController.text,
+          "password": _passwordController.text,
+          "source": "null"
+        }));
 
     if (response.statusCode == 201) {
       print(response.body);
@@ -70,7 +77,8 @@ class RegisterPageState extends State<RegisterPage> {
               children: <Widget>[
                 Container(
                   margin: const EdgeInsets.only(top: 30, bottom: 15),
-                  child: Image.asset(UIData.registerImng, width: 200, height: 200),
+                  child:
+                      Image.asset(UIData.registerImng, width: 200, height: 200),
                 ),
                 const Center(
                   child: Text('REGISTER',

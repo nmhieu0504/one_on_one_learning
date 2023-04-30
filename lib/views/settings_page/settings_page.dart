@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/login_page/login_page.dart';
 
+import '../profile_page/profile_page.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -64,7 +66,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     title: const Text('Profile'),
                     onTap: () {
-                      // Handle profile navigation
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const ProfilePage();
+                      }));
                     },
                   ),
                   ListTile(
@@ -72,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Icons.logout,
                       size: 30,
                     ),
-                    title: const Text('Log out'),
+                    title: const Text('Sign Out'),
                     onTap: () {
                       sharePref.removeString('access_token');
                       sharePref.removeString('refresh_token');
