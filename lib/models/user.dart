@@ -9,8 +9,8 @@ class User {
   final Map<String, dynamic> walletInfo;
   final List<Map<String, dynamic>> learnTopics;
   final List<Map<String, dynamic>> testPreparations;
-  final int timezone;
   final bool canSendMessage;
+  final int? timezone;
   final String? studySchedule;
   final String? birthday;
   final String? level;

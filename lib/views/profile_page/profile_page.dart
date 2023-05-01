@@ -21,8 +21,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _birthdayController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _scheduleController = TextEditingController();
 
   List<String> levelTittleList = <String>[
     'Pre A1 (Beginner)',
@@ -44,9 +46,91 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
   late String? dropdownLevelValue;
 
+  List<String> countryTittleList = <String>[];
+  late String? dropdownCountryValue;
+
+  var learnTopics = [
+    {"id": 4, "key": "business-english", "name": "Business English"},
+    {"id": 3, "key": "english-for-kids", "name": "English for Kids"},
+    {"id": 5, "key": "conversational-english", "name": "Conversational English"}
+  ];
+  List<bool> learnTopicsChoices = <bool>[false, false, false];
+
+  var testPreparations = [
+    {"id": 1, "key": "starters", "name": "STARTERS"},
+    {"id": 2, "key": "movers", "name": "MOVERS"},
+    {"id": 3, "key": "flyers", "name": "FLYERS"},
+    {"id": 4, "key": "ket", "name": "KET"},
+    {"id": 5, "key": "pet", "name": "PET"},
+    {"id": 6, "key": "ielts", "name": "IELTS"},
+    {"id": 7, "key": "toefl", "name": "TOEFL"},
+    {"id": 8, "key": "toeic", "name": "TOEIC"}
+  ];
+  List<bool> testPreparationChoices = <bool>[
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
+
+  Widget _buildLearnTopicsChips() {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Wrap(
+          spacing: 10,
+          children: List<Widget>.generate(learnTopics.length, (int index) {
+            return FilterChip(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              label: Text(learnTopics[index]["name"].toString()),
+              onSelected: (bool isSlected) {
+                setState(() {
+                  if (isSlected) {
+                    learnTopicsChoices[index] = true;
+                  } else {
+                    learnTopicsChoices[index] = false;
+                  }
+                });
+              },
+              selected: learnTopicsChoices[index],
+            );
+          }).toList(),
+        ));
+  }
+
+  Widget _buildTestPreparationsChips() {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Wrap(
+          spacing: 10,
+          children: List<Widget>.generate(testPreparations.length, (int index) {
+            return FilterChip(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              label: Text(testPreparations[index]["name"].toString()),
+              onSelected: (bool isSlected) {
+                setState(() {
+                  if (isSlected) {
+                    testPreparationChoices[index] = true;
+                  } else {
+                    testPreparationChoices[index] = false;
+                  }
+                });
+              },
+              selected: testPreparationChoices[index],
+            );
+          }).toList(),
+        ));
+  }
+
   @override
   void initState() {
     super.initState();
+    countryTittleList = getCountriesName();
     countryList.forEach((key, value) {
       countryMenuList.add(DropdownMenuEntry<String>(value: key, label: value));
     });
@@ -60,9 +144,29 @@ class _ProfilePageState extends State<ProfilePage> {
         _emailController.text = user.email;
         _birthdayController.text = user.birthday ?? "";
         _countryController.text = user.country ?? "";
+        _phoneController.text = user.phone;
+        _scheduleController.text = user.studySchedule ?? "";
 
         int leveldx = levelCodeList.indexOf(user.level ?? "");
         dropdownLevelValue = leveldx == -1 ? null : levelTittleList[leveldx];
+        dropdownCountryValue =
+            user.country == null ? "" : getCountryName(user.country);
+
+        for (var e in user.learnTopics) {
+          int index =
+              learnTopics.indexWhere((element) => element["id"] == e["id"]);
+          if (index != -1) {
+            learnTopicsChoices[index] = true;
+          }
+        }
+
+        for (var e in user.testPreparations) {
+          int index = testPreparations
+              .indexWhere((element) => element["id"] == e["id"]);
+          if (index != -1) {
+            testPreparationChoices[index] = true;
+          }
+        }
       });
     });
   }
@@ -92,34 +196,38 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Container(
                 padding: const EdgeInsets.all(30),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 100,
-                      backgroundColor: Colors.grey[50],
-                      backgroundImage: _isAvatarError
-                          ? const AssetImage(UIData.logoLogin)
-                          : NetworkImage(user.avatar) as ImageProvider,
-                      onBackgroundImageError: (exception, stackTrace) {
-                        setState(() {
-                          _isAvatarError = true;
-                        });
-                      },
+                    Center(
+                      child: CircleAvatar(
+                        radius: 100,
+                        backgroundColor: Colors.grey[50],
+                        backgroundImage: _isAvatarError
+                            ? const AssetImage(UIData.logoLogin)
+                            : NetworkImage(user.avatar) as ImageProvider,
+                        onBackgroundImageError: (exception, stackTrace) {
+                          setState(() {
+                            _isAvatarError = true;
+                          });
+                        },
+                      ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                      child: Text(
-                        user.name,
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                        child: Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return 'Please enter your name';
                         }
                         return null;
                       },
@@ -149,12 +257,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         labelText: 'Email',
                       ),
                     ),
-                    // const SizedBox(height: 20),
-                    // DropdownMenu(
-                    //   label: const Text('Country'),
-                    //   initialSelection: user.country,
-                    //   controller: _countryController,
-                    //   dropdownMenuEntries: countryMenuList),
+                    const SizedBox(height: 20),
+                    TextField(
+                      enableInteractiveSelection: false,
+                      readOnly: true,
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        filled: true, //<-- SEE HERE
+                        fillColor: Colors.grey[200],
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 'Phone',
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     TextField(
                       readOnly: true,
@@ -182,25 +300,111 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    DropdownButton(
+                    DropdownButtonFormField<String>(
                       isExpanded: true,
-                      borderRadius: BorderRadius.circular(30),
+                      decoration: InputDecoration(
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 'Country',
+                      ),
+                      value: dropdownCountryValue,
+                      icon: const Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownCountryValue = newValue;
+                        });
+                      },
+                      items: countryTittleList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                              style: const TextStyle(color: Colors.black)),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 20),
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 'Level',
+                      ),
                       value: dropdownLevelValue,
+                      icon: const Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownLevelValue = newValue;
+                        });
+                      },
                       items: levelTittleList
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(
-                            value,
-                          ),
+                          child: Text(value,
+                              style: const TextStyle(color: Colors.black)),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownLevelValue = newValue!;
-                        });
-                      },
-                    )
+                    ),
+                    const SizedBox(height: 40),
+                    const Text(
+                      'Want to learn',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Topics',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    _buildLearnTopicsChips(),
+                    const Text(
+                      'Test preparation',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    _buildTestPreparationsChips(),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Study schedule',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      maxLines: 3,
+                      enableInteractiveSelection: false,
+                      controller: _scheduleController,
+                      decoration: InputDecoration(
+                        hintText: "Show us your study schedule",
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -2,12 +2,8 @@ String getCountryName(String? code) {
   return countryList[code] ?? "No information";
 }
 
-List<Map<String, String>> getCountryList() {
-  List<Map<String, String>> list = [];
-  countryList.forEach((key, value) {
-    list.add({"code": key, "name": value});
-  });
-  return list;
+List<String> getCountriesName() {
+  return countryList.values.toList();
 }
 
 const countryList = {
