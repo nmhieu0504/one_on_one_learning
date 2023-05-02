@@ -9,99 +9,45 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
+  int _countdown = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    startCountdown();
+  }
+
+  void startCountdown() async {
+    while (_countdown > 0) {
+      await Future.delayed(const Duration(seconds: 1));
+      setState(() {
+        _countdown--;
+      });
+    }
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: buildMeetConfig(),
+      ),
+    );
+  }
+
   final serverText = TextEditingController();
-  final roomText = TextEditingController(text: "jitsi-meet-wrapper-test-room");
-  final subjectText = TextEditingController(text: "My Plugin Test Meeting");
+  final roomText = TextEditingController(text: "Video-test-room");
+  final subjectText = TextEditingController(text: "Test Meeting");
   final tokenText = TextEditingController();
-  final userDisplayNameText = TextEditingController(text: "Plugin Test User");
-  final userEmailText = TextEditingController(text: "fake@email.com");
+  final userDisplayNameText = TextEditingController(text: "Test User");
+  final userEmailText = TextEditingController(text: "hcmus@email.com");
   final userAvatarUrlText = TextEditingController();
 
   bool isAudioMuted = true;
   bool isAudioOnly = false;
   bool isVideoMuted = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Jitsi Meet Wrapper Test')),
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: buildMeetConfig(),
-        ),
-      ),
-    );
-  }
-
-  Widget buildMeetConfig() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "Server URL",
-            controller: serverText,
-            hintText: "Hint: Leave empty for meet.jitsi.si",
-          ),
-          const SizedBox(height: 16.0),
-          _buildTextField(labelText: "Room", controller: roomText),
-          const SizedBox(height: 16.0),
-          _buildTextField(labelText: "Subject", controller: subjectText),
-          const SizedBox(height: 16.0),
-          _buildTextField(labelText: "Token", controller: tokenText),
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "User Display Name",
-            controller: userDisplayNameText,
-          ),
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "User Email",
-            controller: userEmailText,
-          ),
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "User Avatar URL",
-            controller: userAvatarUrlText,
-          ),
-          const SizedBox(height: 16.0),
-          CheckboxListTile(
-            title: const Text("Audio Muted"),
-            value: isAudioMuted,
-            onChanged: _onAudioMutedChanged,
-          ),
-          const SizedBox(height: 16.0),
-          CheckboxListTile(
-            title: const Text("Audio Only"),
-            value: isAudioOnly,
-            onChanged: _onAudioOnlyChanged,
-          ),
-          const SizedBox(height: 16.0),
-          CheckboxListTile(
-            title: const Text("Video Muted"),
-            value: isVideoMuted,
-            onChanged: _onVideoMutedChanged,
-          ),
-          const Divider(height: 48.0, thickness: 2.0),
-          SizedBox(
-            height: 64.0,
-            width: double.maxFinite,
-            child: FilledButton(
-              onPressed: () => _joinMeeting(),
-              child: const Text(
-                "Join Meeting",
-              ),
-            ),
-          ),
-          const SizedBox(height: 48.0),
-        ],
-      ),
-    );
-  }
-
   _onAudioOnlyChanged(bool? value) {
     setState(() {
       isAudioOnly = value!;
@@ -188,6 +134,77 @@ class _MeetingPageState extends State<MeetingPage> {
         },
         onChatToggled: (isOpen) => debugPrint("onChatToggled: isOpen: $isOpen"),
         onClosed: () => debugPrint("onClosed"),
+      ),
+    );
+  }
+
+  Widget buildMeetConfig() {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: 16.0),
+          _buildTextField(
+            labelText: "Server URL",
+            controller: serverText,
+            hintText: "Hint: Leave empty for meet.jitsi.si",
+          ),
+          const SizedBox(height: 16.0),
+          _buildTextField(labelText: "Room", controller: roomText),
+          const SizedBox(height: 16.0),
+          _buildTextField(labelText: "Subject", controller: subjectText),
+          const SizedBox(height: 16.0),
+          _buildTextField(labelText: "Token", controller: tokenText),
+          const SizedBox(height: 16.0),
+          _buildTextField(
+            labelText: "User Display Name",
+            controller: userDisplayNameText,
+          ),
+          const SizedBox(height: 16.0),
+          _buildTextField(
+            labelText: "User Email",
+            controller: userEmailText,
+          ),
+          const SizedBox(height: 16.0),
+          _buildTextField(
+            labelText: "User Avatar URL",
+            controller: userAvatarUrlText,
+          ),
+          const SizedBox(height: 16.0),
+          CheckboxListTile(
+            title: const Text("Audio Muted"),
+            value: isAudioMuted,
+            onChanged: _onAudioMutedChanged,
+          ),
+          const SizedBox(height: 16.0),
+          CheckboxListTile(
+            title: const Text("Audio Only"),
+            value: isAudioOnly,
+            onChanged: _onAudioOnlyChanged,
+          ),
+          const SizedBox(height: 16.0),
+          CheckboxListTile(
+            title: const Text("Video Muted"),
+            value: isVideoMuted,
+            onChanged: _onVideoMutedChanged,
+          ),
+          const Divider(height: 48.0, thickness: 2.0),
+          SizedBox(
+            height: 64.0,
+            width: double.maxFinite,
+            child: ElevatedButton(
+              onPressed: () => _joinMeeting(),
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateColor.resolveWith((states) => Colors.blue),
+              ),
+              child: const Text(
+                "Join Meeting",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          const SizedBox(height: 48.0),
+        ],
       ),
     );
   }
