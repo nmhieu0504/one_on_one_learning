@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/login_page/login_page.dart';
 
+import '../chat_gpt_page/chat_page.dart';
 import '../profile_page/profile_page.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -53,6 +54,19 @@ class _SettingsPageState extends State<SettingsPage> {
                         onChanged: (value) {},
                         value: _isDarkMode,
                       )),
+                  const SizedBox(height: 10),
+                  ListTile(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return const ChatGPTPage();
+                        }));
+                      },
+                      leading: const Icon(
+                        Icons.chat,
+                        size: 30,
+                      ),
+                      title: const Text('Learning with chat GPT')),
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
                     child: const Text("Account",
