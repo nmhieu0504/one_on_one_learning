@@ -11,14 +11,14 @@ class UserService {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
 
-    final response = await http.get(Uri.parse(API_URL.GET_USER_DETAIL),
+    final response = await http.get(Uri.parse(API_URL.USER_DETAIL_INFO),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
       print(response.body);
       var res = jsonDecode(response.body);
       Map<String, dynamic> data = {};
-      
+
       data["id"] = res["user"]["id"];
       data["email"] = res["user"]["email"];
       data["name"] = res["user"]["name"];
@@ -43,5 +43,24 @@ class UserService {
       return User.fromJson(data);
     }
     return null;
+  }
+
+  static Future<dynamic> updateUserInfo(Map<String, dynamic> bodyInfo) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+
+    final response = await http.put(Uri.parse(API_URL.USER_DETAIL_INFO),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(bodyInfo));
+        print(jsonEncode(bodyInfo));
+    print(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      return true;
+    }
+    return false;
   }
 }

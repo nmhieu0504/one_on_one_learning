@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/services/user_service.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/user.dart';
 import '../../utils/countries_lis.dart';
@@ -127,6 +128,47 @@ class _ProfilePageState extends State<ProfilePage> {
         ));
   }
 
+  void _saveProfile() {
+    setState(() {
+      _loading = true;
+    });
+
+    List<String> learnTopicsList = [];
+    for (int i = 0; i < learnTopicsChoices.length; i++) {
+      if (learnTopicsChoices[i]) {
+        learnTopicsList.add(learnTopics[i]["id"].toString());
+      }
+    }
+
+    List<String> testPreparationsList = [];
+    for (int i = 0; i < testPreparationChoices.length; i++) {
+      if (testPreparationChoices[i]) {
+        testPreparationsList.add(testPreparations[i]["id"].toString());
+      }
+    }
+
+    UserService.updateUserInfo({
+      "name": _nameController.text,
+      "country": dropdownCountryValue == null
+          ? null
+          : countryList.keys
+              .toList()[countryTittleList.indexOf(dropdownCountryValue ?? "")],
+      "phone": _phoneController.text,
+      "birthday":
+          _birthdayController.text.isEmpty ? null : _birthdayController.text,
+      "level": dropdownLevelValue == null
+          ? null
+          : levelCodeList[levelTittleList.indexOf(dropdownLevelValue ?? "")],
+      "learnTopics": learnTopicsList,
+      "testPreparations": testPreparationsList,
+      "studySchedule": _scheduleController.text
+    }).then((value) {
+      setState(() {
+        _loading = false;
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -138,8 +180,8 @@ class _ProfilePageState extends State<ProfilePage> {
     UserService.loadUserInfo().then((value) {
       setState(() {
         user = value;
-
         _loading = false;
+
         _nameController.text = user.name;
         _emailController.text = user.email;
         _birthdayController.text = user.birthday ?? "";
@@ -150,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
         int leveldx = levelCodeList.indexOf(user.level ?? "");
         dropdownLevelValue = leveldx == -1 ? null : levelTittleList[leveldx];
         dropdownCountryValue =
-            user.country == null ? "" : getCountryName(user.country);
+            user.country == null ? null : getCountryName(user.country);
 
         for (var e in user.learnTopics) {
           int index =
@@ -183,7 +225,9 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text('Profile'),
       ),
       floatingActionButton: FilledButton.icon(
-        onPressed: () {},
+        onPressed: () {
+          _saveProfile();
+        },
         icon: const Icon(
           Icons.save,
           size: 24.0,
@@ -216,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                         child: Text(
-                          user.name,
+                          _nameController.text,
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -285,7 +329,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ).then((value) {
                           if (value != null) {
                             _birthdayController.text =
-                                '${value.day}/${value.month}/${value.year}';
+                                DateFormat("yyyy-MM-dd").format(value);
                           }
                         });
                       },
