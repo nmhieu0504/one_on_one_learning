@@ -1,35 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
+import 'package:one_on_one_learning/services/user_service.dart';
 
 class MeetingPage extends StatefulWidget {
-  const MeetingPage({super.key});
+  final String roomNameOrUrl;
+  const MeetingPage({super.key, required this.roomNameOrUrl});
 
   @override
   State<MeetingPage> createState() => _MeetingPageState();
 }
 
 class _MeetingPageState extends State<MeetingPage> {
+  bool _loading = true;
+
   @override
   void initState() {
     super.initState();
+    UserService.loadUserInfo().then((value) {
+      setState(() {
+        _loading = false;
+        userDisplayNameText.text = value.name;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: buildMeetConfig(),
-      ),
+      body: _loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: buildMeetConfig(),
+            ),
     );
   }
 
-  final serverText = TextEditingController();
-  final roomText = TextEditingController(text: "Video-test-room");
-  final subjectText = TextEditingController(text: "Test Meeting");
-  final tokenText = TextEditingController();
-  final userDisplayNameText = TextEditingController(text: "Test User");
-  final userEmailText = TextEditingController(text: "hcmus@email.com");
+  final userDisplayNameText = TextEditingController(text: "");
 
   bool isAudioMuted = true;
   bool isAudioOnly = false;
@@ -53,22 +62,14 @@ class _MeetingPageState extends State<MeetingPage> {
   }
 
   _joinMeeting() async {
-    String? serverUrl = serverText.text.trim().isEmpty ? null : serverText.text;
-
-    Map<FeatureFlag, Object> featureFlags = {};
-
     // Define meetings options here
     var options = JitsiMeetingOptions(
-      roomNameOrUrl: roomText.text,
-      serverUrl: serverUrl,
-      subject: subjectText.text,
-      token: tokenText.text,
+      serverUrl: "https://meet.lettutor.com",
+      roomNameOrUrl: widget.roomNameOrUrl,
+      userDisplayName: userDisplayNameText.text,
       isAudioMuted: isAudioMuted,
       isAudioOnly: isAudioOnly,
       isVideoMuted: isVideoMuted,
-      userDisplayName: userDisplayNameText.text,
-      userEmail: userEmailText.text,
-      featureFlags: featureFlags,
     );
 
     debugPrint("JitsiMeetingOptions: $options");

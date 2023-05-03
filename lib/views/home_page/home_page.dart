@@ -1,14 +1,10 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
-import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
 import 'package:one_on_one_learning/views/meeting_page/meeting_page.dart';
-import 'package:http/http.dart' as http;
-import '../../utils/backend.dart';
 import '../../utils/ui_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,8 +19,10 @@ class _HomePageState extends State<HomePage> {
   bool _loading = true;
   bool _getMoreData = false;
   bool _isUpcoming = false;
+
   int _page = 1;
   final int _perPage = 10;
+  late int _totalTimeLearn;
 
   bool _vietnameseTutorChip = false;
   bool _nativeTutorChip = false;
@@ -34,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   DateTime? _selectedDate;
 
-  Map<String, String> _upComingInfo = {};
+  Map<String, dynamic> _upComingInfo = {};
 
   final List<String> _specialtiesList = [
     'ALL',
@@ -318,14 +316,20 @@ class _HomePageState extends State<HomePage> {
         ]));
   }
 
+  String _upcomingLessonTime() {
+    print(
+        "Start time: ${DateTime.fromMillisecondsSinceEpoch(_upComingInfo["startTimestamp"])}");
+    print("End time: ${_upComingInfo["endTimestamp"]}");
+    return "${DateFormat("EEE, dd MMM yyyy").format(DateTime.fromMillisecondsSinceEpoch(_upComingInfo["startTimestamp"]))} ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(_upComingInfo["startTimestamp"]))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(_upComingInfo["endTimestamp"]))}";
+  }
+
   Widget _buildTutorList() {
     return ListView(controller: _scrollController, children: <Widget>[
       Container(
         color: Colors.purple[900],
         child: Center(
           child: Container(
-            margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            margin: const EdgeInsets.fromLTRB(20, 40, 20, 40),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -335,25 +339,54 @@ class _HomePageState extends State<HomePage> {
                       _isUpcoming
                           ? "Upcoming Lesson"
                           : "You have no upcoming lessons",
-                      style: const TextStyle(fontSize: 30, color: Colors.white),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: _isUpcoming ? 30 : 24, color: Colors.white),
                     ),
                   ),
                   _isUpcoming
-                      ? const Text("Welcome to LetLearn!")
-                      : FilledButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                return const MeetingPage();
-                              }),
-                            );
-                          },
-                          icon: Icon(Icons.ondemand_video_sharp),
-                          label: const Text(
-                            'Enter lesson room',
-                          ))
+                      ? Column(
+                          children: [
+                            Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                child: Text(_upcomingLessonTime(),
+                                    style: const TextStyle(
+                                        fontSize: 20, color: Colors.white))),
+                            FilledButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                      return MeetingPage(
+                                        roomNameOrUrl:
+                                            _upComingInfo["roomNameOrUrl"],
+                                      );
+                                    }),
+                                  );
+                                },
+                                icon: const Icon(Icons.ondemand_video_sharp),
+                                label: const Text(
+                                  'Enter lesson room',
+                                ))
+                          ],
+                        )
+                      : Container(),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: _totalTimeLearn == 0
+                        ? const Text(
+                            "Welcome to LetLearn!",
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          )
+                        : Text(
+                            "Total lesson time: ${_totalTimeLearn ~/ 60} hours ${_totalTimeLearn % 60} minutes",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.white),
+                          ),
+                  )
                 ]),
           ),
         ),
@@ -401,13 +434,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // ScheduleServices.loadNextScheduleData().then((value) {
-    //   if (value == null) return;
-    //   setState(() {
-    //     _isUpcoming = true;
-    //     _upComingInfo = value;
-    //   });
-    // });
+    ScheduleServices.loadNextScheduleData().then((value) {
+      if (value == null) return;
+      setState(() {
+        _isUpcoming = true;
+        _upComingInfo = value;
+      });
+    });
+    ScheduleServices.getTotalTimeLearn().then((value) {
+      setState(() {
+        _totalTimeLearn = value;
+      });
+    });
     ScheduleServices.loadTutorList(_selectedSpecialties, _searchController.text,
             checkNationality(), _page++, _perPage)
         .then((value) {

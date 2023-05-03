@@ -210,7 +210,8 @@ class ScheduleServices {
 
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
-      Map<String, String> data = {};
+      Map<String, dynamic> data = {};
+      if (res["data"].length == 0) return null;
       var element = res["data"][0];
 
       data["roomNameOrUrl"] = element["userId"] +
@@ -224,5 +225,19 @@ class ScheduleServices {
       return data;
     }
     return null;
+  }
+
+  static Future<int> getTotalTimeLearn() async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    final response = await http.get(Uri.parse(API_URL.GET_TOTAL_TIME_LEARN),
+        headers: {"Authorization": "Bearer $token"});
+
+    int totalTime = 0;
+    if (response.statusCode == 200) {
+      var res = jsonDecode(response.body);
+      totalTime = res["total"];
+    }
+    return totalTime;
   }
 }
