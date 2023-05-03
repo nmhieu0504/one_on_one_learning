@@ -1,6 +1,9 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:intl/intl.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
@@ -348,33 +351,64 @@ class _HomePageState extends State<HomePage> {
                       ? Column(
                           children: [
                             Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 15),
+                                margin: const EdgeInsets.symmetric(vertical: 5),
                                 child: Text(_upcomingLessonTime(),
                                     style: const TextStyle(
                                         fontSize: 20, color: Colors.white))),
-                            FilledButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                      return MeetingPage(
-                                        roomNameOrUrl:
-                                            _upComingInfo["roomNameOrUrl"],
-                                      );
-                                    }),
-                                  );
+                            Center(
+                              child: CountdownTimer(
+                                widgetBuilder: (_, CurrentRemainingTime? time) {
+                                  if (time == null) return Container();
+                                  String days = time.days! < 10
+                                      ? "0${time.days}"
+                                      : "${time.days}";
+                                  String hours = time.hours! < 10
+                                      ? "0${time.hours}"
+                                      : "${time.hours}";
+                                  String min = time.min! < 10
+                                      ? "0${time.min}"
+                                      : "${time.min}";
+                                  String sec = time.sec! < 10
+                                      ? "0${time.sec}"
+                                      : "${time.sec}";
+                                  return Text(
+                                      '(Start in $days : $hours : $min : $sec)',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.yellow[300],
+                                      ));
                                 },
-                                icon: const Icon(Icons.ondemand_video_sharp),
-                                label: const Text(
-                                  'Enter lesson room',
-                                ))
+                                controller: CountdownTimerController(
+                                    endTime: _upComingInfo["endTimestamp"]),
+                                endTime: _upComingInfo["endTimestamp"],
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsetsDirectional.symmetric(
+                                  vertical: 10),
+                              child: FilledButton.icon(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                        return MeetingPage(
+                                          roomNameOrUrl:
+                                              _upComingInfo["roomNameOrUrl"],
+                                        );
+                                      }),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.ondemand_video_sharp),
+                                  label: const Text(
+                                    'Enter lesson room',
+                                  )),
+                            )
                           ],
                         )
                       : Container(),
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.only(bottom: 10),
                     child: _totalTimeLearn == 0
                         ? const Text(
                             "Welcome to LetLearn!",
