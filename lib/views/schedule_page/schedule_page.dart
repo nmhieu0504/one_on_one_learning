@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import '../../models/schedule.dart';
 import '../../services/schedule_services.dart';
 import '../../utils/countries_lis.dart';
@@ -98,6 +100,20 @@ class _SchedulePageState extends State<SchedulePage> {
     setState(() {
       _loading = false;
     });
+  }
+
+  void _displayErrorMotionToast(String errorMessage) {
+    MotionToast.error(
+      title: const Text(
+        'Error',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      description: Text(errorMessage),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
   }
 
   @override
@@ -229,119 +245,131 @@ class _SchedulePageState extends State<SchedulePage> {
                                         ]),
                                         onPressed: () => showDialog<String>(
                                             context: context,
-                                            builder: (BuildContext context) =>
-                                                Center(
-                                                  child: SingleChildScrollView(
-                                                    child: AlertDialog(
-                                                      title: const Text(
-                                                          'Cancel Schedule',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      content: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            const Text(
-                                                                "What was the reason you cancel this booking?",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
-                                                            Container(
-                                                                margin:
-                                                                    const EdgeInsets
+                                            builder:
+                                                (BuildContext context) =>
+                                                    Center(
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        child: AlertDialog(
+                                                          title: const Text(
+                                                              'Cancel Schedule',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          content: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                const Text(
+                                                                    "What was the reason you cancel this booking?",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold)),
+                                                                Container(
+                                                                    margin: const EdgeInsets
                                                                             .only(
                                                                         top:
                                                                             10),
-                                                                child: Column(
-                                                                    children:
-                                                                        _buildCancelReasonCheckbox())),
-                                                            Container(
-                                                              margin:
-                                                                  const EdgeInsets
+                                                                    child: Column(
+                                                                        children:
+                                                                            _buildCancelReasonCheckbox())),
+                                                                Container(
+                                                                  margin: const EdgeInsets
                                                                           .only(
                                                                       top: 10),
-                                                              child: TextField(
-                                                                controller:
-                                                                    _cancelController,
-                                                                maxLines: 3,
-                                                                decoration: const InputDecoration(
-                                                                    border:
-                                                                        OutlineInputBorder(),
-                                                                    hintText:
-                                                                        'Enter your reason here'),
+                                                                  child:
+                                                                      TextField(
+                                                                    controller:
+                                                                        _cancelController,
+                                                                    maxLines: 3,
+                                                                    decoration: const InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        hintText:
+                                                                            'Enter your reason here'),
+                                                                  ),
+                                                                ),
+                                                              ]),
+                                                          actions: <Widget>[
+                                                            FilledButton(
+                                                              style: FilledButton
+                                                                  .styleFrom(
+                                                                textStyle: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .labelLarge,
                                                               ),
-                                                            ),
-                                                          ]),
-                                                      actions: <Widget>[
-                                                        FilledButton(
-                                                          style: FilledButton
-                                                              .styleFrom(
-                                                            textStyle: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .labelLarge,
-                                                          ),
-                                                          child: const Text(
-                                                            'Ok',
-                                                            style: TextStyle(
-                                                                fontSize: 16),
-                                                          ),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              cancelSchduleService(
-                                                                  _dataList[
-                                                                              index]
-                                                                          .scheduleDetailId ??
-                                                                      "",
-                                                                  _cancelController
-                                                                      .text,
-                                                                  _reason.indexOf(
-                                                                          _currentReason ??
+                                                              child: const Text(
+                                                                'Ok',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16),
+                                                              ),
+                                                              onPressed: () {
+                                                                if (_dataList[
+                                                                            index]
+                                                                        .startTimestamp
+                                                                        .difference(
+                                                                            DateTime.now())
+                                                                        .inHours <=
+                                                                    2) {
+                                                                  _displayErrorMotionToast(
+                                                                      "You can't cancel this schedule because it's less than 2 hours before the schedule start time.");
+                                                                  return;
+                                                                }
+                                                                setState(() {
+                                                                  cancelSchduleService(
+                                                                      _dataList[index]
+                                                                              .scheduleDetailId ??
+                                                                          "",
+                                                                      _cancelController
+                                                                          .text,
+                                                                      _reason.indexOf(_currentReason ??
                                                                               "") +
-                                                                      1);
-                                                              _loading = true;
-                                                              _dataList
-                                                                  .removeAt(
-                                                                      index);
-                                                            });
+                                                                          1);
+                                                                  _loading =
+                                                                      true;
+                                                                  _dataList
+                                                                      .removeAt(
+                                                                          index);
+                                                                });
 
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                            FilledButton(
+                                                              style: FilledButton
+                                                                  .styleFrom(
+                                                                backgroundColor:
+                                                                    Colors.grey,
+                                                                textStyle: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .labelLarge,
+                                                              ),
+                                                              child: const Text(
+                                                                  'Cancel',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          16)),
+                                                              onPressed: () {
+                                                                _cancelController
+                                                                    .clear();
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                          ],
                                                         ),
-                                                        FilledButton(
-                                                          style: FilledButton
-                                                              .styleFrom(
-                                                            backgroundColor:
-                                                                Colors.grey,
-                                                            textStyle: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .labelLarge,
-                                                          ),
-                                                          child: const Text(
-                                                              'Cancel',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      16)),
-                                                          onPressed: () {
-                                                            _cancelController
-                                                                .clear();
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )),
+                                                      ),
+                                                    )),
                                       ),
                                     ]),
                                 Container(
