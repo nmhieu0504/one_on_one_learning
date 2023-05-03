@@ -7,6 +7,58 @@ import '../utils/backend.dart';
 import '../utils/share_pref.dart';
 
 class ScheduleServices {
+  static Future<List<Map<String, dynamic>>> loadTutorList(
+      String selectedSpecialties,
+      String searchKeyWord,
+      Map<dynamic, dynamic> checkNationality,
+      int page,
+      int perPage) async {
+    SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    String specialtiesChosen;
+    if (selectedSpecialties == "ALL") {
+      specialtiesChosen = "";
+    } else {
+      specialtiesChosen = selectedSpecialties;
+    }
+    var body = {
+      "filters": {
+        "specialties": [specialtiesChosen],
+        "nationality": checkNationality,
+        "tutoringTimeAvailable": []
+      },
+      "search": searchKeyWord,
+      "page": page,
+      "perPage": perPage
+    };
+    print("body: $body");
+    final response = await http.post(Uri.parse(API_URL.SEARCH_TUTOR),
+        headers: <String, String>{
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(body));
+    List<Map<String, dynamic>> tutorList = [];
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var data = jsonDecode(response.body);
+      for (int index = 0; index < data["rows"].length; index++) {
+        tutorList.add({
+          "userId": data["rows"][index]["userId"],
+          "avatar": data["rows"][index]["avatar"],
+          "name": data["rows"][index]["name"],
+          "country": data["rows"][index]["country"],
+          "rating": data["rows"][index]["rating"]?.toInt(),
+          "specialties": data["rows"][index]["specialties"],
+          "bio": data["rows"][index]["bio"],
+          "isFavourite": data["rows"][index]["isfavoritetutor"] == "1"
+        });
+      }
+    }
+    return tutorList;
+  }
+
   static Future<dynamic> loadHistoryData(int page, int perPage) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
@@ -146,5 +198,31 @@ class ScheduleServices {
       return true;
     }
     return false;
+  }
+
+  static Future<dynamic> loadNextScheduleData() async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    int date = DateTime.now().millisecondsSinceEpoch;
+    final response = await http.get(
+        Uri.parse("${API_URL.GET_NEXT_SCHEDULE}$date"),
+        headers: {"Authorization": "Bearer $token"});
+
+    if (response.statusCode == 200) {
+      var res = jsonDecode(response.body);
+      Map<String, String> data = {};
+      var element = res["data"][0];
+
+      data["roomNameOrUrl"] = element["userId"] +
+          "-" +
+          element["scheduleDetailInfo"]["scheduleInfo"]["tutorId"];
+      data["startTimestamp"] =
+          element["scheduleDetailInfo"]["scheduleInfo"]["startTimestamp"];
+      data["endTimestamp"] =
+          element["scheduleDetailInfo"]["scheduleInfo"]["endTimestamp"];
+
+      return data;
+    }
+    return null;
   }
 }

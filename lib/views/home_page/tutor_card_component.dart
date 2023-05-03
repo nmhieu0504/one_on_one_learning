@@ -34,6 +34,19 @@ class TutorCard extends StatefulWidget {
     required this.isFavourite,
   });
 
+  factory TutorCard.fromJson(Map<String, dynamic> json) {
+    return TutorCard(
+      userId: json["userId"],
+      avatar: json["avatar"],
+      name: json["name"],
+      country: json["country"],
+      rating: json["rating"]?.toInt(),
+      specialties: json["specialties"],
+      bio: json["bio"],
+      isFavourite: json["isFavourite"],
+    );
+  }
+
   @override
   State<TutorCard> createState() => _TutorCardState();
 }

@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
 import 'package:one_on_one_learning/views/meeting_page/meeting_page.dart';
@@ -21,7 +22,9 @@ class _HomePageState extends State<HomePage> {
   bool _isFilter = false;
   bool _loading = true;
   bool _getMoreData = false;
+  bool _isUpcoming = false;
   int _page = 1;
+  final int _perPage = 10;
 
   bool _vietnameseTutorChip = false;
   bool _nativeTutorChip = false;
@@ -30,6 +33,8 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _datePickerController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
   DateTime? _selectedDate;
+
+  Map<String, String> _upComingInfo = {};
 
   final List<String> _specialtiesList = [
     'ALL',
@@ -56,7 +61,7 @@ class _HomePageState extends State<HomePage> {
   final List<TutorCard> _tutorList = [];
   final ScrollController _scrollController = ScrollController();
 
-  dynamic checkNationality() {
+  Map<dynamic, dynamic> checkNationality() {
     if (_vietnameseTutorChip == _nativeTutorChip &&
         _nativeTutorChip == _foreignTutorChip) {
       return {};
@@ -81,58 +86,7 @@ class _HomePageState extends State<HomePage> {
         return {"isVietNamese": false, "isNative": false};
       }
     }
-  }
-
-  Future<void> _loadTutorList() async {
-    SharePref sharePref = SharePref();
-    String? token = await sharePref.getString("access_token");
-    String specialtiesChosen;
-    if (_selectedSpecialties == "ALL") {
-      specialtiesChosen = "";
-    } else {
-      specialtiesChosen = _selectedSpecialties;
-    }
-    var body = {
-      "filters": {
-        "specialties": [specialtiesChosen],
-        "nationality": checkNationality(),
-        "tutoringTimeAvailable": []
-      },
-      "search": _searchController.text,
-      "page": _page,
-      "perPage": 10
-    };
-    print("body: $body");
-    final response = await http.post(Uri.parse(API_URL.SEARCH_TUTOR),
-        headers: <String, String>{
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json"
-        },
-        body: jsonEncode(body));
-    _page++;
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      var data = jsonDecode(response.body);
-      setState(() {
-        for (int index = 0; index < data["rows"].length; index++) {
-          _tutorList.add(TutorCard(
-            userId: data["rows"][index]["userId"],
-            avatar: data["rows"][index]["avatar"],
-            name: data["rows"][index]["name"],
-            country: data["rows"][index]["country"],
-            rating: data["rows"][index]["rating"]?.toInt(),
-            specialties: data["rows"][index]["specialties"],
-            bio: data["rows"][index]["bio"],
-            isFavourite: data["rows"][index]["isfavoritetutor"] == "1",
-          ));
-        }
-        _loading = false;
-      });
-    }
-    setState(() {
-      _getMoreData = false;
-    });
+    return {};
   }
 
   Widget _buildProgressIndicator() {
@@ -335,12 +289,24 @@ class _HomePageState extends State<HomePage> {
                 margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                 child: FilledButton(
                     onPressed: () {
-                      _tutorList.clear();
-                      _loadTutorList();
                       _page = 1;
+                      _tutorList.clear();
                       setState(() {
                         _isFilter = false;
                         _loading = true;
+                      });
+                      ScheduleServices.loadTutorList(
+                              _selectedSpecialties,
+                              _searchController.text,
+                              checkNationality(),
+                              _page++,
+                              _perPage)
+                          .then((value) {
+                        setState(() {
+                          _tutorList.addAll(
+                              value.map((e) => TutorCard.fromJson(e)).toList());
+                          _loading = false;
+                        });
                       });
                     },
                     child: const Text(
@@ -357,30 +323,37 @@ class _HomePageState extends State<HomePage> {
       Container(
         color: Colors.purple[900],
         child: Center(
-          child: SizedBox(
-            height: 300,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(bottom: 10),
-                    child: const Text(
-                      'Welcome to LetLearn!',
-                      style: TextStyle(fontSize: 30, color: Colors.white),
+                    child: Text(
+                      _isUpcoming
+                          ? "Upcoming Lesson"
+                          : "You have no upcoming lessons",
+                      style: const TextStyle(fontSize: 30, color: Colors.white),
                     ),
                   ),
-                  FilledButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                            return const MeetingPage();
-                          }),
-                        );
-                      },
-                      child: const Text(
-                        'Book a lesson',
-                      ))
+                  _isUpcoming
+                      ? const Text("Welcome to LetLearn!")
+                      : FilledButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                return const MeetingPage();
+                              }),
+                            );
+                          },
+                          icon: Icon(Icons.ondemand_video_sharp),
+                          label: const Text(
+                            'Enter lesson room',
+                          ))
                 ]),
           ),
         ),
@@ -428,14 +401,35 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _loadTutorList();
+    // ScheduleServices.loadNextScheduleData().then((value) {
+    //   if (value == null) return;
+    //   setState(() {
+    //     _isUpcoming = true;
+    //     _upComingInfo = value;
+    //   });
+    // });
+    ScheduleServices.loadTutorList(_selectedSpecialties, _searchController.text,
+            checkNationality(), _page++, _perPage)
+        .then((value) {
+      setState(() {
+        _tutorList.addAll(value.map((e) => TutorCard.fromJson(e)).toList());
+        _loading = false;
+      });
+    });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         setState(() {
           _getMoreData = true;
         });
-        _loadTutorList();
+        ScheduleServices.loadTutorList(_selectedSpecialties,
+                _searchController.text, checkNationality(), _page++, _perPage)
+            .then((value) {
+          setState(() {
+            _tutorList.addAll(value.map((e) => TutorCard.fromJson(e)).toList());
+            _getMoreData = false;
+          });
+        });
       }
     });
   }

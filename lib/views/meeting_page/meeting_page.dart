@@ -9,22 +9,9 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
-  int _countdown = 10;
-
   @override
   void initState() {
     super.initState();
-    startCountdown();
-  }
-
-  void startCountdown() async {
-    while (_countdown > 0) {
-      await Future.delayed(const Duration(seconds: 1));
-      setState(() {
-        _countdown--;
-      });
-    }
-    setState(() {});
   }
 
   @override
@@ -43,7 +30,6 @@ class _MeetingPageState extends State<MeetingPage> {
   final tokenText = TextEditingController();
   final userDisplayNameText = TextEditingController(text: "Test User");
   final userEmailText = TextEditingController(text: "hcmus@email.com");
-  final userAvatarUrlText = TextEditingController();
 
   bool isAudioMuted = true;
   bool isAudioOnly = false;
@@ -139,72 +125,55 @@ class _MeetingPageState extends State<MeetingPage> {
   }
 
   Widget buildMeetConfig() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "Server URL",
-            controller: serverText,
-            hintText: "Hint: Leave empty for meet.jitsi.si",
-          ),
-          const SizedBox(height: 16.0),
-          _buildTextField(labelText: "Room", controller: roomText),
-          const SizedBox(height: 16.0),
-          _buildTextField(labelText: "Subject", controller: subjectText),
-          const SizedBox(height: 16.0),
-          _buildTextField(labelText: "Token", controller: tokenText),
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "User Display Name",
-            controller: userDisplayNameText,
-          ),
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "User Email",
-            controller: userEmailText,
-          ),
-          const SizedBox(height: 16.0),
-          _buildTextField(
-            labelText: "User Avatar URL",
-            controller: userAvatarUrlText,
-          ),
-          const SizedBox(height: 16.0),
-          CheckboxListTile(
-            title: const Text("Audio Muted"),
-            value: isAudioMuted,
-            onChanged: _onAudioMutedChanged,
-          ),
-          const SizedBox(height: 16.0),
-          CheckboxListTile(
-            title: const Text("Audio Only"),
-            value: isAudioOnly,
-            onChanged: _onAudioOnlyChanged,
-          ),
-          const SizedBox(height: 16.0),
-          CheckboxListTile(
-            title: const Text("Video Muted"),
-            value: isVideoMuted,
-            onChanged: _onVideoMutedChanged,
-          ),
-          const Divider(height: 48.0, thickness: 2.0),
-          SizedBox(
-            height: 64.0,
-            width: double.maxFinite,
-            child: ElevatedButton(
-              onPressed: () => _joinMeeting(),
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateColor.resolveWith((states) => Colors.blue),
-              ),
-              child: const Text(
-                "Join Meeting",
-                style: TextStyle(color: Colors.white),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Join meeting"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 16.0),
+            _buildTextField(
+              labelText: "User Display Name",
+              controller: userDisplayNameText,
+            ),
+            const SizedBox(height: 16.0),
+            CheckboxListTile(
+              title: const Text("Audio Muted"),
+              value: isAudioMuted,
+              onChanged: _onAudioMutedChanged,
+            ),
+            const SizedBox(height: 5),
+            CheckboxListTile(
+              title: const Text("Audio Only"),
+              value: isAudioOnly,
+              onChanged: _onAudioOnlyChanged,
+            ),
+            const SizedBox(height: 5),
+            CheckboxListTile(
+              title: const Text("Video Muted"),
+              value: isVideoMuted,
+              onChanged: _onVideoMutedChanged,
+            ),
+            const Divider(height: 48.0, thickness: 2.0),
+            SizedBox(
+              height: 64.0,
+              width: double.maxFinite,
+              child: ElevatedButton(
+                onPressed: () => _joinMeeting(),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateColor.resolveWith((states) => Colors.blue),
+                ),
+                child: const Text(
+                  "Join Meeting",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 48.0),
-        ],
+            const SizedBox(height: 48.0),
+          ],
+        ),
       ),
     );
   }
@@ -217,7 +186,10 @@ class _MeetingPageState extends State<MeetingPage> {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
           labelText: labelText,
           hintText: hintText),
     );
