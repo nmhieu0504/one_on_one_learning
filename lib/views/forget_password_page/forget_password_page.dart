@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
-import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
-import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/forget_password_page/check_email.dart';
+
+import '../../services/auth_services.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -21,24 +21,7 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
   bool _loading = false;
   final TextEditingController _emailController = TextEditingController();
 
-  Future<bool> _forgetPass() async {
-    setState(() {
-      _loading = true;
-    });
-    final response = await http.post(Uri.parse(API_URL.FORGET_PASSWORD), body: {
-      "email": _emailController.text,
-    });
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      return true;
-    } else {
-      print(response.body);
-      return false;
-    }
-  }
-
-  void _displayDeleteMotionToast() {
+  void _displayErrorMotionToast() {
     MotionToast.error(
       title: const Text(
         'Error',
@@ -102,8 +85,12 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   margin: const EdgeInsets.only(top: 20),
                   child: FilledButton(
                     onPressed: () async {
+                      setState(() {
+                        _loading = true;
+                      });
                       if (_formKey.currentState!.validate()) {
-                        bool result = await _forgetPass();
+                        bool result =
+                            await AuthService.forgetPass(_emailController.text);
                         if (result) {
                           Navigator.pop(context);
                           Navigator.push(
@@ -116,7 +103,7 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                           setState(() {
                             _loading = false;
                           });
-                          _displayDeleteMotionToast();
+                          _displayErrorMotionToast();
                         }
                       }
                     },

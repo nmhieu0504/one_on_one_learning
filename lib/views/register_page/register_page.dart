@@ -10,6 +10,8 @@ import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/register_page/active_email.dart';
 
+import '../../services/auth_services.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -25,31 +27,6 @@ class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _rePasswordController = TextEditingController();
-
-  Future<bool> _signUp() async {
-    setState(() {
-      _loading = true;
-    });
-    final response = await http.post(Uri.parse(API_URL.REGISTER),
-        headers: {
-          "Content-Type": "application/json",
-          "Origin": "https://sandbox.app.lettutor.com",
-          "Referer": "https://sandbox.app.lettutor.com",
-        },
-        body: jsonEncode({
-          "email": _emailController.text,
-          "password": _passwordController.text,
-          "source": "null"
-        }));
-
-    if (response.statusCode == 201) {
-      print(response.body);
-      return true;
-    } else {
-      print(response.body);
-      return false;
-    }
-  }
 
   void _displayDeleteMotionToast() {
     MotionToast.error(
@@ -188,7 +165,11 @@ class RegisterPageState extends State<RegisterPage> {
                   child: FilledButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        bool result = await _signUp();
+                        setState(() {
+                          _loading = true;
+                        });
+                        bool result = await AuthService.signUp(
+                            _emailController.text, _passwordController.text);
                         if (result) {
                           Navigator.pop(context);
                           Navigator.push(

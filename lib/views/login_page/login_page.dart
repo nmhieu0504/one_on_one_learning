@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/forget_password_page/forget_password_page.dart';
 import 'package:one_on_one_learning/views/register_page/register_page.dart';
 
+import '../../services/auth_services.dart';
 import '../navigator_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,33 +33,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   SharePref sharePref = SharePref();
-
-  Future<bool> _signIn() async {
-    setState(() {
-      _loading = true;
-    });
-    final response = await http.post(Uri.parse(API_URL.LOGIN), body: {
-      "email": _emailController.text,
-      "password": _passwordController.text,
-    });
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      var data = jsonDecode(response.body);
-      sharePref.saveString("access_token", data["tokens"]["access"]["token"]);
-      sharePref.saveString(
-          "access_token_exp", data["tokens"]["access"]["expires"]);
-      sharePref.saveString("refresh_token", data["tokens"]["refresh"]["token"]);
-      sharePref.saveString(
-          "refresh_token_exp", data["tokens"]["refresh"]["expires"]);
-
-      return true;
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      return false;
-    }
-  }
 
   void _displayErrorMotionToast() {
     MotionToast.error(
@@ -231,7 +205,12 @@ class _LoginPageState extends State<LoginPage> {
                       FilledButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            bool result = await _signIn();
+                            setState(() {
+                              _loading = true;
+                            });
+                            bool result = await AuthService.signIn(
+                                _emailController.text,
+                                _passwordController.text);
                             if (result) {
                               Navigator.pop(context);
                               Navigator.push(
