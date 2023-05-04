@@ -38,20 +38,15 @@ class TutorServices {
     return null;
   }
 
-  static Future<dynamic> getTutorSchedule(
+  static Future<List<Map<String, dynamic>>?> getTutorSchedule(
       {required DateTime startTimestamp,
       required DateTime endTimestamp,
       required String tutorId}) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
 
-    final response = await http.get(
-        Uri.parse(
-            "${API_URL.GET_TUTOR_SCHEDULE}tutorId=$tutorId&startTimestamp=$startTimestamp&endTimestamp=$endTimestamp"),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json"
-        });
+    final response = await http.get(Uri.parse(
+        "${API_URL.GET_TUTOR_SCHEDULE}tutorId=$tutorId&startTimestamp=${startTimestamp.millisecondsSinceEpoch}&endTimestamp=${endTimestamp.millisecondsSinceEpoch}"));
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -59,9 +54,12 @@ class TutorServices {
       List<Map<String, dynamic>> dataList = [];
       for (var element in res["scheduleOfTutor"]) {
         Map<String, dynamic> data = {};
+
         data["startTimestamp"] = element["startTimestamp"];
         data["endTimestamp"] = element["endTimestamp"];
         data["isBooked"] = element["isBooked"];
+        data["scheduleDetailIds"] = element["scheduleDetails"][0]["id"];
+
         dataList.add(data);
       }
       return dataList;

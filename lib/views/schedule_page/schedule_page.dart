@@ -116,6 +116,71 @@ class _SchedulePageState extends State<SchedulePage> {
     ).show(context);
   }
 
+  void _showCancelDialog(int index) {
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => Center(
+              child: SingleChildScrollView(
+                child: AlertDialog(
+                  title: const Text('Cancel Schedule',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  content: Column(mainAxisSize: MainAxisSize.min, children: [
+                    const Text("What was the reason you cancel this booking?",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Column(children: _buildCancelReasonCheckbox())),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: TextField(
+                        controller: _cancelController,
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Enter your reason here'),
+                      ),
+                    ),
+                  ]),
+                  actions: <Widget>[
+                    FilledButton(
+                      style: FilledButton.styleFrom(
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      child: const Text(
+                        'Ok',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          cancelSchduleService(
+                              _dataList[index].scheduleDetailId ?? "",
+                              _cancelController.text,
+                              _reason.indexOf(_currentReason ?? "") + 1);
+                          _loading = true;
+                          _dataList.removeAt(index);
+                        });
+
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FilledButton(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      child: const Text('Cancel',
+                          style: TextStyle(color: Colors.white, fontSize: 16)),
+                      onPressed: () {
+                        _cancelController.clear();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return _loading
@@ -221,156 +286,40 @@ class _SchedulePageState extends State<SchedulePage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      OutlinedButton(
-                                        style: ButtonStyle(
-                                          side: MaterialStateProperty.all<
-                                              BorderSide>(
-                                            const BorderSide(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          shape: MaterialStateProperty.all<
-                                              OutlinedBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        ),
-                                        child: Row(children: const <Widget>[
-                                          Icon(Icons.delete, color: Colors.red),
-                                          Text('Cancel',
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                        ]),
-                                        onPressed: () => showDialog<String>(
-                                            context: context,
-                                            builder:
-                                                (BuildContext context) =>
-                                                    Center(
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        child: AlertDialog(
-                                                          title: const Text(
-                                                              'Cancel Schedule',
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          content: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                const Text(
-                                                                    "What was the reason you cancel this booking?",
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.bold)),
-                                                                Container(
-                                                                    margin: const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            10),
-                                                                    child: Column(
-                                                                        children:
-                                                                            _buildCancelReasonCheckbox())),
-                                                                Container(
-                                                                  margin: const EdgeInsets
-                                                                          .only(
-                                                                      top: 10),
-                                                                  child:
-                                                                      TextField(
-                                                                    controller:
-                                                                        _cancelController,
-                                                                    maxLines: 3,
-                                                                    decoration: const InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                        hintText:
-                                                                            'Enter your reason here'),
-                                                                  ),
-                                                                ),
-                                                              ]),
-                                                          actions: <Widget>[
-                                                            FilledButton(
-                                                              style: FilledButton
-                                                                  .styleFrom(
-                                                                textStyle: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .labelLarge,
-                                                              ),
-                                                              child: const Text(
-                                                                'Ok',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16),
-                                                              ),
-                                                              onPressed: () {
-                                                                if (_dataList[
-                                                                            index]
-                                                                        .startTimestamp
-                                                                        .difference(
-                                                                            DateTime.now())
-                                                                        .inHours <=
-                                                                    2) {
-                                                                  _displayErrorMotionToast(
-                                                                      "You can't cancel this schedule because it's less than 2 hours before the schedule start time.");
-                                                                  return;
-                                                                }
-                                                                setState(() {
-                                                                  cancelSchduleService(
-                                                                      _dataList[index]
-                                                                              .scheduleDetailId ??
-                                                                          "",
-                                                                      _cancelController
-                                                                          .text,
-                                                                      _reason.indexOf(_currentReason ??
-                                                                              "") +
-                                                                          1);
-                                                                  _loading =
-                                                                      true;
-                                                                  _dataList
-                                                                      .removeAt(
-                                                                          index);
-                                                                });
-
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                            ),
-                                                            FilledButton(
-                                                              style: FilledButton
-                                                                  .styleFrom(
-                                                                backgroundColor:
-                                                                    Colors.grey,
-                                                                textStyle: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .labelLarge,
-                                                              ),
-                                                              child: const Text(
-                                                                  'Cancel',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          16)),
-                                                              onPressed: () {
-                                                                _cancelController
-                                                                    .clear();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )),
-                                      ),
+                                      _dataList[index]
+                                                  .startTimestamp
+                                                  .difference(DateTime.now())
+                                                  .inMinutes <=
+                                              120
+                                          ? Container()
+                                          : OutlinedButton(
+                                              style: ButtonStyle(
+                                                side: MaterialStateProperty.all<
+                                                    BorderSide>(
+                                                  const BorderSide(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                shape: MaterialStateProperty
+                                                    .all<OutlinedBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                ),
+                                              ),
+                                              child:
+                                                  Row(children: const <Widget>[
+                                                Icon(Icons.delete,
+                                                    color: Colors.red),
+                                                Text('Cancel',
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
+                                              ]),
+                                              onPressed: () {
+                                                _showCancelDialog(index);
+                                              }),
                                     ]),
                                 Container(
                                   margin:

@@ -359,18 +359,26 @@ class _HomePageState extends State<HomePage> {
                               child: CountdownTimer(
                                 widgetBuilder: (_, CurrentRemainingTime? time) {
                                   if (time == null) return Container();
-                                  String days = time.days! < 10
-                                      ? "0${time.days}"
-                                      : "${time.days}";
-                                  String hours = time.hours! < 10
-                                      ? "0${time.hours}"
-                                      : "${time.hours}";
-                                  String min = time.min! < 10
-                                      ? "0${time.min}"
-                                      : "${time.min}";
-                                  String sec = time.sec! < 10
-                                      ? "0${time.sec}"
-                                      : "${time.sec}";
+                                  String days = time.days == null
+                                      ? "00"
+                                      : time.days! < 10
+                                          ? "0${time.days}"
+                                          : "${time.days}";
+                                  String hours = time.hours == null
+                                      ? "00"
+                                      : time.hours! < 10
+                                          ? "0${time.hours}"
+                                          : "${time.hours}";
+                                  String min = time.min == null
+                                      ? "00"
+                                      : time.min! < 10
+                                          ? "0${time.min}"
+                                          : "${time.min}";
+                                  String sec = time.sec == null
+                                      ? "00"
+                                      : time.sec! < 10
+                                          ? "0${time.sec}"
+                                          : "${time.sec}";
                                   return Text(
                                       '(Start in $days : $hours : $min : $sec)',
                                       style: TextStyle(
@@ -379,8 +387,8 @@ class _HomePageState extends State<HomePage> {
                                       ));
                                 },
                                 controller: CountdownTimerController(
-                                    endTime: _upComingInfo["endTimestamp"]),
-                                endTime: _upComingInfo["endTimestamp"],
+                                    endTime: _upComingInfo["startTimestamp"]),
+                                endTime: _upComingInfo["startTimestamp"],
                               ),
                             ),
                             Container(

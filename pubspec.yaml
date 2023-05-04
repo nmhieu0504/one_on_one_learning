@@ -37,9 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.4.0
   syncfusion_flutter_pdfviewer: ^20.4.53
-  syncfusion_flutter_calendar: ^20.4.53
-  booking_calendar: ^1.1.9
-  table_calendar: ^3.0.8
+  table_calendar: ^3.0.9
   jitsi_meet_wrapper: ^0.0.6
   motion_toast: ^2.6.6
   get: ^4.6.5
@@ -56,7 +54,7 @@ dependencies:
   chat_gpt_sdk: ^2.0.6
   avatar_glow: ^2.0.2
   rename: ^2.1.1
-  intl: ^0.17.0
+  intl: ^0.18.0
   http: ^0.13.5
   flutter_countdown_timer: ^4.1.0
 

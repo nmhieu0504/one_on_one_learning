@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/schedule.dart';
@@ -239,5 +240,25 @@ class ScheduleServices {
       totalTime = res["total"];
     }
     return totalTime;
+  }
+
+  static Future<bool> bookAClass(String scheduleDetailIds, String note) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    final response = await http.post(Uri.parse(API_URL.BOOK_A_CLASS),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({
+          "scheduleDetailIds": [scheduleDetailIds],
+          "note": note
+        }));
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      return true;
+    }
+    return false;
   }
 }

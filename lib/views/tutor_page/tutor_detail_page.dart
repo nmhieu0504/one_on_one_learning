@@ -379,7 +379,9 @@ class TutorPageState extends State<TutorPage> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const BookingPage()));
+                                                      BookingPage(
+                                                        tutorId: widget.userId,
+                                                      )));
                                         },
                                         child: Container(
                                             margin: const EdgeInsets.only(
