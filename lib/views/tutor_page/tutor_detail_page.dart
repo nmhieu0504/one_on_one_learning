@@ -301,381 +301,395 @@ class TutorPageState extends State<TutorPage> {
                   ),
                 ),
               ),
-              body: ListView(children: <Widget>[
-                TutorVideo(url: videoURL),
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.outline,
+              body: SingleChildScrollView(
+                child: Column(children: <Widget>[
+                  TutorVideo(url: videoURL),
+                  Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                     ),
-                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  ),
-                  margin: const EdgeInsets.only(
-                      top: 20, bottom: 20, left: 10, right: 10),
-                  clipBehavior: Clip.hardEdge,
-                  child: InkWell(
-                    // splashcolor: Colors.purple[900].withAlpha(30),
-                    // onTap: () {},
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          ListTile(
-                              leading: _buildAvatar(),
-                              title: Text(
-                                name,
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                              subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                    margin: const EdgeInsets.only(
+                        top: 20, bottom: 20, left: 10, right: 10),
+                    clipBehavior: Clip.hardEdge,
+                    child: InkWell(
+                      // splashcolor: Colors.purple[900].withAlpha(30),
+                      // onTap: () {},
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            ListTile(
+                                leading: _buildAvatar(),
+                                title: Text(
+                                  name,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                                subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      rating != null
+                                          ? Row(children: _showRating())
+                                          : Container(
+                                              margin:
+                                                  const EdgeInsets.only(top: 5),
+                                              child: const Text(
+                                                  'Rating not available',
+                                                  style: TextStyle(
+                                                      fontStyle:
+                                                          FontStyle.italic)),
+                                            ),
+                                      Container(
+                                          margin: const EdgeInsets.only(top: 3),
+                                          child: Text(getCountryName(country),
+                                              style: const TextStyle(
+                                                  fontStyle:
+                                                      FontStyle.italic))),
+                                    ]),
+                                trailing: IconButton(
+                                  iconSize: 35,
+                                  icon: Icon(Icons.favorite_sharp,
+                                      color: isFavorite
+                                          ? Colors.red
+                                          : Colors.grey),
+                                  onPressed: () {
+                                    setState(() {
+                                      isFavorite = !isFavorite;
+                                    });
+                                    _modifyFavourite();
+                                    debugPrint('Favourite button pressed.');
+                                  },
+                                )),
+                            Center(
+                              child: Column(children: <Widget>[
+                                Container(
+                                  margin: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: <Widget>[
+                                      FilledButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const BookingPage()));
+                                        },
+                                        child: Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 10, bottom: 10),
+                                            child: const Text('Book Now')),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: <Widget>[
-                                    rating != null
-                                        ? Row(children: _showRating())
-                                        : Container(
+                                    TextButton(
+                                      child: Column(children: <Widget>[
+                                        const Icon(Icons.reviews_sharp),
+                                        Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
-                                            child: const Text(
-                                                'Rating not available',
-                                                style: TextStyle(
-                                                    fontStyle:
-                                                        FontStyle.italic)),
-                                          ),
-                                    Container(
-                                        margin: const EdgeInsets.only(top: 3),
-                                        child: Text(getCountryName(country),
-                                            style: const TextStyle(
-                                                fontStyle: FontStyle.italic))),
-                                  ]),
-                              trailing: IconButton(
-                                iconSize: 35,
-                                icon: Icon(Icons.favorite_sharp,
-                                    color:
-                                        isFavorite ? Colors.red : Colors.grey),
-                                onPressed: () {
-                                  setState(() {
-                                    isFavorite = !isFavorite;
-                                  });
-                                  _modifyFavourite();
-                                  debugPrint('Favourite button pressed.');
-                                },
-                              )),
-                          Center(
-                            child: Column(children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    FilledButton(
+                                            child: const Text('Reviews')),
+                                      ]),
                                       onPressed: () {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const BookingPage()));
+                                                    ReviewPage(
+                                                        userID:
+                                                            widget.userId)));
                                       },
-                                      child: Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 10, bottom: 10),
-                                          child: const Text('Book Now')),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  TextButton(
-                                    child: Column(children: <Widget>[
-                                      const Icon(Icons.reviews_sharp),
-                                      Container(
-                                          margin: const EdgeInsets.only(top: 5),
-                                          child: const Text('Reviews')),
-                                    ]),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ReviewPage(
-                                                  userID: widget.userId)));
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Column(children: <Widget>[
-                                      const Icon(Icons.report),
-                                      Container(
-                                          margin: const EdgeInsets.only(top: 5),
-                                          child: const Text('Report')),
-                                    ]),
-                                    onPressed: () => showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            Center(
-                                              child: SingleChildScrollView(
-                                                child: AlertDialog(
-                                                  title: Text('Report $name',
-                                                      style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  content: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        const Text(
-                                                            "Help us understand what's happening?",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                        Container(
+                                    ),
+                                    TextButton(
+                                      child: Column(children: <Widget>[
+                                        const Icon(Icons.report),
+                                        Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 5),
+                                            child: const Text('Report')),
+                                      ]),
+                                      onPressed: () => showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              Center(
+                                                child: SingleChildScrollView(
+                                                  child: AlertDialog(
+                                                    title: Text('Report $name',
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    content: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          const Text(
+                                                              "Help us understand what's happening?",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: ListBody(
+                                                                children:
+                                                                    _reportItems
+                                                                        .map((item) =>
+                                                                            StatefulBuilder(
+                                                                              builder: (context, setState) => CheckboxListTile(
+                                                                                  value: _selectedRepotItems.contains(item),
+                                                                                  title: Text(item, style: const TextStyle(fontWeight: FontWeight.normal)),
+                                                                                  controlAffinity: ListTileControlAffinity.leading,
+                                                                                  onChanged: (isChecked) => setState(() {
+                                                                                        if (isChecked!) {
+                                                                                          _selectedRepotItems.add(item);
+                                                                                        } else {
+                                                                                          _selectedRepotItems.remove(item);
+                                                                                        }
+                                                                                      })),
+                                                                            ))
+                                                                        .toList(),
+                                                              )),
+                                                          Container(
                                                             margin:
                                                                 const EdgeInsets
                                                                         .only(
                                                                     top: 10),
-                                                            child: ListBody(
-                                                              children:
-                                                                  _reportItems
-                                                                      .map((item) =>
-                                                                          StatefulBuilder(
-                                                                            builder: (context, setState) => CheckboxListTile(
-                                                                                value: _selectedRepotItems.contains(item),
-                                                                                title: Text(item, style: const TextStyle(fontWeight: FontWeight.normal)),
-                                                                                controlAffinity: ListTileControlAffinity.leading,
-                                                                                onChanged: (isChecked) => setState(() {
-                                                                                      if (isChecked!) {
-                                                                                        _selectedRepotItems.add(item);
-                                                                                      } else {
-                                                                                        _selectedRepotItems.remove(item);
-                                                                                      }
-                                                                                    })),
-                                                                          ))
-                                                                      .toList(),
-                                                            )),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 10),
-                                                          child: TextField(
-                                                            controller:
-                                                                _reportController,
-                                                            maxLines: 3,
-                                                            decoration: const InputDecoration(
-                                                                border:
-                                                                    OutlineInputBorder(),
-                                                                hintText:
-                                                                    'Enter your report here'),
+                                                            child: TextField(
+                                                              controller:
+                                                                  _reportController,
+                                                              maxLines: 3,
+                                                              decoration: const InputDecoration(
+                                                                  border:
+                                                                      OutlineInputBorder(),
+                                                                  hintText:
+                                                                      'Enter your report here'),
+                                                            ),
                                                           ),
+                                                        ]),
+                                                    actions: <Widget>[
+                                                      FilledButton(
+                                                        style: FilledButton
+                                                            .styleFrom(
+                                                          textStyle:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .labelLarge,
                                                         ),
-                                                      ]),
-                                                  actions: <Widget>[
-                                                    FilledButton(
-                                                      style: FilledButton
-                                                          .styleFrom(
-                                                        textStyle:
-                                                            Theme.of(context)
-                                                                .textTheme
-                                                                .labelLarge,
+                                                        child: const Text(
+                                                          'Ok',
+                                                          style: TextStyle(
+                                                              fontSize: 16),
+                                                        ),
+                                                        onPressed: () {
+                                                          if (_selectedRepotItems
+                                                                  .isEmpty &&
+                                                              _reportController
+                                                                  .text
+                                                                  .isEmpty) {
+                                                            _displayErrorMotionToast(
+                                                                "Please give us more information about your report.");
+                                                          } else {
+                                                            _sendReport();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          }
+                                                        },
                                                       ),
-                                                      child: const Text(
-                                                        'Ok',
-                                                        style: TextStyle(
-                                                            fontSize: 16),
-                                                      ),
-                                                      onPressed: () {
-                                                        if (_selectedRepotItems
-                                                                .isEmpty &&
-                                                            _reportController
-                                                                .text.isEmpty) {
-                                                          _displayErrorMotionToast(
-                                                              "Please give us more information about your report.");
-                                                        } else {
-                                                          _sendReport();
+                                                      FilledButton(
+                                                        style: FilledButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              Colors.grey,
+                                                          textStyle:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .labelLarge,
+                                                        ),
+                                                        child: const Text(
+                                                            'Cancel',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16)),
+                                                        onPressed: () {
+                                                          _reportController
+                                                              .clear();
+                                                          _selectedRepotItems
+                                                              .clear();
                                                           Navigator.of(context)
                                                               .pop();
-                                                        }
-                                                      },
-                                                    ),
-                                                    FilledButton(
-                                                      style: FilledButton
-                                                          .styleFrom(
-                                                        backgroundColor:
-                                                            Colors.grey,
-                                                        textStyle:
-                                                            Theme.of(context)
-                                                                .textTheme
-                                                                .labelLarge,
+                                                        },
                                                       ),
-                                                      child: const Text(
-                                                          'Cancel',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 16)),
-                                                      onPressed: () {
-                                                        _reportController
-                                                            .clear();
-                                                        _selectedRepotItems
-                                                            .clear();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            )),
-                                  ),
-                                ],
-                              ),
-                            ]),
-                          ),
-                          Container(
-                              padding: const EdgeInsets.all(10),
-                              child: Text.rich(
-                                TextSpan(text: bio),
-                                textAlign: TextAlign.justify,
-                              )),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Languages',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  Wrap(
-                                      alignment: WrapAlignment.start,
-                                      children: _showLanguage()),
-                                ]),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Education',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  Container(
+                                              )),
+                                    ),
+                                  ],
+                                ),
+                              ]),
+                            ),
+                            Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Text.rich(
+                                  TextSpan(text: bio),
+                                  textAlign: TextAlign.justify,
+                                )),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text.rich(
-                                        TextSpan(text: education),
-                                      ))
-                                ]),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Experience',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  Container(
+                                      child: Text('Languages',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.purple[900])),
+                                    ),
+                                    Wrap(
+                                        alignment: WrapAlignment.start,
+                                        children: _showLanguage()),
+                                  ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text.rich(
-                                          TextSpan(text: experience),
-                                          textAlign: TextAlign.justify))
-                                ]),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Interests',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text(interests),
-                                  )
-                                ]),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Profession',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text(profession),
-                                  )
-                                ]),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Specialties',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  Wrap(
-                                      alignment: WrapAlignment.start,
-                                      children: _showSpecialties()),
-                                ]),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Text('Courses',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.purple[900])),
-                                  ),
-                                  ..._showCourses()
-                                ]),
-                          ),
-                        ],
+                                      child: Text('Education',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.purple[900])),
+                                    ),
+                                    Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: Text.rich(
+                                          TextSpan(text: education),
+                                        ))
+                                  ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Text('Experience',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.purple[900])),
+                                    ),
+                                    Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: Text.rich(
+                                            TextSpan(text: experience),
+                                            textAlign: TextAlign.justify))
+                                  ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Text('Interests',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.purple[900])),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Text(interests),
+                                    )
+                                  ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Text('Profession',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.purple[900])),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Text(profession),
+                                    )
+                                  ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Text('Specialties',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.purple[900])),
+                                    ),
+                                    Wrap(
+                                        alignment: WrapAlignment.start,
+                                        children: _showSpecialties()),
+                                  ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Text('Courses',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.purple[900])),
+                                    ),
+                                    ..._showCourses()
+                                  ]),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
             ),
     );
   }
