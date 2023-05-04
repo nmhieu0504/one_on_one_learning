@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'pages/login_page/login_page.dart';
+import 'package:get/get.dart';
+import 'views/login_page/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,11 +14,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    return MaterialApp(
+    return  GetMaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      home: const LoginPage('Sign In'),
+      home: const LoginPage(),
     );
   }
 }
