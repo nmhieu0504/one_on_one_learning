@@ -247,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         radius: 100,
                         backgroundColor: Colors.grey[50],
                         backgroundImage: _isAvatarError
-                            ? const AssetImage(UIData.logoLogin)
+                            ? const AssetImage(UIData.defaultAvatar)
                             : NetworkImage(user.avatar) as ImageProvider,
                         onBackgroundImageError: (exception, stackTrace) {
                           setState(() {

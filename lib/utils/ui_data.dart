@@ -13,4 +13,6 @@ class UIData {
   static const String emailVerify = "$imageDir/email_verify.png";
   static const String registerImng = "$imageDir/register_img.png";
   static const String forgetPasswordImg = "$imageDir/forget_password_img.png";
+
+  static const String defaultAvatar = "$imageDir/default_avatar.png";
 }
