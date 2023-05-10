@@ -98,6 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       sharePref.removeString('access_token_exp');
                       sharePref.removeString('refresh_token_exp');
                       Navigator.pop(context);
+                      Navigator.pop(context);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
                         return const LoginPage();
