@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       home: const LoginPage(),
     );
   }

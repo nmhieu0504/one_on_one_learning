@@ -6,11 +6,13 @@ import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:one_on_one_learning/services/tutor_services.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/tutor_page/tutor_video.dart';
+import '../../models/tutor.dart';
 import '../../utils/backend.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/language_map.dart';
@@ -25,22 +27,7 @@ class TutorPage extends StatefulWidget {
 }
 
 class TutorPageState extends State<TutorPage> {
-  final SharePref sharePref = SharePref();
-  late final String videoURL;
-  late final String? avatar;
-  late final String name;
-  late final String? country;
-  late final int? rating;
-  late final String bio;
-  late final String languages;
-  late final String education;
-  late final String experience;
-  late final String interests;
-  late final String profession;
-  late final String specialties;
-  late final List<dynamic> courses;
-  late final int? totalFeedback;
-  late bool isFavorite = false;
+  late Tutor tutor;
   bool _loadingData = true;
   final TextEditingController _reportController = TextEditingController();
 
@@ -51,80 +38,6 @@ class TutorPageState extends State<TutorPage> {
   ];
 
   List<String> _selectedRepotItems = [];
-
-  Future<void> _loadData() async {
-    String? token = await sharePref.getString("access_token");
-
-    final response = await http.get(
-        Uri.parse(API_URL.GET_TUTOR_DETAIL + widget.userId),
-        headers: {"Authorization": "Bearer $token"});
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      // ignore: no_leading_underscores_for_local_identifiers
-      var _data = jsonDecode(response.body);
-      videoURL = _data["video"];
-      avatar = _data["User"]["avatar"];
-      name = _data["User"]["name"];
-      country = _data["User"]["country"];
-      rating = _data["rating"]?.toInt();
-      bio = _data["bio"];
-      languages = _data["languages"];
-      education = _data["education"];
-      experience = _data["experience"];
-      interests = _data["interests"];
-      profession = _data["profession"];
-      specialties = _data["specialties"];
-      courses = _data["User"]["courses"];
-      totalFeedback = _data["totalFeedback"];
-      isFavorite = _data["isFavorite"];
-
-      setState(() {
-        _loadingData = false;
-      });
-    }
-  }
-
-  Future<void> _sendReport() async {
-    String? token = await sharePref.getString("access_token");
-
-    _selectedRepotItems.add(_reportController.text);
-    final response = await http.post(Uri.parse(API_URL.REPORT_TUTOR),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json"
-        },
-        body: jsonEncode({
-          "tutorId": widget.userId,
-          "content": _selectedRepotItems.join("\n")
-        }));
-
-    _reportController.clear();
-    _selectedRepotItems.clear();
-    if (response.statusCode == 200) {
-      print(response.body);
-      // ignore: no_leading_underscores_for_local_identifiers
-      _displaySuccessMotionToast('Your report has been sent');
-    }
-  }
-
-  Future<void> _modifyFavourite() async {
-    String? token = await sharePref.getString("access_token");
-
-    final response = await http.post(Uri.parse(API_URL.ADD_TO_FAVOURITE),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json"
-        },
-        body: jsonEncode({"tutorId": widget.userId}));
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      // ignore: no_leading_underscores_for_local_identifiers
-      _displaySuccessMotionToast(
-          isFavorite ? 'Add to favourite' : 'Remove from favourite');
-    }
-  }
 
   void _displayErrorMotionToast(String str) {
     MotionToast.error(
@@ -155,13 +68,13 @@ class TutorPageState extends State<TutorPage> {
   }
 
   Widget _buildAvatar() {
-    if (avatar == null) {
+    if (tutor.user.avatar == null) {
       return Image.asset(UIData.logoLogin);
     } else {
       return Avatar(
         loader: Container(),
-        sources: [NetworkSource(avatar!)],
-        name: name,
+        sources: [NetworkSource(tutor.user.avatar ?? "")],
+        name: tutor.user.name,
         shape: AvatarShape.rectangle(
             50, 50, const BorderRadius.all(Radius.circular(20.0))),
       );
@@ -170,7 +83,7 @@ class TutorPageState extends State<TutorPage> {
 
   List<Widget> _showRating() {
     List<Widget> list = [];
-    for (int i = 0; i < rating!; i++) {
+    for (int i = 0; i < tutor.avgRating.round(); i++) {
       list.add(const Icon(
         Icons.star,
         color: Colors.yellow,
@@ -184,7 +97,7 @@ class TutorPageState extends State<TutorPage> {
     }
     list.add(Container(
         margin: const EdgeInsets.only(left: 5),
-        child: Text("(${totalFeedback.toString()})")));
+        child: Text("(${tutor.totalFeedback.toString()})")));
     return list;
   }
 
@@ -202,7 +115,7 @@ class TutorPageState extends State<TutorPage> {
 
   List<Widget> _showSpecialties() {
     List<Widget> list = [];
-    for (int i = 0; i < specialties.split(",").length; i++) {
+    for (int i = 0; i < tutor.specialties.split(",").length; i++) {
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: OutlinedButton(
@@ -214,7 +127,7 @@ class TutorPageState extends State<TutorPage> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
-          child: Text(specialtiesUltis(specialties.split(",")[i]),
+          child: Text(specialtiesUltis(tutor.specialties.split(",")[i]),
               style: const TextStyle(fontSize: 12)),
         ),
       ));
@@ -224,8 +137,8 @@ class TutorPageState extends State<TutorPage> {
 
   List<Widget> _showLanguage() {
     List<Widget> list = [];
-    for (int i = 0; i < languages.split(",").length; i++) {
-      if (languagesMap[languages.split(",")[i]] == null) continue;
+    for (int i = 0; i < tutor.languages.split(",").length; i++) {
+      if (languagesMap[tutor.languages.split(",")[i]] == null) continue;
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: OutlinedButton(
@@ -237,7 +150,7 @@ class TutorPageState extends State<TutorPage> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
-          child: Text(languagesMap[languages.split(",")[i]]!,
+          child: Text(languagesMap[tutor.languages.split(",")[i]]!,
               style: const TextStyle(fontSize: 12)),
         ),
       ));
@@ -247,12 +160,13 @@ class TutorPageState extends State<TutorPage> {
 
   List<Widget> _showCourses() {
     List<Widget> list = [];
-    for (int i = 0; i < courses.length; i++) {
+    for (int i = 0; i < tutor.user.courses.length; i++) {
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: TextButton(
           onPressed: () {},
-          child: Text(courses[i]["name"], style: const TextStyle(fontSize: 12)),
+          child: Text(tutor.user.courses[i].name ?? "",
+              style: const TextStyle(fontSize: 12)),
         ),
       ));
     }
@@ -266,7 +180,12 @@ class TutorPageState extends State<TutorPage> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    TutorServices.loadData(widget.userId).then((value) {
+      setState(() {
+        tutor = value;
+        _loadingData = false;
+      });
+    });
   }
 
   @override
@@ -293,7 +212,7 @@ class TutorPageState extends State<TutorPage> {
                 ),
                 automaticallyImplyLeading: false,
                 title: Text(
-                  name,
+                  tutor.user.name,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -303,7 +222,7 @@ class TutorPageState extends State<TutorPage> {
               ),
               body: SingleChildScrollView(
                 child: Column(children: <Widget>[
-                  TutorVideo(url: videoURL),
+                  TutorVideo(url: tutor.video ?? ""),
                   Card(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -326,27 +245,19 @@ class TutorPageState extends State<TutorPage> {
                             ListTile(
                                 leading: _buildAvatar(),
                                 title: Text(
-                                  name,
+                                  tutor.user.name,
                                   style: const TextStyle(fontSize: 18),
                                 ),
                                 subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      rating != null
-                                          ? Row(children: _showRating())
-                                          : Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 5),
-                                              child: const Text(
-                                                  'Rating not available',
-                                                  style: TextStyle(
-                                                      fontStyle:
-                                                          FontStyle.italic)),
-                                            ),
+                                      Row(children: _showRating()),
                                       Container(
                                           margin: const EdgeInsets.only(top: 3),
-                                          child: Text(getCountryName(country),
+                                          child: Text(
+                                              getCountryName(
+                                                  tutor.user.country),
                                               style: const TextStyle(
                                                   fontStyle:
                                                       FontStyle.italic))),
@@ -354,14 +265,22 @@ class TutorPageState extends State<TutorPage> {
                                 trailing: IconButton(
                                   iconSize: 35,
                                   icon: Icon(Icons.favorite_sharp,
-                                      color: isFavorite
+                                      color: tutor.isFavorite
                                           ? Colors.red
                                           : Colors.grey),
                                   onPressed: () {
                                     setState(() {
-                                      isFavorite = !isFavorite;
+                                      tutor.isFavorite = !tutor.isFavorite;
                                     });
-                                    _modifyFavourite();
+                                    TutorServices.modifyFavourite(widget.userId)
+                                        .then((value) {
+                                      if (value) {
+                                        _displaySuccessMotionToast(
+                                            tutor.isFavorite
+                                                ? 'Add to favourite'
+                                                : 'Remove from favourite');
+                                      }
+                                    });
                                     debugPrint('Favourite button pressed.');
                                   },
                                 )),
@@ -427,7 +346,8 @@ class TutorPageState extends State<TutorPage> {
                                               Center(
                                                 child: SingleChildScrollView(
                                                   child: AlertDialog(
-                                                    title: Text('Report $name',
+                                                    title: Text(
+                                                        'Report ${tutor.user.name}',
                                                         style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight
@@ -506,7 +426,23 @@ class TutorPageState extends State<TutorPage> {
                                                             _displayErrorMotionToast(
                                                                 "Please give us more information about your report.");
                                                           } else {
-                                                            _sendReport();
+                                                            _selectedRepotItems.add(
+                                                                _reportController
+                                                                    .text);
+                                                            TutorServices.sendReport(
+                                                                    widget
+                                                                        .userId,
+                                                                    _selectedRepotItems)
+                                                                .then((value) {
+                                                              _reportController
+                                                                  .clear();
+                                                              _selectedRepotItems
+                                                                  .clear();
+                                                              if (value) {
+                                                                _displaySuccessMotionToast(
+                                                                    'Your report has been sent');
+                                                              }
+                                                            });
                                                             Navigator.of(
                                                                     context)
                                                                 .pop();
@@ -550,7 +486,7 @@ class TutorPageState extends State<TutorPage> {
                             Container(
                                 padding: const EdgeInsets.all(10),
                                 child: Text.rich(
-                                  TextSpan(text: bio),
+                                  TextSpan(text: tutor.bio),
                                   textAlign: TextAlign.justify,
                                 )),
                             Container(
@@ -588,7 +524,7 @@ class TutorPageState extends State<TutorPage> {
                                         margin:
                                             const EdgeInsets.only(bottom: 10),
                                         child: Text.rich(
-                                          TextSpan(text: education),
+                                          TextSpan(text: tutor.education),
                                         ))
                                   ]),
                             ),
@@ -609,7 +545,7 @@ class TutorPageState extends State<TutorPage> {
                                         margin:
                                             const EdgeInsets.only(bottom: 10),
                                         child: Text.rich(
-                                            TextSpan(text: experience),
+                                            TextSpan(text: tutor.experience),
                                             textAlign: TextAlign.justify))
                                   ]),
                             ),
@@ -628,7 +564,7 @@ class TutorPageState extends State<TutorPage> {
                                     ),
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text(interests),
+                                      child: Text(tutor.interests),
                                     )
                                   ]),
                             ),
@@ -647,7 +583,7 @@ class TutorPageState extends State<TutorPage> {
                                     ),
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text(profession),
+                                      child: Text(tutor.profession),
                                     )
                                   ]),
                             ),

@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/models/reviews.dart';
+import 'package:one_on_one_learning/models/tutor.dart';
 
 import '../utils/backend.dart';
 import '../utils/share_pref.dart';
@@ -42,9 +43,6 @@ class TutorServices {
       {required DateTime startTimestamp,
       required DateTime endTimestamp,
       required String tutorId}) async {
-    final SharePref sharePref = SharePref();
-    String? token = await sharePref.getString("access_token");
-
     final response = await http.get(Uri.parse(
         "${API_URL.GET_TUTOR_SCHEDULE}tutorId=$tutorId&startTimestamp=${startTimestamp.millisecondsSinceEpoch}&endTimestamp=${endTimestamp.millisecondsSinceEpoch}"));
 
@@ -65,5 +63,68 @@ class TutorServices {
       return dataList;
     }
     return null;
+  }
+
+  static Future<Tutor> loadData(String userId) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+
+    final response = await http.get(
+        Uri.parse(API_URL.GET_TUTOR_DETAIL + userId),
+        headers: {"Authorization": "Bearer $token"});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var data = jsonDecode(response.body);
+      Tutor tutor = Tutor.fromJson(data);
+      return tutor;
+    }
+    return Tutor(
+        profession: "",
+        interests: "",
+        user: User(
+            courses: [], id: "", name: "", country: "", isPublicRecord: false),
+        languages: "",
+        avgRating: 0,
+        totalFeedback: 0,
+        isFavorite: false,
+        specialties: "");
+  }
+
+  static Future<bool> sendReport(
+      String userId, List<String> selectedRepotItems) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+
+    final response = await http.post(Uri.parse(API_URL.REPORT_TUTOR),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(
+            {"tutorId": userId, "content": selectedRepotItems.join("\n")}));
+    if (response.statusCode == 200) {
+      print(response.body);
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> modifyFavourite(String userId) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+
+    final response = await http.post(Uri.parse(API_URL.ADD_TO_FAVOURITE),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({"tutorId": userId}));
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return true;
+    }
+    return false;
   }
 }
