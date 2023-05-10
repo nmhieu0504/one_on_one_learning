@@ -91,6 +91,9 @@ class _BookingPageState extends State<BookingPage> {
           String time =
               '${DateFormat.Hm().format(startTimestamp)} - ${DateFormat.Hm().format(endTimestamp)}';
           String tmpStr = element['isBooked'] ? '(Booked)' : '';
+          element['isBooked'] = DateTime.now().isAfter(startTimestamp)
+              ? true
+              : element['isBooked'];
           Schedule schedule = Schedule("$time $tmpStr", element['isBooked'],
               element["scheduleDetailIds"]);
           if (kEventSource.containsKey(date)) {
