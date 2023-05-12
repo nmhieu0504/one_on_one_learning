@@ -40,4 +40,30 @@ class CoursesService {
     }
     return null;
   }
+
+  static Future<dynamic> loadContentCategory() async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    final response =
+        await http.get(Uri.parse(API_URL.GET_COURSE_CATEGORY), headers: {
+      "Authorization": "Bearer $token",
+    });
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var res = jsonDecode(response.body);
+      List<Map<String, dynamic>> dataList = [];
+      for (var element in res["rows"]) {
+        Map<String, dynamic> data = {};
+
+        data["title"] = element["title"];
+        data["id"] = element["id"];
+        data["key"] = element["key"];
+
+        dataList.add(data);
+      }
+      return dataList;
+    }
+    return null;
+  }
 }
