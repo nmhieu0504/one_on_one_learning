@@ -15,4 +15,6 @@ class UIData {
   static const String forgetPasswordImg = "$imageDir/forget_password_img.png";
 
   static const String defaultAvatar = "$imageDir/default_avatar.png";
+
+  static const String noDataFound = "$imageDir/no-data.png";
 }

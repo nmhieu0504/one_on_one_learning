@@ -6,6 +6,8 @@ import '../../services/schedule_services.dart';
 import '../../utils/countries_lis.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/ui_data.dart';
+
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
 
@@ -187,182 +189,202 @@ class _SchedulePageState extends State<SchedulePage> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : ListView.builder(
-            controller: _scrollController,
-            itemCount: _dataList.length + 1,
-            itemBuilder: (context, index) {
-              return index == _dataList.length
-                  ? _buildProgressIndicator()
-                  : Container(
-                      margin: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: const Color.fromARGB(255, 74, 20, 140)),
-                        borderRadius: BorderRadius.circular(10),
+        : _dataList.isEmpty
+            ? Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(UIData.noDataFound, width: 100, height: 100),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "No data",
+                        style: TextStyle(color: Colors.grey),
                       ),
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(bottom: 10, top: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  DateFormat("EEE, dd MMM yyyy")
-                                      .format(_dataList[index].date),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                    ]),
+              )
+            : ListView.builder(
+                controller: _scrollController,
+                itemCount: _dataList.length + 1,
+                itemBuilder: (context, index) {
+                  return index == _dataList.length
+                      ? _buildProgressIndicator()
+                      : Container(
+                          margin: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: const Color.fromARGB(255, 74, 20, 140)),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          Card(
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12)),
-                            ),
-                            margin: const EdgeInsets.only(bottom: 20),
-                            clipBehavior: Clip.hardEdge,
-                            child: InkWell(
-                              splashColor: Colors.blue.withAlpha(30),
-                              child: Container(
-                                margin: const EdgeInsets.all(15),
-                                child: ListTile(
-                                  leading: Image.network(
-                                    _dataList[index].avatar,
-                                    width: 50,
-                                    height: 50,
-                                  ),
-                                  title: Text(
-                                    _dataList[index].name,
-                                    style: const TextStyle(fontSize: 20),
-                                  ),
-                                  subtitle: Container(
-                                    margin: const EdgeInsets.only(top: 5),
-                                    child: Row(children: <Widget>[
-                                      const Icon(
-                                        Icons.flag,
-                                        color: Colors.blue,
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.only(bottom: 10, top: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      DateFormat("EEE, dd MMM yyyy")
+                                          .format(_dataList[index].date),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 5),
-                                        child: Text(
-                                          getCountryName(
-                                              _dataList[index].country),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                    ]),
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(bottom: 10, top: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "${DateFormat.Hm().format(_dataList[index].startTimestamp)} - ${DateFormat.Hm().format(_dataList[index].endTimestamp)}",
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                              Card(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(12)),
+                                ),
+                                margin: const EdgeInsets.only(bottom: 20),
+                                clipBehavior: Clip.hardEdge,
+                                child: InkWell(
+                                  splashColor: Colors.blue.withAlpha(30),
+                                  child: Container(
+                                    margin: const EdgeInsets.all(15),
+                                    child: ListTile(
+                                      leading: Image.network(
+                                        _dataList[index].avatar,
+                                        width: 50,
+                                        height: 50,
                                       ),
-                                      _dataList[index]
-                                                  .startTimestamp
-                                                  .difference(DateTime.now())
-                                                  .inMinutes <=
-                                              120
-                                          ? Container()
-                                          : OutlinedButton(
-                                              style: ButtonStyle(
-                                                side: MaterialStateProperty.all<
-                                                    BorderSide>(
-                                                  const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                shape: MaterialStateProperty
-                                                    .all<OutlinedBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                  ),
-                                                ),
-                                              ),
-                                              child:
-                                                  Row(children: const <Widget>[
-                                                Icon(Icons.delete,
-                                                    color: Colors.red),
-                                                Text('Cancel',
-                                                    style: TextStyle(
-                                                        color: Colors.red)),
-                                              ]),
-                                              onPressed: () {
-                                                _showCancelDialog(index);
-                                              }),
-                                    ]),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 5, bottom: 5),
-                                  child: const Text(
-                                    'Lesson request',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
+                                      title: Text(
+                                        _dataList[index].name,
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                      subtitle: Container(
+                                        margin: const EdgeInsets.only(top: 5),
+                                        child: Row(children: <Widget>[
+                                          const Icon(
+                                            Icons.flag,
+                                            color: Colors.blue,
+                                          ),
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              getCountryName(
+                                                  _dataList[index].country),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
                                     ),
                                   ),
                                 ),
-                                Card(
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color:
-                                          Theme.of(context).colorScheme.outline,
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.only(bottom: 10, top: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            "${DateFormat.Hm().format(_dataList[index].startTimestamp)} - ${DateFormat.Hm().format(_dataList[index].endTimestamp)}",
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          _dataList[index]
+                                                      .startTimestamp
+                                                      .difference(
+                                                          DateTime.now())
+                                                      .inMinutes <=
+                                                  120
+                                              ? Container()
+                                              : OutlinedButton(
+                                                  style: ButtonStyle(
+                                                    side: MaterialStateProperty
+                                                        .all<BorderSide>(
+                                                      const BorderSide(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                    shape: MaterialStateProperty
+                                                        .all<OutlinedBorder>(
+                                                      RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Row(
+                                                      children: const <Widget>[
+                                                        Icon(Icons.delete,
+                                                            color: Colors.red),
+                                                        Text('Cancel',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .red)),
+                                                      ]),
+                                                  onPressed: () {
+                                                    _showCancelDialog(index);
+                                                  }),
+                                        ]),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 5, bottom: 5),
+                                      child: const Text(
+                                        'Lesson request',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                        ),
+                                      ),
                                     ),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(12)),
-                                  ),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    // height: 100,
-                                    child: Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 30,
-                                            bottom: 30,
-                                            left: 10,
-                                            right: 10),
-                                        child: Text(
-                                            _dataList[index].studentRequest ??
+                                    Card(
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline,
+                                        ),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(12)),
+                                      ),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        // height: 100,
+                                        child: Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 30,
+                                                bottom: 30,
+                                                left: 10,
+                                                right: 10),
+                                            child: Text(_dataList[index]
+                                                    .studentRequest ??
                                                 "No request")),
-                                  ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-            },
-          );
+                              )
+                            ],
+                          ),
+                        );
+                },
+              );
   }
 }

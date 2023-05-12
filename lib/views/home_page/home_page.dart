@@ -454,16 +454,29 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      ListView.builder(
-        shrinkWrap: true,
-        physics: const ScrollPhysics(),
-        itemBuilder: (context, index) {
-          return index == _tutorList.length
-              ? _buildProgressIndicator()
-              : _tutorList[index];
-        },
-        itemCount: _tutorList.length + 1,
-      ),
+      _tutorList.isEmpty
+          ? Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(UIData.noDataFound, width: 100, height: 100),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "No tutor found",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ]),
+            )
+          : ListView.builder(
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              itemBuilder: (context, index) {
+                return index == _tutorList.length
+                    ? _buildProgressIndicator()
+                    : _tutorList[index];
+              },
+              itemCount: _tutorList.length + 1,
+            ),
     ]);
   }
 

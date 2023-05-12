@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/views/courses_page/courses_list_page.dart';
 import 'package:one_on_one_learning/views/courses_page/ebook_list_page.dart';
 
+import '../../utils/ui_data.dart';
+
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
 
@@ -42,12 +44,20 @@ class _CoursesPageState extends State<CoursesPage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const <Widget>[
-          CoursesList(),
-          EBookList(),
+        children: <Widget>[
+          const CoursesList(),
+          const EBookList(),
           Center(
-            child: Text("No Data"),
-          ),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Image.asset(UIData.noDataFound, width: 100, height: 100),
+              const SizedBox(height: 10),
+              const Text(
+                "No data",
+                style: TextStyle(color: Colors.grey),
+              ),
+            ]),
+          )
         ],
       ),
     );
