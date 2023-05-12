@@ -1,19 +1,14 @@
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
-
 import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
-import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
-import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/tutor_page/tutor_video.dart';
 import '../../models/tutor.dart';
-import '../../utils/backend.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/language_map.dart';
 import '../reviews_page/review_page.dart';

@@ -1,13 +1,10 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages
 
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
-import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
-import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/views/register_page/active_email.dart';
 
 import '../../services/auth_services.dart';

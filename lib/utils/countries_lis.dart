@@ -1,4 +1,6 @@
 String getCountryName(String? code) {
+  if (code == null) return "No information";
+  if (code.length > 2) return code;
   return countryList[code] ?? "No information";
 }
 
