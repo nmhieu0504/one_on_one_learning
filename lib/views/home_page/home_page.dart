@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, depend_on_referenced_packages
+// ignore_for_file: avoid_debugPrint, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -320,9 +320,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   String _upcomingLessonTime() {
-    print(
+    debugPrint(
         "Start time: ${DateTime.fromMillisecondsSinceEpoch(_upComingInfo["startTimestamp"])}");
-    print("End time: ${_upComingInfo["endTimestamp"]}");
+    debugPrint("End time: ${_upComingInfo["endTimestamp"]}");
     return "${DateFormat("EEE, dd MMM yyyy").format(DateTime.fromMillisecondsSinceEpoch(_upComingInfo["startTimestamp"]))} ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(_upComingInfo["startTimestamp"]))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(_upComingInfo["endTimestamp"]))}";
   }
 

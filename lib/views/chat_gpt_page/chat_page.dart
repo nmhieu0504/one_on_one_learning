@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:one_on_one_learning/services/chat_gpt_service/chat_gpt_ultis.dart';
-import 'package:one_on_one_learning/models/db_ultils.dart';
+import 'package:one_on_one_learning/models/db_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -291,7 +291,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           message.date.day,
         ),
         groupHeaderBuilder: (Message message) => Container(
-          margin: const EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(top: 10, bottom: 10),
           child: Align(
             alignment: Alignment.topCenter,
             child: Text(DateFormat.yMMMMEEEEd().format(message.date),

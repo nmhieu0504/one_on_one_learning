@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
+import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:collection';
+
+import '../../models/user.dart';
+import '../../services/utils_services.dart';
 
 class BookingPage extends StatefulWidget {
   final String tutorId;
@@ -17,6 +21,8 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
+  late User user;
+  late int priceOfSession;
   bool _loading = true;
 
   final kToday = DateTime.now();
@@ -31,6 +37,8 @@ class _BookingPageState extends State<BookingPage> {
   DateTime? _rangeEnd;
 
   late LinkedHashMap<DateTime, List<Schedule>> kSchedules;
+
+  TextEditingController _noteController = TextEditingController();
 
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
@@ -75,6 +83,19 @@ class _BookingPageState extends State<BookingPage> {
       if (value == null) {
         return;
       }
+
+      UserService.loadUserInfo().then((value) {
+        setState(() {
+          user = value;
+        });
+      });
+
+      UtilsService.getSessionPrice().then((value) {
+        setState(() {
+          priceOfSession = value;
+        });
+      });
+
       setState(() {
         value
             .sort((a, b) => a['startTimestamp'].compareTo(b['startTimestamp']));
@@ -95,7 +116,9 @@ class _BookingPageState extends State<BookingPage> {
               ? true
               : element['isBooked'];
           Schedule schedule = Schedule("$time $tmpStr", element['isBooked'],
-              element["scheduleDetailIds"]);
+              element["scheduleDetailIds"],
+              startTimestamp: startTimestamp.millisecondsSinceEpoch,
+              endTimestamp: endTimestamp.millisecondsSinceEpoch);
           if (kEventSource.containsKey(date)) {
             kEventSource[date]!.add(schedule);
           } else {
@@ -113,6 +136,134 @@ class _BookingPageState extends State<BookingPage> {
         _loading = false;
       });
     });
+  }
+
+  void _showBookingDialog(
+      String scheduleDetailIds, int startTimestamp, int endTimestamp) {
+    showDialog(
+        context: context,
+        builder: ((BuildContext context) => Center(
+                child: AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Text("Booking details"),
+              content: SingleChildScrollView(
+                child: Column(children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(children: [
+                      Row(children: const [
+                        Text(
+                          'Booking Time',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ]),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Center(
+                            child: Text(
+                                "${DateFormat("EEE, dd MMM yyyy").format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))}  ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(endTimestamp))}")),
+                      )
+                    ]),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Balance',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                                "You have ${int.parse(user.walletInfo["amount"]) ~/ priceOfSession} lessons left")
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Price',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text("1 lesson")
+                          ]),
+                    ]),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(children: [
+                      Row(children: const [
+                        Text(
+                          'Note',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ]),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: TextField(
+                          maxLines: 3,
+                          controller: _noteController,
+                          decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.all(10),
+                              border: InputBorder.none,
+                              hintText: "Enter your note here"),
+                        ),
+                      )
+                    ]),
+                  ),
+                ]),
+              ),
+              actions: [
+                OutlinedButton(
+                  child: const Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _noteController.clear();
+                  },
+                ),
+                FilledButton.icon(
+                  onPressed:
+                      int.parse(user.walletInfo["amount"]) < priceOfSession
+                          ? null
+                          : () {
+                              Navigator.of(context).pop();
+                              setState(() {
+                                _loading = true;
+                              });
+                              ScheduleServices.bookAClass(
+                                      scheduleDetailIds, _noteController.text)
+                                  .then((value) {
+                                _noteController.clear();
+                                _loadData();
+                                debugPrint("BOOKED");
+                              });
+                            },
+                  icon: const Icon(Icons.keyboard_double_arrow_right_outlined),
+                  label: const Text("Book"),
+                ),
+              ],
+            ))));
   }
 
   @override
@@ -197,16 +348,10 @@ class _BookingPageState extends State<BookingPage> {
                               onPressed: value[index].isBooked
                                   ? null
                                   : () {
-                                      setState(() {
-                                        _loading = true;
-                                      });
-                                      ScheduleServices.bookAClass(
-                                              value[index].scheduleDetailIds,
-                                              "note")
-                                          .then((value) {
-                                        _loadData();
-                                        debugPrint("BOOKED");
-                                      });
+                                      _showBookingDialog(
+                                          value[index].scheduleDetailIds,
+                                          value[index].startTimestamp,
+                                          value[index].endTimestamp);
                                     },
                               child: Text('${value[index]}'),
                             ),
@@ -227,7 +372,10 @@ class Schedule {
   final String title;
   final bool isBooked;
   final String scheduleDetailIds;
-  const Schedule(this.title, this.isBooked, this.scheduleDetailIds);
+  final int startTimestamp;
+  final int endTimestamp;
+  const Schedule(this.title, this.isBooked, this.scheduleDetailIds,
+      {required this.startTimestamp, required this.endTimestamp});
 
   @override
   String toString() => title;
