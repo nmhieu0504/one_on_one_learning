@@ -186,6 +186,7 @@ class _CoursesListState extends State<CoursesList> {
                             element["isSelected"] = false;
                           }
                           _searchController.text = "";
+                          _currentSorting = "";
                         });
                       },
                       child: const Text(
@@ -200,22 +201,24 @@ class _CoursesListState extends State<CoursesList> {
                         setState(() {
                           _isFilter = false;
                           _loading = true;
-                          _currentSorting = "";
                         });
-                        // ScheduleServices.loadTutorList(
-                        //         _selectedSpecialties,
-                        //         _searchController.text,
-                        //         checkNationality(),
-                        //         _page++,
-                        //         _perPage)
-                        //     .then((value) {
-                        //   setState(() {
-                        //     _tutorList.addAll(value
-                        //         .map((e) => TutorCard.fromJson(e))
-                        //         .toList());
-                        //     _loading = false;
-                        //   });
-                        // });
+                        CoursesService.loadCoursesList(
+                          courseContentCategories: courseContentCategories,
+                          levelList: levelList,
+                          sortingOrder: _currentSorting,
+                          q: _searchController.text,
+                        ).then((value) {
+                          setState(() {
+                            coursesList.addAll(value);
+                            for (var element in coursesList) {
+                              element.level =
+                                  levelList[int.parse(element.level)]["name"];
+                              element.topics.sort((a, b) =>
+                                  a["orderCourse"].compareTo(b["orderCourse"]));
+                            }
+                            _loading = false;
+                          });
+                        });
                       },
                       child: const Text(
                         'Apply',
