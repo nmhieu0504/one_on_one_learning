@@ -270,39 +270,62 @@ class _CoursesListState extends State<CoursesList> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              _isFilter = true;
-                            });
-                          },
-                          icon: const Icon(Icons.filter_alt),
-                          label: const Text("Filter")),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                _isFilter = true;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.filter_alt_outlined,
+                              color: Colors.black,
+                            ),
+                            label: const Text(
+                              "Filter",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            )),
+                      ),
                     ],
                   ),
-                  GroupedListView<dynamic, String>(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    elements: coursesList,
-                    groupBy: (element) => element.categories,
-                    // groupComparator: (value1, value2) => value2.compareTo(value1),
-                    // itemComparator: (item1, item2) => item1['name'].compareTo(item2['name']),
-                    groupSeparatorBuilder: (String value) => Container(
-                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        value,
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    itemBuilder: (context, element) {
-                      return CourseCardComponent(
-                        course: element,
-                      );
-                    },
-                  ),
+                  coursesList.isEmpty
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 150),
+                            Image.asset(UIData.noDataFound,
+                                width: 100, height: 100),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "No data",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ])
+                      : GroupedListView<dynamic, String>(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          elements: coursesList,
+                          groupBy: (element) => element.categories,
+                          // groupComparator: (value1, value2) => value2.compareTo(value1),
+                          // itemComparator: (item1, item2) => item1['name'].compareTo(item2['name']),
+                          groupSeparatorBuilder: (String value) => Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            child: Text(
+                              value,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          itemBuilder: (context, element) {
+                            return CourseCardComponent(
+                              course: element,
+                            );
+                          },
+                        ),
                 ]),
               );
   }

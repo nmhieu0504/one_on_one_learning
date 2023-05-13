@@ -455,18 +455,15 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       _tutorList.isEmpty
-          ? Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(UIData.noDataFound, width: 100, height: 100),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "No tutor found",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ]),
-            )
+          ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const SizedBox(height: 100),
+              Image.asset(UIData.noDataFound, width: 100, height: 100),
+              const SizedBox(height: 10),
+              const Text(
+                "No tutor found",
+                style: TextStyle(color: Colors.grey),
+              ),
+            ])
           : ListView.builder(
               shrinkWrap: true,
               physics: const ScrollPhysics(),

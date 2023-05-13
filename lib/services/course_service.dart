@@ -43,7 +43,7 @@ class CoursesService {
     }
 
     if (q.isNotEmpty) {
-      q.trim();
+      q = q.trim();
       queryURL += "&q=$q";
     }
 
