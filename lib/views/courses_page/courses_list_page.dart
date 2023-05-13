@@ -34,7 +34,7 @@ class _CoursesListState extends State<CoursesList> {
   bool _loading = true;
   bool _isFilter = false;
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   Widget _levelFilter() {
     return Container(
@@ -294,15 +294,15 @@ class _CoursesListState extends State<CoursesList> {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(height: 150),
-                            Image.asset(UIData.noDataFound,
-                                width: 100, height: 100),
-                            const SizedBox(height: 10),
-                            const Text(
-                              "No data",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ])
+                              const SizedBox(height: 150),
+                              Image.asset(UIData.noDataFound,
+                                  width: 100, height: 100),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "No data",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ])
                       : GroupedListView<dynamic, String>(
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
