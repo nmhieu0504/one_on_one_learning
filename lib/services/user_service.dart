@@ -1,6 +1,6 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/models/user.dart';
 import '../utils/backend.dart';
 import '../utils/share_pref.dart';
@@ -15,7 +15,7 @@ class UserService {
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var res = jsonDecode(response.body);
       Map<String, dynamic> data = {};
 
@@ -55,10 +55,37 @@ class UserService {
           "Content-Type": "application/json"
         },
         body: jsonEncode(bodyInfo));
-        print(jsonEncode(bodyInfo));
-    print(response.body);
+    debugPrint(jsonEncode(bodyInfo));
+    debugPrint(response.body);
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
+      return true;
+    }
+    return false;
+  }
+
+  static Future<dynamic> updateUserAvatar(File imageFile) async {
+    debugPrint("File selected: ${imageFile.path}");
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+
+    var request =
+        http.MultipartRequest('POST', Uri.parse(API_URL.UPDATE_USER_AVATAR));
+    request.files
+        .add(await http.MultipartFile.fromPath('avatar', imageFile.path));
+    request.headers.addAll({
+      "Authorization": "Bearer $token",
+      "Content-Type":
+          "multipart/form-data; boundary=----WebKitFormBoundaryVx3opYIudlAppGP5",
+      "origin": "https://sandbox.api.lettutor.com",
+      "referer": "https://sandbox.api.lettutor.com/"
+    });
+
+    final response = await request.send();
+    String responseBody = await response.stream.transform(utf8.decoder).join();
+    debugPrint('Image uploaded with response body: $responseBody');
+
+    if (response.statusCode == 200) {
       return true;
     }
     return false;

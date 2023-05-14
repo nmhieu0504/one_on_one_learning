@@ -29,6 +29,7 @@ class API_URL {
   static const String GET_COURSE_CATEGORY = "$BASE_URL/content-category";
 
   static const String USER_DETAIL_INFO = "$BASE_URL/user/info";
+  static const String UPDATE_USER_AVATAR = "$BASE_URL/user/uploadAvatar";
 
   static const String GET_PRICE_OF_SESSION= "$BASE_URL/payment/price-of-session";
 

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +17,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late File imageFile;
   bool _loading = true;
   bool _isAvatarError = false;
   late User user;
@@ -169,14 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    countryTittleList = getCountriesName();
-    countryList.forEach((key, value) {
-      countryMenuList.add(DropdownMenuEntry<String>(value: key, label: value));
-    });
-
+  void _loadData() {
     UserService.loadUserInfo().then((value) {
       setState(() {
         user = value;
@@ -214,6 +211,16 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    countryTittleList = getCountriesName();
+    countryList.forEach((key, value) {
+      countryMenuList.add(DropdownMenuEntry<String>(value: key, label: value));
+    });
+    _loadData();
+  }
+
+  @override
   void dispose() {
     super.dispose();
   }
@@ -243,17 +250,50 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: CircleAvatar(
-                        radius: 100,
-                        backgroundColor: Colors.grey[50],
-                        backgroundImage: _isAvatarError
-                            ? const AssetImage(UIData.defaultAvatar)
-                            : NetworkImage(user.avatar) as ImageProvider,
-                        onBackgroundImageError: (exception, stackTrace) {
-                          setState(() {
-                            _isAvatarError = true;
-                          });
-                        },
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 100,
+                            backgroundColor: Colors.grey[50],
+                            backgroundImage: _isAvatarError
+                                ? const AssetImage(UIData.defaultAvatar)
+                                : NetworkImage(user.avatar) as ImageProvider,
+                            onBackgroundImageError: (exception, stackTrace) {
+                              setState(() {
+                                _isAvatarError = true;
+                              });
+                            },
+                          ),
+                          Positioned(
+                            bottom: -10,
+                            right: -15,
+                            child: IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () async {
+                                final picker = ImagePicker();
+                                final pickedFile = await picker.pickImage(
+                                    source: ImageSource.gallery);
+
+                                if (pickedFile != null) {
+                                  // File selected, process it
+                                  debugPrint(
+                                      "File selected: ${pickedFile.path}");
+                                  imageFile = File(pickedFile.path);
+                                  setState(() {
+                                    _loading = true;
+                                  });
+                                  UserService.updateUserAvatar(imageFile)
+                                      .then((value) {
+                                    _loadData();
+                                  });
+                                  // Do something with the image file, e.g. upload to server
+                                } else {
+                                  // No file selected, handle accordingly
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Center(

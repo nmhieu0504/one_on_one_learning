@@ -521,5 +521,6 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
   @override
   void dispose() {
     super.dispose();
+    flutterTts.stop();
   }
 }
