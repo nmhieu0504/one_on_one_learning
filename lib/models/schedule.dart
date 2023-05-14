@@ -1,4 +1,5 @@
 class ScheduleModel {
+  final String id;
   final DateTime date;
   final String avatar;
   final String name;
@@ -26,7 +27,8 @@ class ScheduleModel {
   final bool classReview;
 
   ScheduleModel(
-      {required this.date,
+      {required this.id,
+      required this.date,
       required this.avatar,
       required this.name,
       required this.country,
@@ -54,6 +56,7 @@ class ScheduleModel {
 
   factory ScheduleModel.fromJson(Map<String, dynamic> json) {
     return ScheduleModel(
+      id: json['id'],
       date: json['date'],
       avatar: json['avatar'],
       name: json['name'],

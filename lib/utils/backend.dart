@@ -22,7 +22,8 @@ class API_URL {
   static const String GET_NEXT_SCHEDULE = "$BASE_URL/booking/next?dateTime=";
   static const String GET_TOTAL_TIME_LEARN = "$BASE_URL/call/total";
   static const String BOOK_A_CLASS = "$BASE_URL/booking";
-
+  static const String EDIT_SCHEDULE_REQUEST = "$BASE_URL/booking/student-request/";
+  
   static const String GET_COURSES_LIST = "$BASE_URL/course?";
   static const String GET_EBOOK_LIST = "$BASE_URL/e-book?";
   static const String GET_COURSE_DETAIL_BY_ID = "$BASE_URL/course/";

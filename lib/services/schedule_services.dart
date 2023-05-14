@@ -79,6 +79,7 @@ class ScheduleServices {
       for (var element in res["data"]["rows"]) {
         Map<String, dynamic> data = {};
 
+        data["id"] = element["id"];
         data["studentRequest"] = element["studentRequest"];
         data["date"] = DateTime.parse(
             element["scheduleDetailInfo"]["scheduleInfo"]["date"]);
@@ -138,6 +139,7 @@ class ScheduleServices {
       for (var element in res["data"]["rows"]) {
         Map<String, dynamic> data = {};
 
+        data["id"] = element["id"];
         data["scheduleDetailId"] = element["id"];
         data["studentRequest"] = element["studentRequest"];
         data["date"] = DateTime.parse(
@@ -254,6 +256,25 @@ class ScheduleServices {
           "scheduleDetailIds": [scheduleDetailIds],
           "note": note
         }));
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> updateScheduleRequest(
+      String id, String studentRequest) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    final response = await http.post(
+        Uri.parse(API_URL.EDIT_SCHEDULE_REQUEST + id),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({"studentRequest": studentRequest}));
 
     if (response.statusCode == 200) {
       debugPrint(response.body);

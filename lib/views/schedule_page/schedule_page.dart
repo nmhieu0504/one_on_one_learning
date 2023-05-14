@@ -31,6 +31,8 @@ class _SchedulePageState extends State<SchedulePage> {
   final List<ScheduleModel> _dataList = [];
 
   final TextEditingController _cancelController = TextEditingController();
+  late List<TextEditingController> _requestControllerList;
+  late List<bool> _isEditList;
 
   @override
   void initState() {
@@ -38,6 +40,11 @@ class _SchedulePageState extends State<SchedulePage> {
     ScheduleServices.loadScheduleData(_page++, 20).then((value) {
       setState(() {
         _dataList.addAll(value);
+        _requestControllerList = List.generate(
+            _dataList.length,
+            (index) => TextEditingController()
+              ..text = _dataList[index].studentRequest ?? "");
+        _isEditList = List.generate(_dataList.length, (index) => false);
         _loading = false;
       });
     });
@@ -50,6 +57,11 @@ class _SchedulePageState extends State<SchedulePage> {
         ScheduleServices.loadScheduleData(_page++, 20).then((value) {
           setState(() {
             _dataList.addAll(value);
+            _requestControllerList = List.generate(
+                _dataList.length,
+                (index) => TextEditingController()
+                  ..text = _dataList[index].studentRequest ?? "");
+            _isEditList = List.generate(_dataList.length, (index) => false);
             _getMoreData = false;
           });
         });
@@ -99,6 +111,24 @@ class _SchedulePageState extends State<SchedulePage> {
       String scheduleDetailId, String note, int cancelReasonId) async {
     bool result = await ScheduleServices.deleteSchdule(
         scheduleDetailId, note, cancelReasonId);
+    if (result) {
+      _displaySuccessMotionToast("Cancel schedule successfully");
+    } else {
+      _displayErrorMotionToast("Cancel schedule failed");
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> editRequestService(String id, String studentRequest) async {
+    bool result =
+        await ScheduleServices.updateScheduleRequest(id, studentRequest);
+    if (result) {
+      _displaySuccessMotionToast("Edit request successfully");
+    } else {
+      _displayErrorMotionToast("Edit request failed");
+    }
     setState(() {
       _loading = false;
     });
@@ -113,6 +143,20 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
       ),
       description: Text(errorMessage),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
+  }
+
+  void _displaySuccessMotionToast(String successMessage) {
+    MotionToast.success(
+      title: const Text(
+        'Success',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      description: Text(successMessage),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -345,39 +389,58 @@ class _SchedulePageState extends State<SchedulePage> {
                                     Container(
                                       margin: const EdgeInsets.only(
                                           top: 5, bottom: 5),
-                                      child: const Text(
-                                        'Lesson request',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                        ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'Lesson request',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _isEditList[index] =
+                                                      !_isEditList[index];
+                                                  if (!_isEditList[index]) {
+                                                    editRequestService(
+                                                        _dataList[index].id,
+                                                        _requestControllerList[
+                                                                index]
+                                                            .text);
+                                                  }
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                Icons.edit,
+                                                size: 20,
+                                              ))
+                                        ],
                                       ),
                                     ),
-                                    Card(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .outline,
-                                        ),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(12)),
-                                      ),
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        // height: 100,
-                                        child: Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 30,
-                                                bottom: 30,
-                                                left: 10,
-                                                right: 10),
-                                            child: Text(_dataList[index]
-                                                    .studentRequest ??
-                                                "No request")),
-                                      ),
-                                    ),
+                                    Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 0,
+                                            bottom: 0,
+                                            left: 10,
+                                            right: 10),
+                                        child: TextField(
+                                          enabled: _isEditList[index],
+                                          maxLines: 2,
+                                          controller:
+                                              _requestControllerList[index],
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(15)),
+                                            ),
+                                          ),
+                                        )),
                                   ],
                                 ),
                               )
