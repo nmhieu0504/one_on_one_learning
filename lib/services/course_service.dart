@@ -9,13 +9,15 @@ import 'package:http/http.dart' as http;
 
 class CoursesService {
   static Future<dynamic> loadCoursesList(
-      {List<Map<String, dynamic>> courseContentCategories = const [],
+      {required int page,
+      required int size,
+      List<Map<String, dynamic>> courseContentCategories = const [],
       List<Map<String, dynamic>> levelList = const [],
       String sortingOrder = "",
       String q = ""}) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
-    String queryURL = "";
+    String queryURL = "page=$page&size=$size";
 
     if (courseContentCategories.isNotEmpty) {
       for (var element in courseContentCategories) {
@@ -151,10 +153,10 @@ class CoursesService {
     debugPrint("queryURL: $queryURL");
     debugPrint("URL: ${Uri.parse(API_URL.GET_EBOOK_LIST + queryURL)}");
 
-    final response = await http
-        .get(Uri.parse(API_URL.GET_EBOOK_LIST + queryURL), headers: {
+    final response =
+        await http.get(Uri.parse(API_URL.GET_EBOOK_LIST + queryURL), headers: {
       "Authorization": "Bearer $token",
-    });    
+    });
 
     if (response.statusCode == 200) {
       debugPrint(response.body);

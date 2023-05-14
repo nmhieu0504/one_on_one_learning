@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/models/ebook.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EbookCardComponent extends StatelessWidget {
   final EBook ebook;
@@ -8,6 +9,15 @@ class EbookCardComponent extends StatelessWidget {
     super.key,
     required this.ebook,
   });
+
+  void _launchInBrowser() async {
+    if (!await launchUrl(
+      Uri.parse(ebook.fileUrl),
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $ebook.fileUrl');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +34,7 @@ class EbookCardComponent extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (BuildContext context) {
-          //     return ebookDetailPage(
-          //       ebook: ebook,
-          //     );
-          //   }),
+          _launchInBrowser();
           // );
         },
         child: Column(

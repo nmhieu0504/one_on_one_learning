@@ -287,10 +287,10 @@ class _EBookListState extends State<EBookList> {
           q: _searchController.text,
         ).then((value) {
           setState(() {
-            ebookList.addAll(value);
-            for (var element in ebookList) {
+            for (var element in value) {
               element.level = levelList[int.parse(element.level)]["name"];
             }
+            ebookList.addAll(value);
             _loading = false;
             _getMoreData = false;
           });
