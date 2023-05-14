@@ -177,4 +177,33 @@ class CoursesService {
     }
     return null;
   }
+
+  static Future<dynamic> loadCourseByID(String id) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    final response = await http
+        .get(Uri.parse(API_URL.GET_COURSE_DETAIL_BY_ID + id), headers: {
+      "Authorization": "Bearer $token",
+    });
+
+    if (response.statusCode == 200) {
+      var res = jsonDecode(response.body);
+      Map<String, dynamic> data = {};
+      var element = res["data"];
+      
+      data["name"] = element["name"];
+      data["description"] = element["description"];
+      data["level"] = element["level"];
+      data["imageUrl"] = element["imageUrl"];
+      data["numberOfTopics"] = element["topics"].length;
+      data["categories"] = "";
+      data["id"] = element["id"];
+      data["reason"] = element["reason"];
+      data["purpose"] = element["purpose"];
+      data["topics"] = element["topics"];
+
+      return Course.fromJson(data);
+    }
+    return null;
+  }
 }

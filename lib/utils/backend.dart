@@ -25,7 +25,7 @@ class API_URL {
 
   static const String GET_COURSES_LIST = "$BASE_URL/course?";
   static const String GET_EBOOK_LIST = "$BASE_URL/e-book?";
-  static const String GET_COURSE_DETAIL = "$BASE_URL/course";
+  static const String GET_COURSE_DETAIL_BY_ID = "$BASE_URL/course/";
   static const String GET_COURSE_CATEGORY = "$BASE_URL/content-category";
 
   static const String USER_DETAIL_INFO = "$BASE_URL/user/info";

@@ -4,13 +4,16 @@ import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:one_on_one_learning/services/course_service.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:one_on_one_learning/views/tutor_page/tutor_video.dart';
+import '../../models/course.dart';
 import '../../models/tutor.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/language_map.dart';
+import '../courses_page/course_detail_page.dart';
 import '../reviews_page/review_page.dart';
 
 class TutorPage extends StatefulWidget {
@@ -25,6 +28,8 @@ class TutorPageState extends State<TutorPage> {
   late Tutor tutor;
   bool _loadingData = true;
   final TextEditingController _reportController = TextEditingController();
+
+  List<Course> tutorCoursesList = [];
 
   final _reportItems = [
     "This tutor is annoying me",
@@ -159,7 +164,16 @@ class TutorPageState extends State<TutorPage> {
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (BuildContext context) {
+                return CourseDetailPage(
+                  course: tutorCoursesList[i],
+                );
+              }),
+            );
+          },
           child: Text(tutor.user.courses[i].name ?? "",
               style: const TextStyle(fontSize: 12)),
         ),
@@ -180,6 +194,12 @@ class TutorPageState extends State<TutorPage> {
         tutor = value;
         _loadingData = false;
       });
+      for (int i = 0; i < tutor.user.courses.length; i++) {
+        CoursesService.loadCourseByID(tutor.user.courses[i].id ?? "")
+            .then((value) {
+          tutorCoursesList.add(value);
+        });
+      }
     });
   }
 
