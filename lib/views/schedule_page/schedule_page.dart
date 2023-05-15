@@ -86,21 +86,20 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  List<Widget> _buildCancelReasonCheckbox() {
+  List<Widget> _buildCancelReasonCheckbox(
+      void Function(void Function()) setState) {
     var list = <Widget>[];
     for (var i = 0; i < _reason.length; i++) {
       list.add(
-        ListTile(
+        RadioListTile(
           title: Text(_reason[i]),
-          leading: Radio<String>(
-            value: _reason[i],
-            groupValue: _currentReason,
-            onChanged: (String? value) {
-              setState(() {
-                _currentReason = value;
-              });
-            },
-          ),
+          value: _reason[i],
+          groupValue: _currentReason,
+          onChanged: (value) {
+            setState(() {
+              _currentReason = value;
+            });
+          },
         ),
       );
     }
@@ -175,7 +174,10 @@ class _SchedulePageState extends State<SchedulePage> {
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     Container(
                         margin: const EdgeInsets.only(top: 10),
-                        child: Column(children: _buildCancelReasonCheckbox())),
+                        child: StatefulBuilder(builder: (context, setState) {
+                          return ListBody(
+                              children: _buildCancelReasonCheckbox(setState));
+                        })),
                     Container(
                       margin: const EdgeInsets.only(top: 10),
                       child: TextField(
@@ -218,6 +220,7 @@ class _SchedulePageState extends State<SchedulePage> {
                           style: TextStyle(color: Colors.white, fontSize: 16)),
                       onPressed: () {
                         _cancelController.clear();
+                        _currentReason = _reason[0];
                         Navigator.of(context).pop();
                       },
                     ),

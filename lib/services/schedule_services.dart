@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +31,7 @@ class ScheduleServices {
       "page": page,
       "perPage": perPage
     };
-    print("body: $body");
+    debugPrint("body: $body");
     final response = await http.post(Uri.parse(API_URL.SEARCH_TUTOR),
         headers: <String, String>{
           "Authorization": "Bearer $token",
@@ -42,7 +41,7 @@ class ScheduleServices {
     List<Map<String, dynamic>> tutorList = [];
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var data = jsonDecode(response.body);
       for (int index = 0; index < data["rows"].length; index++) {
         tutorList.add({
@@ -73,7 +72,7 @@ class ScheduleServices {
         });
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var res = jsonDecode(response.body);
       List<ScheduleModel> dataList = [];
       for (var element in res["data"]["rows"]) {
@@ -133,7 +132,7 @@ class ScheduleServices {
         });
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var res = jsonDecode(response.body);
       List<ScheduleModel> dataList = [];
       for (var element in res["data"]["rows"]) {
@@ -195,9 +194,9 @@ class ScheduleServices {
           "cancelInfo": {"cancelReasonId": cancelReasonId, "note": note}
         }));
 
-    print("delete: $scheduleDetailId");
+    debugPrint("delete: $scheduleDetailId");
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       return true;
     }
     return false;
