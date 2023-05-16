@@ -164,7 +164,7 @@ class ScheduleServices {
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
       Map<String, dynamic> data = {};
-      if (res["data"].length == 0) return null;
+      if (res["data"]["rows"].length == 0) return null;
       var element = res["data"]["rows"][0];
 
       data["roomNameOrUrl"] = element["userId"] +
@@ -231,5 +231,43 @@ class ScheduleServices {
       return true;
     }
     return false;
+  }
+
+  static Future<dynamic> feedbackTutor(
+      {required String id,
+      required String bookingId,
+      required String userId,
+      required int rating,
+      required String content,
+      required bool isEdit}) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    Map<String, String> headers = {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json"
+    };
+    Map<String, dynamic> body = {};
+    late final http.Response response;
+
+    if (isEdit) {
+      body = {"content": content, "id": id, "rating": rating};
+      response = await http.put(Uri.parse(API_URL.FEEDBACK_TUTOR),
+          headers: headers, body: jsonEncode(body));
+    } else {
+      body = {
+        "bookingId": bookingId,
+        "userId": userId,
+        "rating": rating,
+        "content": content
+      };
+      response = await http.post(Uri.parse(API_URL.FEEDBACK_TUTOR),
+          headers: headers, body: jsonEncode(body));
+    }
+
+    debugPrint(response.body);
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+    }
+    return jsonDecode(response.body);
   }
 }

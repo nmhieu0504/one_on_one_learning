@@ -6,6 +6,8 @@ import 'package:one_on_one_learning/models/schedule.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/user.dart';
+import '../../services/user_service.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/ui_data.dart';
 
@@ -17,6 +19,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  late final User user;
   bool _getMoreData = false;
   bool _loading = true;
 
@@ -32,6 +35,9 @@ class _HistoryPageState extends State<HistoryPage> {
         _dataList.addAll(value);
         _loading = false;
       });
+    });
+    UserService.loadUserInfo().then((value) {
+      user = value;
     });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -71,7 +77,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return list;
   }
 
-  Widget _buildRatingList(List<dynamic> list) {
+  Widget _buildRatingList(List<dynamic> list, int dataListIndex) {
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -90,7 +96,14 @@ class _HistoryPageState extends State<HistoryPage> {
               ]),
               TextButton(
                   onPressed: () {
-                    _showRatingDialog(initialRating: list[index]["rating"]);
+                    _showRatingDialog(
+                        dataListIndex: dataListIndex,
+                        feedbackIndex: index,
+                        initialRating: list[index]["rating"],
+                        content: list[index]["content"],
+                        isEdit: true,
+                        id: list[index]["id"],
+                        bookingId: list[index]["bookingId"]);
                   },
                   child: const Text("Edit")),
             ]));
@@ -108,14 +121,23 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  void _showRatingDialog({int initialRating = 5}) { 
-    int _ratingStar = initialRating;
-    TextEditingController _contentRating = TextEditingController();
+  void _showRatingDialog(
+      {required int dataListIndex,
+      required int feedbackIndex,
+      int initialRating = 5,
+      String content = "",
+      bool isEdit = false,
+      String id = "",
+      String bookingId = ""}) {
+    int ratingStar = initialRating;
+    TextEditingController contentRating = TextEditingController();
+    contentRating.text = content;
+
     showDialog(
         context: context,
         builder: (BuildContext context) => Center(
                 child: AlertDialog(
-              title: const Text('Rate this lesson'),
+              title: const Text('Rate for this lesson'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -131,13 +153,13 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                     onRatingUpdate: (rating) {
                       debugPrint(rating.toString());
-                      _ratingStar = rating.toInt();
+                      ratingStar = rating.toInt();
                     },
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: TextField(
-                      controller: _contentRating,
+                      controller: contentRating,
                       maxLines: 2,
                       decoration: const InputDecoration(
                         labelText: 'Write a review',
@@ -145,11 +167,6 @@ class _HistoryPageState extends State<HistoryPage> {
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          _contentRating.text = value;
-                        });
-                      },
                     ),
                   ),
                 ],
@@ -164,7 +181,25 @@ class _HistoryPageState extends State<HistoryPage> {
                 FilledButton(
                   child: const Text('Submit'),
                   onPressed: () {
-
+                    ScheduleServices.feedbackTutor(
+                            id: id,
+                            bookingId: bookingId,
+                            userId: user.id,
+                            rating: ratingStar,
+                            content: contentRating.text,
+                            isEdit: isEdit)
+                        .then((value) {
+                      setState(() {
+                        if (isEdit) {
+                          _dataList[dataListIndex].feedbacks[feedbackIndex]
+                              ["rating"] = ratingStar;
+                          _dataList[dataListIndex].feedbacks[feedbackIndex]
+                              ["content"] = contentRating.text;
+                        } else {
+                          _dataList[dataListIndex].feedbacks.add(value["data"]);
+                        }
+                      });
+                    });
                     Navigator.of(context).pop();
                   },
                 ),
@@ -407,7 +442,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 10, horizontal: 15),
                                       child: _buildRatingList(
-                                          _dataList[index].feedbacks))
+                                          _dataList[index].feedbacks, index))
                             ],
                           ),
                         ),
@@ -428,7 +463,11 @@ class _HistoryPageState extends State<HistoryPage> {
                                         ? Container()
                                         : TextButton(
                                             onPressed: () {
-                                              _showRatingDialog();
+                                              _showRatingDialog(
+                                                  dataListIndex: index,
+                                                  feedbackIndex: 0,
+                                                  bookingId:
+                                                      _dataList[index].id);
                                             },
                                             child: const Text("Rating")),
                                   ),
