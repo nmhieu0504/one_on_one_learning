@@ -24,9 +24,6 @@ class _HistoryPageState extends State<HistoryPage> {
   final ScrollController _scrollController = ScrollController();
   final List<ScheduleModel> _dataList = [];
 
-  int _ratingStar = 5;
-  final TextEditingController _contentRating = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -93,7 +90,6 @@ class _HistoryPageState extends State<HistoryPage> {
               ]),
               TextButton(
                   onPressed: () {
-                    _contentRating.text = list[index]["content"];
                     _showRatingDialog(initialRating: list[index]["rating"]);
                   },
                   child: const Text("Edit")),
@@ -112,7 +108,9 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  void _showRatingDialog({int initialRating = 5}) {
+  void _showRatingDialog({int initialRating = 5}) { 
+    int _ratingStar = initialRating;
+    TextEditingController _contentRating = TextEditingController();
     showDialog(
         context: context,
         builder: (BuildContext context) => Center(
@@ -166,6 +164,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 FilledButton(
                   child: const Text('Submit'),
                   onPressed: () {
+
                     Navigator.of(context).pop();
                   },
                 ),

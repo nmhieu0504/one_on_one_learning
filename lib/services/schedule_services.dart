@@ -157,14 +157,15 @@ class ScheduleServices {
     String? token = await sharePref.getString("access_token");
     int date = DateTime.now().millisecondsSinceEpoch;
     final response = await http.get(
-        Uri.parse("${API_URL.GET_NEXT_SCHEDULE}$date"),
+        Uri.parse(
+            "${API_URL.GET_SCHEDULE_INFO}page=1&perPage=10&dateTimeGte=$date&orderBy=meeting&sortBy=asc"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
       Map<String, dynamic> data = {};
       if (res["data"].length == 0) return null;
-      var element = res["data"][0];
+      var element = res["data"]["rows"][0];
 
       data["roomNameOrUrl"] = element["userId"] +
           "-" +
