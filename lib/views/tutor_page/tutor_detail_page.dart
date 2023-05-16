@@ -331,7 +331,25 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     TextButton(
                                       child: Column(children: <Widget>[
-                                        const Icon(Icons.reviews_sharp),
+                                        const Icon(Icons.chat),
+                                        Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 5),
+                                            child: const Text('Chat')),
+                                      ]),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReviewPage(
+                                                        userID:
+                                                            widget.userId)));
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Column(children: <Widget>[
+                                        const Icon(Icons.star_border_outlined),
                                         Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
