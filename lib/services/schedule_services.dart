@@ -7,58 +7,6 @@ import '../utils/backend.dart';
 import '../utils/share_pref.dart';
 
 class ScheduleServices {
-  static Future<List<Map<String, dynamic>>> loadTutorList(
-      String selectedSpecialties,
-      String searchKeyWord,
-      Map<dynamic, dynamic> checkNationality,
-      int page,
-      int perPage) async {
-    SharePref sharePref = SharePref();
-    String? token = await sharePref.getString("access_token");
-    String specialtiesChosen;
-    if (selectedSpecialties == "ALL") {
-      specialtiesChosen = "";
-    } else {
-      specialtiesChosen = selectedSpecialties;
-    }
-    var body = {
-      "filters": {
-        "specialties": [specialtiesChosen],
-        "nationality": checkNationality,
-        "tutoringTimeAvailable": []
-      },
-      "search": searchKeyWord,
-      "page": page,
-      "perPage": perPage
-    };
-    debugPrint("body: $body");
-    final response = await http.post(Uri.parse(API_URL.SEARCH_TUTOR),
-        headers: <String, String>{
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json"
-        },
-        body: jsonEncode(body));
-    List<Map<String, dynamic>> tutorList = [];
-
-    if (response.statusCode == 200) {
-      debugPrint(response.body);
-      var data = jsonDecode(response.body);
-      for (int index = 0; index < data["rows"].length; index++) {
-        tutorList.add({
-          "userId": data["rows"][index]["userId"],
-          "avatar": data["rows"][index]["avatar"],
-          "name": data["rows"][index]["name"],
-          "country": data["rows"][index]["country"],
-          "rating": data["rows"][index]["rating"]?.toInt(),
-          "specialties": data["rows"][index]["specialties"],
-          "bio": data["rows"][index]["bio"],
-          "isFavourite": data["rows"][index]["isfavoritetutor"] == "1"
-        });
-      }
-    }
-    return tutorList;
-  }
-
   static Future<dynamic> loadHistoryData(int page, int perPage) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
@@ -111,6 +59,7 @@ class ScheduleServices {
         data["page"] = element["classReview"]?["page"];
         data["lessonProgress"] = element["classReview"]?["lessonProgress"];
         data["classReview"] = element["classReview"] != null;
+        data["feedbacks"] = element["feedbacks"];
 
         dataList.add(ScheduleModel.fromJson(data));
       }
@@ -172,6 +121,7 @@ class ScheduleServices {
         data["page"] = element["classReview"]?["page"];
         data["lessonProgress"] = element["classReview"]?["lessonProgress"];
         data["classReview"] = element["classReview"] != null;
+        data["feedbacks"] = element["feedbacks"];
 
         dataList.add(ScheduleModel.fromJson(data));
       }

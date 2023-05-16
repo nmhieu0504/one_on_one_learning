@@ -1,7 +1,6 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:one_on_one_learning/models/reviews.dart';
 import 'package:one_on_one_learning/models/tutor.dart';
@@ -10,6 +9,58 @@ import '../utils/backend.dart';
 import '../utils/share_pref.dart';
 
 class TutorServices {
+  static Future<List<Map<String, dynamic>>> loadTutorList(
+      String selectedSpecialties,
+      String searchKeyWord,
+      Map<dynamic, dynamic> checkNationality,
+      int page,
+      int perPage) async {
+    SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    String specialtiesChosen;
+    if (selectedSpecialties == "ALL") {
+      specialtiesChosen = "";
+    } else {
+      specialtiesChosen = selectedSpecialties;
+    }
+    var body = {
+      "filters": {
+        "specialties": [specialtiesChosen],
+        "nationality": checkNationality,
+        "tutoringTimeAvailable": []
+      },
+      "search": searchKeyWord,
+      "page": page,
+      "perPage": perPage
+    };
+    debugPrint("body: $body");
+    final response = await http.post(Uri.parse(API_URL.SEARCH_TUTOR),
+        headers: <String, String>{
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(body));
+    List<Map<String, dynamic>> tutorList = [];
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      for (int index = 0; index < data["rows"].length; index++) {
+        tutorList.add({
+          "userId": data["rows"][index]["userId"],
+          "avatar": data["rows"][index]["avatar"],
+          "name": data["rows"][index]["name"],
+          "country": data["rows"][index]["country"],
+          "rating": data["rows"][index]["rating"]?.toInt(),
+          "specialties": data["rows"][index]["specialties"],
+          "bio": data["rows"][index]["bio"],
+          "isFavourite": data["rows"][index]["isfavoritetutor"] == "1"
+        });
+      }
+    }
+    return tutorList;
+  }
+
   static Future<dynamic> loadReviews(
       String userID, int page, int perPage) async {
     final SharePref sharePref = SharePref();
@@ -20,7 +71,7 @@ class TutorServices {
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var res = jsonDecode(response.body);
       List<Reviews> dataList = [];
       for (var element in res["data"]["rows"]) {
@@ -47,7 +98,7 @@ class TutorServices {
         "${API_URL.GET_TUTOR_SCHEDULE}tutorId=$tutorId&startTimestamp=${startTimestamp.millisecondsSinceEpoch}&endTimestamp=${endTimestamp.millisecondsSinceEpoch}"));
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var res = jsonDecode(response.body);
       List<Map<String, dynamic>> dataList = [];
       for (var element in res["scheduleOfTutor"]) {
@@ -74,7 +125,7 @@ class TutorServices {
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var data = jsonDecode(response.body);
       Tutor tutor = Tutor.fromJson(data);
       return tutor;
@@ -104,7 +155,7 @@ class TutorServices {
         body: jsonEncode(
             {"tutorId": userId, "content": selectedRepotItems.join("\n")}));
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       return true;
     }
     return false;
@@ -122,7 +173,7 @@ class TutorServices {
         body: jsonEncode({"tutorId": userId}));
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       return true;
     }
     return false;

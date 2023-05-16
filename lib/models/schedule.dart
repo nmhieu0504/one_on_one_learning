@@ -25,6 +25,7 @@ class ScheduleModel {
   final String? lessonProgress;
   final String? scheduleDetailId;
   final bool classReview;
+  final List<dynamic> feedbacks;
 
   ScheduleModel(
       {required this.id,
@@ -52,7 +53,8 @@ class ScheduleModel {
       required this.lesson,
       required this.page,
       required this.lessonProgress,
-      this.scheduleDetailId});
+      this.scheduleDetailId,
+      this.feedbacks = const []});
 
   factory ScheduleModel.fromJson(Map<String, dynamic> json) {
     return ScheduleModel(
@@ -82,6 +84,7 @@ class ScheduleModel {
       lessonProgress: json['lessonProgress'],
       classReview: json['classReview'],
       scheduleDetailId: json['scheduleDetailId'],
+      feedbacks: json['feedbacks'],
     );
   }
 
@@ -112,6 +115,7 @@ class ScheduleModel {
       'lessonProgress': lessonProgress,
       'classReview': classReview,
       'scheduleDetailId': scheduleDetailId,
+      'feedbacks': feedbacks,
     };
   }
 }

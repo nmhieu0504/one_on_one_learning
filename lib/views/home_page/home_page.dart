@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
 import 'package:one_on_one_learning/views/meeting_page/meeting_page.dart';
+import '../../services/tutor_services.dart';
 import '../../utils/ui_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -296,7 +297,7 @@ class _HomePageState extends State<HomePage> {
                         _isFilter = false;
                         _loading = true;
                       });
-                      ScheduleServices.loadTutorList(
+                      TutorServices.loadTutorList(
                               _selectedSpecialties,
                               _searchController.text,
                               checkNationality(),
@@ -498,7 +499,7 @@ class _HomePageState extends State<HomePage> {
         _totalTimeLearn = value;
       });
     });
-    ScheduleServices.loadTutorList(_selectedSpecialties, _searchController.text,
+    TutorServices.loadTutorList(_selectedSpecialties, _searchController.text,
             checkNationality(), _page++, _perPage)
         .then((value) {
       setState(() {
@@ -512,7 +513,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _getMoreData = true;
         });
-        ScheduleServices.loadTutorList(_selectedSpecialties,
+        TutorServices.loadTutorList(_selectedSpecialties,
                 _searchController.text, checkNationality(), _page++, _perPage)
             .then((value) {
           setState(() {

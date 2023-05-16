@@ -24,8 +24,8 @@ class _HistoryPageState extends State<HistoryPage> {
   final ScrollController _scrollController = ScrollController();
   final List<ScheduleModel> _dataList = [];
 
-  int _ratingStar = 0;
-  String _contentRating = '';
+  int _ratingStar = 5;
+  final TextEditingController _contentRating = TextEditingController();
 
   @override
   void initState() {
@@ -57,6 +57,49 @@ class _HistoryPageState extends State<HistoryPage> {
     super.dispose();
   }
 
+  List<Widget> _showRating(int rating) {
+    List<Widget> list = [];
+    for (int i = 0; i < rating; i++) {
+      list.add(const Icon(
+        Icons.star,
+        color: Colors.yellow,
+      ));
+    }
+    while (list.length < 5) {
+      list.add(const Icon(
+        Icons.star,
+        color: Colors.grey,
+      ));
+    }
+    return list;
+  }
+
+  Widget _buildRatingList(List<dynamic> list) {
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: list.length,
+        itemBuilder: (context, index) =>
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Row(children: [
+                const Text(
+                  "Rating: ",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(children: _showRating(list[index]["rating"]))
+              ]),
+              TextButton(
+                  onPressed: () {
+                    _contentRating.text = list[index]["content"];
+                    _showRatingDialog(initialRating: list[index]["rating"]);
+                  },
+                  child: const Text("Edit")),
+            ]));
+  }
+
   Widget _buildProgressIndicator() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -69,7 +112,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  void _showRatingDialog() {
+  void _showRatingDialog({int initialRating = 5}) {
     showDialog(
         context: context,
         builder: (BuildContext context) => Center(
@@ -79,7 +122,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RatingBar.builder(
-                    initialRating: 5,
+                    initialRating: initialRating.toDouble(),
                     minRating: 1,
                     direction: Axis.horizontal,
                     itemCount: 5,
@@ -90,21 +133,23 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                     onRatingUpdate: (rating) {
                       debugPrint(rating.toString());
+                      _ratingStar = rating.toInt();
                     },
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: TextField(
+                      controller: _contentRating,
                       maxLines: 2,
                       decoration: const InputDecoration(
-                        labelText: 'Write a comment',
+                        labelText: 'Write a review',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                       onChanged: (value) {
                         setState(() {
-                          _contentRating = value;
+                          _contentRating.text = value;
                         });
                       },
                     ),
@@ -357,6 +402,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                                               : ""))))),
                                     ]),
                               ),
+                              _dataList[index].feedbacks.isEmpty
+                                  ? Container()
+                                  : Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 15),
+                                      child: _buildRatingList(
+                                          _dataList[index].feedbacks))
                             ],
                           ),
                         ),
@@ -373,11 +425,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                   Container(
                                     margin: const EdgeInsets.only(
                                         left: 5, right: 5),
-                                    child: TextButton(
-                                        onPressed: () {
-                                          _showRatingDialog();
-                                        },
-                                        child: const Text('Rating')),
+                                    child: _dataList[index].feedbacks.isNotEmpty
+                                        ? Container()
+                                        : TextButton(
+                                            onPressed: () {
+                                              _showRatingDialog();
+                                            },
+                                            child: const Text("Rating")),
                                   ),
                                   Container(
                                     margin: const EdgeInsets.only(

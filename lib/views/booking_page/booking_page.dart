@@ -38,7 +38,7 @@ class _BookingPageState extends State<BookingPage> {
 
   late LinkedHashMap<DateTime, List<Schedule>> kSchedules;
 
-  TextEditingController _noteController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
 
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
