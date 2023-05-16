@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:one_on_one_learning/models/schedule.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +23,9 @@ class _HistoryPageState extends State<HistoryPage> {
   int _page = 1;
   final ScrollController _scrollController = ScrollController();
   final List<ScheduleModel> _dataList = [];
+
+  int _ratingStar = 0;
+  String _contentRating = '';
 
   @override
   void initState() {
@@ -63,6 +67,65 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       ),
     );
+  }
+
+  void _showRatingDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => Center(
+                child: AlertDialog(
+              title: const Text('Rate this lesson'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RatingBar.builder(
+                    initialRating: 5,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      debugPrint(rating.toString());
+                    },
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: TextField(
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        labelText: 'Write a comment',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _contentRating = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FilledButton(
+                  child: const Text('Submit'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            )));
   }
 
   @override
@@ -311,7 +374,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                     margin: const EdgeInsets.only(
                                         left: 5, right: 5),
                                     child: TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          _showRatingDialog();
+                                        },
                                         child: const Text('Rating')),
                                   ),
                                   Container(
