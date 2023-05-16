@@ -8,6 +8,7 @@ import 'package:one_on_one_learning/services/course_service.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
+import 'package:one_on_one_learning/views/chat_with_tutor_page/chat_page.dart';
 import 'package:one_on_one_learning/views/tutor_page/tutor_video.dart';
 import '../../models/course.dart';
 import '../../models/tutor.dart';
@@ -341,10 +342,8 @@ class TutorPageState extends State<TutorPage> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReviewPage(
-                                                        userID:
-                                                            widget.userId)));
+                                                builder: (context) => ChatPage(
+                                                    tutorId: widget.userId)));
                                       },
                                     ),
                                     TextButton(
