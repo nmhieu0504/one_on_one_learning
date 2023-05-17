@@ -245,6 +245,10 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                                 setState(() {
                                   messageList.clear();
                                   ChatGPTUltils.history.clear();
+                                  ChatGPTUltils.totalTokens = 0;
+                                  SharedPreferences.getInstance().then((prefs) {
+                                    prefs.setInt("totalTokens", 0);
+                                  });
                                 });
                                 DB_Ultils.deleteAll();
                                 Navigator.of(context).pop();
@@ -291,7 +295,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           message.date.day,
         ),
         groupHeaderBuilder: (Message message) => Container(
-          margin: const EdgeInsets.only(top: 10, bottom: 10),
+          margin: const EdgeInsets.only(top: 20, bottom: 10),
           child: Align(
             alignment: Alignment.topCenter,
             child: Text(DateFormat.yMMMMEEEEd().format(message.date),
@@ -305,7 +309,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                   elevation: 5,
                   margin: const BubbleEdges.only(
                     top: 5,
-                    bottom: 5,
+                    bottom: 10,
                   ),
                   alignment: Alignment.topRight,
                   nip: BubbleNip.rightTop,
@@ -322,7 +326,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                         elevation: 5,
                         margin: const BubbleEdges.only(
                           top: 5,
-                          bottom: 5,
+                          bottom: 10,
                         ),
                         alignment: Alignment.topLeft,
                         nip: BubbleNip.leftTop,
