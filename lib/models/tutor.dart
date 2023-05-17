@@ -52,7 +52,7 @@ class Tutor {
     user = (json['User'] != null ? User.fromJson(json['User']) : null) ??
         User(courses: [], id: "", name: "", country: "", isPublicRecord: false);
     isFavorite = json['isFavorite'];
-    avgRating = json['avgRating'] == 0 ? 0.0 : json['avgRating'];
+    avgRating = json['avgRating'].toDouble();
     totalFeedback = json['totalFeedback'] ?? 0;
   }
 

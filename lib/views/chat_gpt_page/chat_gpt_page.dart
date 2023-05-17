@@ -39,6 +39,8 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
 
+  bool _loading = true;
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +69,9 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
         "content": element.message
       });
     }
-    setState(() {});
+    setState(() {
+      _loading = false;
+    });
   }
 
   void _listen() async {
@@ -514,12 +518,16 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                 fontWeight: FontWeight.bold,
               ))),
       endDrawer: _buildDrawer(),
-      body: SafeArea(
-        child: Column(children: [
-          _buildMessageListView(),
-          _buildInputMessage(),
-        ]),
-      ),
+      body: _loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SafeArea(
+              child: Column(children: [
+                _buildMessageListView(),
+                _buildInputMessage(),
+              ]),
+            ),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }

@@ -7,7 +7,7 @@ import '../utils/share_pref.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  static Future<dynamic> loadUserInfo() async {
+  static Future<dynamic> loadUserInfo({bool isSocketCall = false}) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
 
@@ -39,6 +39,10 @@ class UserService {
       data["timezone"] = res["user"]["timezone"];
       data["studySchedule"] = res["user"]["studySchedule"];
       data["canSendMessage"] = res["user"]["canSendMessage"];
+
+      if (isSocketCall) {
+        return data;
+      }
 
       return User.fromJson(data);
     }

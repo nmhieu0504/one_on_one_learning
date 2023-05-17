@@ -6,8 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:one_on_one_learning/models/chat_message.dart';
 import 'package:bubble/bubble.dart';
 import 'package:one_on_one_learning/services/chat_service.dart';
+import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:one_on_one_learning/utils/web_socket.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ChatPage extends StatefulWidget {
   final String tutorId;
@@ -19,76 +21,52 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   bool _loading = true;
-  // bool _isConnected = true;
-  late IO.Socket _socket;
   final textFieldController = TextEditingController();
   List<Message> messageList = [];
   int page = 1;
   final int perPage = 25;
   final ScrollController _scrollController = ScrollController();
 
-  void _connectToServer() {
-    _socket = IO.io(
-      WebSocket.SOCKET_URL,
-      <String, dynamic>{
-        "transports": ["websocket"],
-        // "forceNew": true,
-        "EIO": "4",
-        // "auth": {
-        //   "token":
-        //       "${AppKey.authorization} ${SPref.instance.get(AppKey.authorization)}"
-        // }
-      },
-    );
-    _socket.onConnect((_) {
-      debugPrint('CONNECT STATUS: CONNECT');
-      // _socket.emitWithAck(
-      //     "chat:join-room", {"idGroup": "_groupController.targetGroup?.id"},
-      //     ack: (value) {
-      //   debugPrint("ACK JOIN CHAT ROOM: $value");
-      // });
-      // _getAllMessage();
-    });
-    debugPrint("CONNECT STATUS: ${_socket.connected}");
-  }
+  late final WebSocketChannel channel;
 
-  void _getAllMessage() {
-    _socket.emitWithAck(
-        "chat:get-all-message", {"idGroup": "_groupController.targetGroup?.id"},
-        ack: (Map<String, dynamic> value) {
-      setState(() {
-        // _isConnected = true;
-        debugPrint("ACK GET ALL MESSAGE: $value");
-        final data = value["messages"];
-        debugPrint("DATA: $data");
+  void connectToWebSocket() {
+    channel = IOWebSocketChannel.connect(WebSocketChat.SOCKET_URL);
 
-        data.forEach((e) {
-          messageList.add(Message(
-              userID: e["userID"],
-              message: e["data"]["content"],
-              date: DateTime.parse(e["createdAt"]),
-              sentByMe: e["userID"] == "_currentUser?.uid"));
-        });
-      });
+    UserService.loadUserInfo(isSocketCall: true).then((value) {
+      debugPrint("USER INFO: $value");
+      channel.sink.add(40); // start connection
+      debugPrint("SENDING: 40");
+      List<dynamic> obj = ["connection:login"];
+      obj.add(value);
+
+      String message = "42$obj";
+      debugPrint("LOGIN: $message");
+      channel.sink.add(message);
+      debugPrint("SENDING: 42");
     });
-    _socket.on("chat:receive-message", (data) {
-      debugPrint("MESSAAGE RECEIVED: $data");
-      // setState(() {
-      //   String photoURL = findSentUserImg(data["userID"]) ?? defaultAvatar;
-      //   messageList.add(Message(
-      //       photoURL: photoURL,
-      //       userID: data["userID"],
-      //       message: data["data"]["content"],
-      //       date: DateTime.parse(data["createdAt"]),
-      //       sentByMe: data["userID"] == _currentUser?.uid));
-      // });
+
+    channel.stream.listen((message) {
+      debugPrint("RAW MESSAGE: $message");
+      // Define a regular expression pattern to match the number followed by the object
+      RegExp pattern = RegExp(r'^(\d{1,2})(.*)$');
+      // Extract the number and the object using the regular expression pattern
+      RegExpMatch? match = pattern.firstMatch(message);
+
+      if (match != null) {
+        // Extract the number and the object from the matched groups
+        String? code = match.group(1);
+        String? object = match.group(2);
+
+        debugPrint('Code: $code');
+        debugPrint('Object: $object');
+      }
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _connectToServer();
+    connectToWebSocket();
     ChatService.loadMessage(widget.tutorId, page++, perPage).then((value) {
       setState(() {
         if (value != null) {
@@ -114,12 +92,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     super.dispose();
-    _socket.emitWithAck(
-        "chat:leave-room", {"idGroup": "_groupController.targetGroup?.id"},
-        ack: (value) {
-      _socket.dispose();
-      debugPrint("ACK LEAVE CHAT ROOM: $value");
-    });
+    channel.sink.close();
   }
 
   @override
@@ -159,6 +132,8 @@ class _ChatPageState extends State<ChatPage> {
                               style: const TextStyle(fontSize: 11.0)),
                         ),
                       ),
+                      itemComparator: (element1, element2) =>
+                          element1.date.compareTo(element2.date),
                       indexedItemBuilder: (context, message, index) {
                         return Column(children: [
                           Row(children: [
@@ -216,13 +191,6 @@ class _ChatPageState extends State<ChatPage> {
                               color: Colors.blue,
                             ),
                             onPressed: () {
-                              _socket.emitWithAck("chat:send-message", {
-                                "idGroup": "_groupController.targetGroup?.id",
-                                "content": textFieldController.text,
-                                "type": "text"
-                              }, ack: (value) {
-                                debugPrint("ACK SEND MESSAGE: $value");
-                              });
                               setState(() {
                                 messageList.add(Message(
                                     userID: "userID",
