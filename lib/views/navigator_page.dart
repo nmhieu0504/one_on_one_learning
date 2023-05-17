@@ -4,6 +4,7 @@ import 'package:one_on_one_learning/views/history_page/history_page.dart';
 import 'package:one_on_one_learning/views/home_page/home_page.dart';
 import 'package:one_on_one_learning/views/schedule_page/schedule_page.dart';
 import 'package:one_on_one_learning/views/settings_page/settings_page.dart';
+import 'package:one_on_one_learning/views/chat_gpt_page/chat_gpt_page.dart';
 
 class NavigatorPage extends StatefulWidget {
   const NavigatorPage({super.key});
@@ -75,6 +76,20 @@ class NavigatorStatePage extends State<NavigatorPage> {
           ),
         ],
       ),
+      floatingActionButton: FilledButton.icon(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (BuildContext context) {
+                return const ChatGPTPage();
+              }),
+            );
+          },
+          icon: const Icon(Icons.chat),
+          label: const Text('Chat with AI')),
       body: SafeArea(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

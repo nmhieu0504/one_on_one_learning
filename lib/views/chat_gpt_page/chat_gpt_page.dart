@@ -59,6 +59,8 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
 
   Future<void> _loadMessage() async {
     messageList = await DB_Ultils.loadAll();
+    ChatGPTUltils.totalTokens =
+        (await SharedPreferences.getInstance()).getInt("totalTokens") ?? 0;
     for (var element in messageList) {
       ChatGPTUltils.history.add({
         "role": element.isUser ? "user" : "assistant",
