@@ -20,8 +20,11 @@ class ChatGPTUltils {
     var pref = await SharedPreferences.getInstance();
 
     if (API_Const.MAX_TOKEN - totalTokens <= tokenRemainingLimt) {
-      debugPrint("Eleminating history: ${history[1]["content"]}");
-      history.removeAt(1);
+      // remove top 2 messages
+      debugPrint("Eleminating history: ${history[0]["content"]}");
+      history.removeAt(0);
+      debugPrint("Eleminating history: ${history[0]["content"]}");
+      history.removeAt(0);
     }
 
     try {
