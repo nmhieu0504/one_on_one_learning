@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       translations: AppTranslations(), // Initialize with custom translations
-      locale: const Locale('en', 'US'),
+      locale: const Locale('vi', 'VN'),
       fallbackLocale: const Locale('en', 'US'),
       supportedLocales: const [
         Locale('en', 'US'),

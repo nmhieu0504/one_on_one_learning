@@ -5,6 +5,7 @@ import 'package:one_on_one_learning/views/home_page/home_page.dart';
 import 'package:one_on_one_learning/views/schedule_page/schedule_page.dart';
 import 'package:one_on_one_learning/views/settings_page/settings_page.dart';
 import 'package:one_on_one_learning/views/chat_gpt_page/chat_gpt_page.dart';
+import 'package:get/get.dart';
 
 class NavigatorPage extends StatefulWidget {
   const NavigatorPage({super.key});
@@ -24,18 +25,13 @@ class NavigatorStatePage extends State<NavigatorPage> {
     SchedulePage(),
     HistoryPage(),
     CoursesPage(),
-    Text(
-      'Index 4: Settings',
-      style: optionStyle,
-    ),
   ];
 
-  static const List<String> _appBarTitles = <String>[
-    'Tutors',
-    'Schedule',
-    'History',
-    'Courses',
-    'Settings',
+  static final List<String> _appBarTitles = <String>[
+    'home'.tr,
+    'schedule'.tr,
+    'history'.tr,
+    'courses'.tr,
   ];
 
   void _onItemTapped(int index) {
@@ -61,6 +57,19 @@ class NavigatorStatePage extends State<NavigatorPage> {
         backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return const ChatGPTPage();
+                  }),
+                );
+              },
+              icon: const Icon(
+                Icons.headset_mic,
+                color: Colors.black,
+              )),
+          IconButton(
             icon: const Icon(
               Icons.settings,
               color: Colors.black,
@@ -76,53 +85,41 @@ class NavigatorStatePage extends State<NavigatorPage> {
           ),
         ],
       ),
-      floatingActionButton: FilledButton.icon(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) {
-                return const ChatGPTPage();
-              }),
-            );
-          },
-          icon: const Icon(Icons.chat),
-          label: const Text('Chat with AI')),
       body: SafeArea(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(
+            icon: const Icon(
               Icons.home,
             ),
-            label: 'Home',
+            label: 'home'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(
+            icon: const Icon(
               Icons.timer_outlined,
             ),
-            label: 'Schedule',
+            label: 'schedule'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(
+            icon: const Icon(
               Icons.history,
             ),
-            label: 'History',
+            label: 'history'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu_book_sharp,
             ),
-            label: 'Courses',
+            label: 'courses'.tr,
           ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        selectedItemColor: Colors.blue,
       ),
     );
   }

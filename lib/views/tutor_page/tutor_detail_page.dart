@@ -16,10 +16,11 @@ import '../../utils/countries_lis.dart';
 import '../../utils/language_map.dart';
 import '../courses_page/course_detail_page.dart';
 import '../reviews_page/review_page.dart';
+import 'package:get/get.dart';
 
 class TutorPage extends StatefulWidget {
   final String userId;
-  const TutorPage({required this.userId, super.key});
+  TutorPage({required this.userId, super.key});
 
   @override
   State<TutorPage> createState() => TutorPageState();
@@ -33,9 +34,9 @@ class TutorPageState extends State<TutorPage> {
   List<Course> tutorCoursesList = [];
 
   final _reportItems = [
-    "This tutor is annoying me",
-    "This profile is pretending be someone or is fake",
-    "Inappropriate profile photo"
+    "reason_report_1".tr,
+    "reason_report_2".tr,
+    "reason_report_3".tr,
   ];
 
   List<String> _selectedRepotItems = [];
@@ -122,7 +123,7 @@ class TutorPageState extends State<TutorPage> {
         child: OutlinedButton(
           onPressed: () {},
           style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.blue,
+            foregroundColor: Colors.blue[600],
             side: const BorderSide(color: Colors.blue),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -145,7 +146,7 @@ class TutorPageState extends State<TutorPage> {
         child: OutlinedButton(
           onPressed: () {},
           style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.blue,
+            foregroundColor: Colors.blue[600],
             side: const BorderSide(color: Colors.blue),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -176,7 +177,7 @@ class TutorPageState extends State<TutorPage> {
             );
           },
           child: Text(tutor.user.courses[i].name ?? "",
-              style: const TextStyle(fontSize: 12)),
+              style: const TextStyle(color: Colors.black, fontSize: 12)),
         ),
       ));
     }
@@ -251,7 +252,7 @@ class TutorPageState extends State<TutorPage> {
                         top: 20, bottom: 20, left: 10, right: 10),
                     clipBehavior: Clip.hardEdge,
                     child: InkWell(
-                      // splashcolor: Colors.purple[900].withAlpha(30),
+                      // splashcolor: Colors.blue[600].withAlpha(30),
                       // onTap: () {},
                       child: Container(
                         margin: const EdgeInsets.all(10),
@@ -309,6 +310,8 @@ class TutorPageState extends State<TutorPage> {
                                         CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       FilledButton(
+                                        style: FilledButton.styleFrom(
+                                            backgroundColor: Colors.blue[600]),
                                         onPressed: () {
                                           Navigator.push(
                                               context,
@@ -321,7 +324,9 @@ class TutorPageState extends State<TutorPage> {
                                         child: Container(
                                             margin: const EdgeInsets.only(
                                                 top: 10, bottom: 10),
-                                            child: const Text('Book Now')),
+                                            child: Text(
+                                              'book_a_lesson'.tr,
+                                            )),
                                       )
                                     ],
                                   ),
@@ -332,11 +337,14 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     TextButton(
                                       child: Column(children: <Widget>[
-                                        const Icon(Icons.chat),
+                                        Icon(Icons.chat,
+                                            color: Colors.blue[600]),
                                         Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
-                                            child: const Text('Chat')),
+                                            child: Text('Chat',
+                                                style: TextStyle(
+                                                    color: Colors.blue[600]))),
                                       ]),
                                       onPressed: () {
                                         Navigator.push(
@@ -348,11 +356,14 @@ class TutorPageState extends State<TutorPage> {
                                     ),
                                     TextButton(
                                       child: Column(children: <Widget>[
-                                        const Icon(Icons.star_border_outlined),
+                                        Icon(Icons.star_border_outlined,
+                                            color: Colors.blue[600]),
                                         Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
-                                            child: const Text('Reviews')),
+                                            child: Text('Reviews',
+                                                style: TextStyle(
+                                                    color: Colors.blue[600]))),
                                       ]),
                                       onPressed: () {
                                         Navigator.push(
@@ -366,11 +377,14 @@ class TutorPageState extends State<TutorPage> {
                                     ),
                                     TextButton(
                                       child: Column(children: <Widget>[
-                                        const Icon(Icons.report),
+                                        Icon(Icons.report,
+                                            color: Colors.blue[600]),
                                         Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
-                                            child: const Text('Report')),
+                                            child: Text('report'.tr,
+                                                style: TextStyle(
+                                                    color: Colors.blue[600]))),
                                       ]),
                                       onPressed: () => showDialog<String>(
                                           context: context,
@@ -378,8 +392,10 @@ class TutorPageState extends State<TutorPage> {
                                               Center(
                                                 child: SingleChildScrollView(
                                                   child: AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.white,
                                                     title: Text(
-                                                        'Report ${tutor.user.name}',
+                                                        '${'report'.tr} ${tutor.user.name}',
                                                         style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight
@@ -388,9 +404,10 @@ class TutorPageState extends State<TutorPage> {
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         children: [
-                                                          const Text(
-                                                              "Help us understand what's happening?",
-                                                              style: TextStyle(
+                                                          Text(
+                                                              "help_us_report"
+                                                                  .tr,
+                                                              style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold)),
@@ -405,6 +422,7 @@ class TutorPageState extends State<TutorPage> {
                                                                         .map((item) =>
                                                                             StatefulBuilder(
                                                                               builder: (context, setState) => CheckboxListTile(
+                                                                                  activeColor: Colors.blue[600],
                                                                                   value: _selectedRepotItems.contains(item),
                                                                                   title: Text(item, style: const TextStyle(fontWeight: FontWeight.normal)),
                                                                                   controlAffinity: ListTileControlAffinity.leading,
@@ -423,15 +441,29 @@ class TutorPageState extends State<TutorPage> {
                                                                 const EdgeInsets
                                                                         .only(
                                                                     top: 10),
-                                                            child: TextField(
-                                                              controller:
-                                                                  _reportController,
-                                                              maxLines: 3,
-                                                              decoration: const InputDecoration(
-                                                                  border:
-                                                                      OutlineInputBorder(),
-                                                                  hintText:
-                                                                      'Enter your report here'),
+                                                            child: Theme(
+                                                              data: ThemeData(
+                                                                primaryColor:
+                                                                    Colors.blue[
+                                                                        600],
+                                                                primaryColorDark:
+                                                                    Colors.blue[
+                                                                        600],
+                                                              ),
+                                                              child: TextField(
+                                                                cursorColor:
+                                                                    Colors.blue[
+                                                                        600],
+                                                                controller:
+                                                                    _reportController,
+                                                                maxLines: 3,
+                                                                decoration: InputDecoration(
+                                                                    border:
+                                                                        const OutlineInputBorder(),
+                                                                    hintText:
+                                                                        'enter_your_report'
+                                                                            .tr),
+                                                              ),
                                                             ),
                                                           ),
                                                         ]),
@@ -439,6 +471,8 @@ class TutorPageState extends State<TutorPage> {
                                                       FilledButton(
                                                         style: FilledButton
                                                             .styleFrom(
+                                                          backgroundColor:
+                                                              Colors.blue[600],
                                                           textStyle:
                                                               Theme.of(context)
                                                                   .textTheme
@@ -456,7 +490,8 @@ class TutorPageState extends State<TutorPage> {
                                                                   .text
                                                                   .isEmpty) {
                                                             _displayErrorMotionToast(
-                                                                "Please give us more information about your report.");
+                                                                "error_report"
+                                                                    .tr);
                                                           } else {
                                                             _selectedRepotItems.add(
                                                                 _reportController
@@ -472,7 +507,8 @@ class TutorPageState extends State<TutorPage> {
                                                                   .clear();
                                                               if (value) {
                                                                 _displaySuccessMotionToast(
-                                                                    'Your report has been sent');
+                                                                    'success_report'
+                                                                        .tr);
                                                               }
                                                             });
                                                             Navigator.of(
@@ -485,7 +521,7 @@ class TutorPageState extends State<TutorPage> {
                                                         style: FilledButton
                                                             .styleFrom(
                                                           backgroundColor:
-                                                              Colors.grey,
+                                                              Colors.grey[400],
                                                           textStyle:
                                                               Theme.of(context)
                                                                   .textTheme
@@ -528,11 +564,11 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text('Languages',
+                                      child: Text('languages'.tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.purple[900])),
+                                              color: Colors.blue[600])),
                                     ),
                                     Wrap(
                                         alignment: WrapAlignment.start,
@@ -546,11 +582,11 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text('Education',
+                                      child: Text('education'.tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.purple[900])),
+                                              color: Colors.blue[600])),
                                     ),
                                     Container(
                                         margin:
@@ -567,11 +603,11 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text('Experience',
+                                      child: Text('experience'.tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.purple[900])),
+                                              color: Colors.blue[600])),
                                     ),
                                     Container(
                                         margin:
@@ -588,11 +624,11 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text('Interests',
+                                      child: Text('interests'.tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.purple[900])),
+                                              color: Colors.blue[600])),
                                     ),
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
@@ -607,11 +643,11 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text('Profession',
+                                      child: Text('profession'.tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.purple[900])),
+                                              color: Colors.blue[600])),
                                     ),
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
@@ -626,11 +662,11 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text('Specialties',
+                                      child: Text('specialties'.tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.purple[900])),
+                                              color: Colors.blue[600])),
                                     ),
                                     Wrap(
                                         alignment: WrapAlignment.start,
@@ -644,11 +680,11 @@ class TutorPageState extends State<TutorPage> {
                                   children: <Widget>[
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
-                                      child: Text('Courses',
+                                      child: Text('courses'.tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.purple[900])),
+                                              color: Colors.blue[600])),
                                     ),
                                     ..._showCourses()
                                   ]),

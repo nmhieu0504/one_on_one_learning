@@ -520,7 +520,9 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
       endDrawer: _buildDrawer(),
       body: _loading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.blue,
+              ),
             )
           : SafeArea(
               child: Column(children: [

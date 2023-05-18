@@ -108,7 +108,9 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: SafeArea(
           child: _loading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator(
+                color: Colors.blue,
+              ))
               : Column(children: [
                   Expanded(
                     child: GroupedListView<Message, DateTime>(

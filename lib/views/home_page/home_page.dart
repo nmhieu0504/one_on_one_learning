@@ -10,6 +10,7 @@ import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
 import 'package:one_on_one_learning/views/meeting_page/meeting_page.dart';
 import '../../services/tutor_services.dart';
 import '../../utils/ui_data.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,9 +56,9 @@ class _HomePageState extends State<HomePage> {
   String _selectedSpecialties = 'ALL';
 
   final List<String> _nationalityTutorList = [
-    "Vietnamese Tutor",
-    "Foreign Tutor",
-    "Native English Tutor"
+    "vietnamese_tutor".tr,
+    "foreign_tutor".tr,
+    "english_tutor".tr
   ];
 
   final List<TutorCard> _tutorList = [];
@@ -97,7 +98,9 @@ class _HomePageState extends State<HomePage> {
       child: Center(
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
-          child: const CircularProgressIndicator(),
+          child: const CircularProgressIndicator(
+            color: Colors.blue,
+          ),
         ),
       ),
     );
@@ -122,6 +125,7 @@ class _HomePageState extends State<HomePage> {
           spacing: 10,
           children: _specialtiesList.map((value) {
             return FilterChip(
+              selectedColor: Colors.blue[100],
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               label: Text(specialtiesUltis(value)),
@@ -145,40 +149,42 @@ class _HomePageState extends State<HomePage> {
         margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Wrap(
             spacing: 10,
-            children: _nationalityTutorList.map((value) {
+            children: _nationalityTutorList.asMap().entries.map((value) {
               return FilterChip(
+                  selectedColor: Colors.blue[100],
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30))),
-                  label: Text(value),
+                  label: Text(_nationalityTutorList[value.key]),
                   onSelected: (bool isSlected) {
                     setState(() {
-                      switch (value) {
-                        case "Vietnamese Tutor":
+                      switch (value.key) {
+                        case 0:
                           _vietnameseTutorChip = isSlected;
                           break;
-                        case "Native English Tutor":
-                          _nativeTutorChip = isSlected;
-                          break;
-                        case "Foreign Tutor":
+                        case 1:
                           _foreignTutorChip = isSlected;
+                          break;
+                        case 2:
+                          _nativeTutorChip = isSlected;
                           break;
                       }
                     });
                   },
-                  selected: value == "Vietnamese Tutor"
+                  selected: value.key == 0
                       ? _vietnameseTutorChip
-                      : value == "Foreign Tutor"
+                      : value.key == 1
                           ? _foreignTutorChip
                           : _nativeTutorChip);
             }).toList()));
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final DateTime now = DateTime.now();
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: _selectedDate ?? DateTime.now(),
         firstDate: DateTime(1900),
-        lastDate: DateTime.now());
+        lastDate: DateTime(now.year, 12, 31));
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
@@ -196,9 +202,9 @@ class _HomePageState extends State<HomePage> {
             children: [
           Container(
               margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: const Text(
-                "Tutor Name",
-                style: TextStyle(
+              child: Text(
+                "tutor_name".tr,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -207,29 +213,36 @@ class _HomePageState extends State<HomePage> {
             margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: SizedBox(
               height: 40,
-              child: TextField(
-                controller: _searchController,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    hintText: 'Search',
-                    hintStyle:
-                        const TextStyle(color: Colors.grey, fontSize: 16),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(15),
-                      width: 18,
-                      child: Image.asset(UIData.searchIcon),
-                    )),
+              child: Theme(
+                data: ThemeData(
+                  primaryColor: Colors.blue,
+                  primaryColorDark: Colors.blue,
+                ),
+                child: TextField(
+                  cursorColor: Colors.blue,
+                  controller: _searchController,
+                  textAlignVertical: TextAlignVertical.bottom,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      hintText: 'search'.tr,
+                      hintStyle:
+                          const TextStyle(color: Colors.grey, fontSize: 16),
+                      prefixIcon: Container(
+                        padding: const EdgeInsets.all(15),
+                        width: 18,
+                        child: Image.asset(UIData.searchIcon),
+                      )),
+                ),
               ),
             ),
           ),
           _nationalityTutorFilter(),
           Container(
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: const Text(
-                "Select available tutoring time",
-                style: TextStyle(
+              child: Text(
+                "available_time".tr,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -238,29 +251,37 @@ class _HomePageState extends State<HomePage> {
             margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: SizedBox(
               height: 40,
-              child: TextField(
-                textAlignVertical: TextAlignVertical.bottom,
-                textAlign: TextAlign.center,
-                controller: _datePickerController,
-                onTap: () {
-                  _selectDate(context);
-                },
-                decoration: InputDecoration(
-                  suffixIcon: const Icon(Icons.calendar_month_outlined),
-                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
-                  hintText: "Pick a date",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30)),
+              child: Theme(
+                data: ThemeData(
+                  primaryColor: Colors.blue,
+                  primaryColorDark: Colors.blue,
                 ),
-                readOnly: true,
+                child: TextField(
+                  cursorColor: Colors.blue,
+                  textAlignVertical: TextAlignVertical.bottom,
+                  textAlign: TextAlign.center,
+                  controller: _datePickerController,
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  decoration: InputDecoration(
+                    suffixIcon: const Icon(Icons.calendar_month_outlined),
+                    hintStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 16),
+                    hintText: "pick_a_date".tr,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
+                  readOnly: true,
+                ),
               ),
             ),
           ),
           Container(
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: const Text(
-                "Specialties",
-                style: TextStyle(
+              child: Text(
+                "specialties".tr,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -283,13 +304,17 @@ class _HomePageState extends State<HomePage> {
                         _searchController.text = "";
                       });
                     },
-                    child: const Text(
-                      'Reset Filter',
+                    child: Text(
+                      'reset_filter'.tr,
+                      style: const TextStyle(color: Colors.blue),
                     )),
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                 child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
                     onPressed: () {
                       _page = 1;
                       _tutorList.clear();
@@ -302,7 +327,8 @@ class _HomePageState extends State<HomePage> {
                               _searchController.text,
                               checkNationality(),
                               _page++,
-                              _perPage)
+                              _perPage,
+                              pickedDate: _selectedDate)
                           .then((value) {
                         setState(() {
                           _tutorList.addAll(
@@ -311,8 +337,8 @@ class _HomePageState extends State<HomePage> {
                         });
                       });
                     },
-                    child: const Text(
-                      'Apply',
+                    child: Text(
+                      'apply_filter'.tr,
                     )),
               ),
             ],
@@ -330,7 +356,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildTutorList() {
     return ListView(controller: _scrollController, children: <Widget>[
       Container(
-        color: Colors.purple[900],
+        color: Colors.blue[900],
         child: Center(
           child: Container(
             margin: const EdgeInsets.fromLTRB(20, 40, 20, 40),
@@ -341,8 +367,8 @@ class _HomePageState extends State<HomePage> {
                     margin: const EdgeInsets.only(bottom: 10),
                     child: Text(
                       _isUpcoming
-                          ? "Upcoming Lesson"
-                          : "You have no upcoming lessons",
+                          ? "upcoming_lesson".tr
+                          : "you_have_no_upcoming_lesson".tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: _isUpcoming ? 30 : 24, color: Colors.white),
@@ -381,7 +407,7 @@ class _HomePageState extends State<HomePage> {
                                           ? "0${time.sec}"
                                           : "${time.sec}";
                                   return Text(
-                                      '(Start in $days : $hours : $min : $sec)',
+                                      '(${'start_in'.tr}$days : $hours : $min : $sec)',
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.yellow[300],
@@ -396,6 +422,9 @@ class _HomePageState extends State<HomePage> {
                               margin: const EdgeInsetsDirectional.symmetric(
                                   vertical: 10),
                               child: FilledButton.icon(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                  ),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -408,9 +437,13 @@ class _HomePageState extends State<HomePage> {
                                       }),
                                     );
                                   },
-                                  icon: const Icon(Icons.ondemand_video_sharp),
-                                  label: const Text(
-                                    'Enter lesson room',
+                                  icon: const Icon(
+                                    Icons.ondemand_video_sharp,
+                                    color: Colors.blue,
+                                  ),
+                                  label: Text(
+                                    'enter_lesson_room'.tr,
+                                    style: const TextStyle(color: Colors.blue),
                                   )),
                             )
                           ],
@@ -424,7 +457,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(fontSize: 20, color: Colors.white),
                           )
                         : Text(
-                            "Total lesson time: ${_totalTimeLearn ~/ 60} hours ${_totalTimeLearn % 60} minutes",
+                            "${'total_lesson_time'.tr}${_totalTimeLearn ~/ 60}${'hours'.tr}${_totalTimeLearn % 60}${'minutes'.tr}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 20, color: Colors.white),
@@ -436,14 +469,14 @@ class _HomePageState extends State<HomePage> {
       ),
       Container(
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 10, bottom: 10),
+        margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
-              'All Tutors',
-              style:
-                  TextStyle(fontSize: 18, decoration: TextDecoration.underline),
+            Text(
+              'all_tutors'.tr,
+              style: const TextStyle(
+                  fontSize: 18, decoration: TextDecoration.underline),
             ),
             TextButton(
                 onPressed: () {
@@ -451,7 +484,10 @@ class _HomePageState extends State<HomePage> {
                     _isFilter = true;
                   });
                 },
-                child: const Text('Filters >'))
+                child: Text(
+                  '${'filter'.tr} >',
+                  style: TextStyle(color: Colors.blue[700]),
+                ))
           ],
         ),
       ),
@@ -514,7 +550,8 @@ class _HomePageState extends State<HomePage> {
           _getMoreData = true;
         });
         TutorServices.loadTutorList(_selectedSpecialties,
-                _searchController.text, checkNationality(), _page++, _perPage)
+                _searchController.text, checkNationality(), _page++, _perPage,
+                pickedDate: _selectedDate)
             .then((value) {
           setState(() {
             _tutorList.addAll(value.map((e) => TutorCard.fromJson(e)).toList());
@@ -528,7 +565,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return _loading
-        ? const Center(child: CircularProgressIndicator())
+        ? const Center(
+            child: CircularProgressIndicator(
+            color: Colors.blue,
+          ))
         : _isFilter
             ? _buildFilter()
             : _buildTutorList();

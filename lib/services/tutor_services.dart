@@ -14,7 +14,8 @@ class TutorServices {
       String searchKeyWord,
       Map<dynamic, dynamic> checkNationality,
       int page,
-      int perPage) async {
+      int perPage,
+      {DateTime? pickedDate}) async {
     SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
     String specialtiesChosen;
@@ -27,7 +28,16 @@ class TutorServices {
       "filters": {
         "specialties": [specialtiesChosen],
         "nationality": checkNationality,
-        "tutoringTimeAvailable": []
+        "tutoringTimeAvailable": pickedDate == null
+            ? []
+            : [
+                DateTime(pickedDate.year, pickedDate.month, pickedDate.day, 0,
+                        0, 0)
+                    .millisecondsSinceEpoch,
+                DateTime(pickedDate.year, pickedDate.month, pickedDate.day, 23,
+                        59, 59)
+                    .millisecondsSinceEpoch
+              ]
       },
       "search": searchKeyWord,
       "page": page,
