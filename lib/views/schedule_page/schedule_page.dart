@@ -7,6 +7,7 @@ import '../../utils/countries_lis.dart';
 import 'package:intl/intl.dart';
 
 import '../../utils/ui_data.dart';
+import 'package:get/get.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -19,12 +20,12 @@ class _SchedulePageState extends State<SchedulePage> {
   bool _getMoreData = false;
   bool _loading = true;
   final _reason = [
-    'Reschedule at another time',
-    'Busy at that time',
-    'Asked by the tutor',
-    'Other'
+    'cancel_schedule_reason_1'.tr,
+    'cancel_schedule_reason_2'.tr,
+    'cancel_schedule_reason_3'.tr,
+    'cancel_schedule_reason_4'.tr,
   ];
-  String? _currentReason = 'Reschedule at another time';
+  String? _currentReason = 'cancel_schedule_reason_1'.tr;
 
   int _page = 1;
   final ScrollController _scrollController = ScrollController();
@@ -92,6 +93,7 @@ class _SchedulePageState extends State<SchedulePage> {
     for (var i = 0; i < _reason.length; i++) {
       list.add(
         RadioListTile(
+          activeColor: Colors.blue,
           title: Text(_reason[i]),
           value: _reason[i],
           groupValue: _currentReason,
@@ -111,9 +113,9 @@ class _SchedulePageState extends State<SchedulePage> {
     bool result = await ScheduleServices.deleteSchdule(
         scheduleDetailId, note, cancelReasonId);
     if (result) {
-      _displaySuccessMotionToast("Cancel schedule successfully");
+      _displaySuccessMotionToast("cancel_schedule_success".tr);
     } else {
-      _displayErrorMotionToast("Cancel schedule failed");
+      _displayErrorMotionToast("cancel_schedule_error".tr);
     }
     setState(() {
       _loading = false;
@@ -124,9 +126,9 @@ class _SchedulePageState extends State<SchedulePage> {
     bool result =
         await ScheduleServices.updateScheduleRequest(id, studentRequest);
     if (result) {
-      _displaySuccessMotionToast("Edit request successfully");
+      _displaySuccessMotionToast("edit_request_success".tr);
     } else {
-      _displayErrorMotionToast("Edit request failed");
+      _displayErrorMotionToast("edit_request_error".tr);
     }
     setState(() {
       _loading = false;
@@ -167,11 +169,11 @@ class _SchedulePageState extends State<SchedulePage> {
         builder: (BuildContext context) => Center(
               child: SingleChildScrollView(
                 child: AlertDialog(
-                  title: const Text('Cancel Schedule',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text('cancel_schedule'.tr,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   content: Column(mainAxisSize: MainAxisSize.min, children: [
-                    const Text("What was the reason you cancel this booking?",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text("cancel_schedule_why".tr,
+                        style: const TextStyle(fontSize: 18)),
                     Container(
                         margin: const EdgeInsets.only(top: 10),
                         child: StatefulBuilder(builder: (context, setState) {
@@ -183,9 +185,10 @@ class _SchedulePageState extends State<SchedulePage> {
                       child: TextField(
                         controller: _cancelController,
                         maxLines: 3,
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Enter your reason here'),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          hintText: 'enter_your_reason'.tr,
+                        ),
                       ),
                     ),
                   ]),
@@ -206,6 +209,8 @@ class _SchedulePageState extends State<SchedulePage> {
                               _reason.indexOf(_currentReason ?? "") + 1);
                           _loading = true;
                           _dataList.removeAt(index);
+                          _requestControllerList.removeAt(index);
+                          _isEditList.removeAt(index);
                         });
 
                         Navigator.of(context).pop();
@@ -376,29 +381,27 @@ class _SchedulePageState extends State<SchedulePage> {
                                                       ),
                                                     ),
                                                   ),
-                                                  child: Row(
-                                                      children: const <Widget>[
-                                                        Icon(Icons.delete,
-                                                            color: Colors.red),
-                                                        Text('Cancel',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .red)),
-                                                      ]),
+                                                  child: Row(children: <Widget>[
+                                                    const Icon(Icons.delete,
+                                                        color: Colors.red),
+                                                    Text('cancel'.tr,
+                                                        style: const TextStyle(
+                                                            color: Colors.red)),
+                                                  ]),
                                                   onPressed: () {
                                                     _showCancelDialog(index);
                                                   }),
                                         ]),
                                     Container(
                                       margin: const EdgeInsets.only(
-                                          top: 5, bottom: 5),
+                                          left: 15, top: 5, bottom: 0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text(
-                                            'Lesson request',
-                                            style: TextStyle(
+                                          Text(
+                                            'lesson_request'.tr,
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               color: Colors.black,
                                             ),
@@ -417,9 +420,11 @@ class _SchedulePageState extends State<SchedulePage> {
                                                   }
                                                 });
                                               },
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                size: 20,
+                                              icon: Icon(
+                                                _isEditList[index]
+                                                    ? Icons.save
+                                                    : Icons.edit,
+                                                size: 25,
                                               ))
                                         ],
                                       ),

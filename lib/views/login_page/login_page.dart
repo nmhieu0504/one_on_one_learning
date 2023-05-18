@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      description: const Text('Wrong email or password'),
+      description: Text('wrong_email_or_password'.tr),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -104,9 +104,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: _checkRefreshToken
-            ? const Center(
+            ? Center(
                 child: CircularProgressIndicator(
-                  color: Colors.blue,
+                  color: Colors.blue[700],
                 ),
               )
             : Form(
@@ -120,23 +120,23 @@ class _LoginPageState extends State<LoginPage> {
                         child: Image.asset(UIData.logoLogin,
                             width: 200, height: 200),
                       ),
-                      const Center(
+                      Center(
                         child: Text('LET LEARN',
                             style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue,
+                              color: Colors.blue[700],
                             )),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 50, bottom: 10),
                         child: Theme(
                           data: ThemeData(
-                            primaryColor: Colors.blue,
-                            primaryColorDark: Colors.blue,
+                            primaryColor: Colors.blue[700],
+                            primaryColorDark: Colors.blue[700],
                           ),
                           child: TextFormField(
-                            cursorColor: Colors.blue,
+                            cursorColor: Colors.blue[700],
                             style: const TextStyle(fontSize: 16),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -163,11 +163,11 @@ class _LoginPageState extends State<LoginPage> {
                         margin: const EdgeInsets.only(top: 5, bottom: 5),
                         child: Theme(
                           data: ThemeData(
-                            primaryColor: Colors.blue,
-                            primaryColorDark: Colors.blue,
+                            primaryColor: Colors.blue[700],
+                            primaryColorDark: Colors.blue[700],
                           ),
                           child: TextFormField(
-                            cursorColor: Colors.blue,
+                            cursorColor: Colors.blue[700],
                             style: const TextStyle(fontSize: 16),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                                     _obscureText
                                         ? Icons.visibility_off
                                         : Icons.visibility,
-                                    color: Colors.blue),
+                                    color: Colors.blue[700]),
                               ),
                             ),
                             obscureText: _obscureText,
@@ -217,13 +217,13 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             },
                             child: Text('forgot_password'.tr,
-                                style: const TextStyle(color: Colors.blue)),
+                                style: TextStyle(color: Colors.blue[700])),
                           ),
                         ],
                       ),
                       FilledButton(
                         style: FilledButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Colors.blue[700],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -271,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             },
                             child: Text('sign_up'.tr,
-                                style: const TextStyle(color: Colors.blue)),
+                                style: TextStyle(color: Colors.blue[700])),
                           ),
                         ],
                       ),
@@ -351,9 +351,9 @@ class _LoginPageState extends State<LoginPage> {
                           opacity: 0.8,
                           child: Container(
                             color: Colors.white,
-                            child: const Center(
+                            child: Center(
                               child: CircularProgressIndicator(
-                                color: Colors.blue,
+                                color: Colors.blue[700],
                               ),
                             ),
                           ),

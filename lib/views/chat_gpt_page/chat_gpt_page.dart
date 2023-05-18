@@ -12,6 +12,7 @@ import 'package:bubble/bubble.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:get/get.dart';
 
 class ChatGPTPage extends StatefulWidget {
   const ChatGPTPage({super.key});
@@ -102,15 +103,15 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const SizedBox(
+          SizedBox(
             height: 120,
             child: DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   // color: Colors.blue,
                   ),
               child: Text(
-                'Settings',
-                style: TextStyle(
+                'settings'.tr,
+                style: const TextStyle(
                   // color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -120,7 +121,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           ),
           ListTile(
             leading: const Icon(Icons.play_circle_outline),
-            title: const Text('Auto TTS reply'),
+            title: Text('auto_tts_reply'.tr),
             trailing: Switch(
                 activeColor: Colors.blue,
                 value: isAutoTTS,
@@ -136,7 +137,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           ),
           ListTile(
             leading: const Icon(Icons.language_outlined),
-            title: const Text('Speech Language'),
+            title: Text('speech_language'.tr),
             onTap: () => showDialog<void>(
               context: context,
               builder: (BuildContext context) => Dialog(
@@ -170,7 +171,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                                 height: 50,
                                 child:
                                     Image.asset('assets/images/us_flag.png')),
-                            title: const Text('English (United States)'),
+                            title: Text('english'.tr),
                             trailing: isEnglish
                                 ? const Icon(Icons.check_circle,
                                     color: Colors.green)
@@ -202,7 +203,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                                 height: 50,
                                 child:
                                     Image.asset('assets/images/vn_flag.png')),
-                            title: const Text('Vietnamese'),
+                            title: Text('vietnamese'.tr),
                             trailing: isVietnamese
                                 ? const Icon(Icons.check_circle,
                                     color: Colors.green)
@@ -233,9 +234,8 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Delete all messages'),
-                          content: const Text('This action cannot be undone. '
-                              'Do you want to continue?'),
+                          title: Text('delete_all_messages'.tr),
+                          content: Text('delete_all_messages_confirm'.tr),
                           actions: <Widget>[
                             TextButton(
                               style: TextButton.styleFrom(
@@ -280,7 +280,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                 },
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.red)),
-                child: const Text('Delete all messages')),
+                child: Text('delete_all_messages'.tr)),
           ),
         ],
       ),
@@ -420,7 +420,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           decoration: InputDecoration(
             border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(40.0))),
-            hintText: "Start typing or talking ...",
+            hintText: "start_typing_or_talking".tr,
             contentPadding:
                 const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
             suffixIcon: IconButton(
@@ -481,7 +481,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
             ),
           ),
           Text(
-            _isListening ? "Listening..." : "Tap to Talk",
+            _isListening ? "listening".tr : "tap_to_talk".tr,
             style: TextStyle(
                 fontStyle: FontStyle.italic,
                 fontSize: 18,

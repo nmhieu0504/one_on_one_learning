@@ -10,6 +10,7 @@ import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:one_on_one_learning/utils/web_socket.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:get/get.dart';
 
 class ChatPage extends StatefulWidget {
   final String tutorId;
@@ -99,6 +100,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text("Chat",
             style: TextStyle(
               color: Colors.black,
@@ -108,9 +110,10 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: SafeArea(
           child: _loading
-              ? const Center(child: CircularProgressIndicator(
-                color: Colors.blue,
-              ))
+              ? const Center(
+                  child: CircularProgressIndicator(
+                  color: Colors.blue,
+                ))
               : Column(children: [
                   Expanded(
                     child: GroupedListView<Message, DateTime>(
@@ -184,7 +187,7 @@ class _ChatPageState extends State<ChatPage> {
                           border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(40.0))),
-                          hintText: "Send a message ...",
+                          hintText: "send_a_meesage".tr,
                           contentPadding: const EdgeInsets.only(
                               top: 10, bottom: 10, left: 20, right: 20),
                           suffixIcon: IconButton(

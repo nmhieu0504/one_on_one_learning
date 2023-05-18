@@ -16,7 +16,7 @@ class NavigatorPage extends StatefulWidget {
 
 class NavigatorStatePage extends State<NavigatorPage> {
   int _selectedIndex = 0;
-  String _appBarTitle = 'Tutors';
+  String _appBarTitle = 'home'.tr;
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);

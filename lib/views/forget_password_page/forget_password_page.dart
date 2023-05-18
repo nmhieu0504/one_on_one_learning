@@ -5,6 +5,7 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:one_on_one_learning/views/forget_password_page/check_email.dart';
+import 'package:get/get.dart';
 
 import '../../services/auth_services.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,7 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      description: const Text('Email does not exist'),
+      description: Text('email_not_found'.tr),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -53,21 +54,21 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 ),
                 Center(
                   child: Text('reset_password'.tr,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.blue[700],
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
                   child: Theme(
                     data: ThemeData(
-                      primaryColor: Colors.blue,
-                      primaryColorDark: Colors.blue,
+                      primaryColor: Colors.blue[700],
+                      primaryColorDark: Colors.blue[700],
                     ),
                     child: TextFormField(
-                      cursorColor: Colors.blue,
+                      cursorColor: Colors.blue[700],
                       style: const TextStyle(fontSize: 16),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -94,7 +95,7 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   margin: const EdgeInsets.only(top: 20),
                   child: FilledButton(
                     style: FilledButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.blue[700],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -134,8 +135,10 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                     opacity: 0.8,
                     child: Container(
                       color: Colors.white,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.blue[700],
+                        ),
                       ),
                     ),
                   )

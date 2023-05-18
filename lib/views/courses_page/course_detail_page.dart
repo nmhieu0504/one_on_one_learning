@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:one_on_one_learning/models/course.dart';
 import 'package:one_on_one_learning/views/courses_page/course_topic_component.dart';
 
@@ -17,9 +18,9 @@ class CourseDetailPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          "Course Detail",
-          style: TextStyle(
+        title: Text(
+          "course_detail".tr,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -31,20 +32,20 @@ class CourseDetailPage extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: const EdgeInsets.all(20),
-            child: Row(children: const <Widget>[
-              Expanded(
+            child: Row(children: <Widget>[
+              const Expanded(
                 flex: 1,
                 child: Divider(
                   endIndent: 10,
                   color: Colors.black,
                 ),
               ),
-              Text("Overview",
-                  style: TextStyle(
+              Text("overview".tr,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
-              Expanded(
+              const Expanded(
                 flex: 5,
                 child: Divider(
                   indent: 10,
@@ -63,9 +64,9 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Container(
                   margin: const EdgeInsets.only(left: 10),
-                  child: const Text(
-                    'Why Did You Choose This Course?',
-                    style: TextStyle(
+                  child: Text(
+                    'why_choose_this_course'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -92,9 +93,9 @@ class CourseDetailPage extends StatelessWidget {
               ),
               Container(
                   margin: const EdgeInsets.only(left: 10),
-                  child: const Text(
-                    'Why Will You Learn?',
-                    style: TextStyle(
+                  child: Text(
+                    'what_will_you_learn'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -113,20 +114,20 @@ class CourseDetailPage extends StatelessWidget {
               )),
           Container(
             margin: const EdgeInsets.all(20),
-            child: Row(children: const <Widget>[
-              Expanded(
+            child: Row(children: <Widget>[
+              const Expanded(
                 flex: 1,
                 child: Divider(
                   endIndent: 10,
                   color: Colors.black,
                 ),
               ),
-              Text("Experience Level",
-                  style: TextStyle(
+              Text("experience_level".tr,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
-              Expanded(
+              const Expanded(
                 flex: 5,
                 child: Divider(
                   indent: 10,
@@ -156,20 +157,20 @@ class CourseDetailPage extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.all(20),
-            child: Row(children: const <Widget>[
-              Expanded(
+            child: Row(children: <Widget>[
+              const Expanded(
                 flex: 1,
                 child: Divider(
                   endIndent: 10,
                   color: Colors.black,
                 ),
               ),
-              Text("Course Length",
-                  style: TextStyle(
+              Text("course_length".tr,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
-              Expanded(
+              const Expanded(
                 flex: 5,
                 child: Divider(
                   indent: 10,
@@ -189,7 +190,7 @@ class CourseDetailPage extends StatelessWidget {
               Container(
                   margin: const EdgeInsets.only(left: 10),
                   child: Text(
-                    "${course.numberOfTopics} topics",
+                    "${course.numberOfTopics} ${'topics'.tr}",
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -199,20 +200,20 @@ class CourseDetailPage extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.all(20),
-            child: Row(children: const <Widget>[
-              Expanded(
+            child: Row(children: <Widget>[
+              const Expanded(
                 flex: 1,
                 child: Divider(
                   endIndent: 10,
                   color: Colors.black,
                 ),
               ),
-              Text("List Topics",
-                  style: TextStyle(
+              Text("list_topics".tr,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   )),
-              Expanded(
+              const Expanded(
                 flex: 5,
                 child: Divider(
                   indent: 10,

@@ -44,7 +44,7 @@ class ActiveEmail extends StatelessWidget {
           margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.blue[700],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

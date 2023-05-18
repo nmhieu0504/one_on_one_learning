@@ -20,7 +20,7 @@ import 'package:get/get.dart';
 
 class TutorPage extends StatefulWidget {
   final String userId;
-  TutorPage({required this.userId, super.key});
+  const TutorPage({required this.userId, super.key});
 
   @override
   State<TutorPage> createState() => TutorPageState();
@@ -37,6 +37,18 @@ class TutorPageState extends State<TutorPage> {
     "reason_report_1".tr,
     "reason_report_2".tr,
     "reason_report_3".tr,
+  ];
+
+  List<String> levelList = [
+    "Any Level",
+    "Beginner",
+    "Upper-Beginner",
+    "Pre-Intermediate",
+    "Intermediate",
+    "Upper-Intermediate",
+    "Pre-Advanced",
+    "Advanced",
+    "Very Advanced"
   ];
 
   List<String> _selectedRepotItems = [];
@@ -199,6 +211,7 @@ class TutorPageState extends State<TutorPage> {
       for (int i = 0; i < tutor.user.courses.length; i++) {
         CoursesService.loadCourseByID(tutor.user.courses[i].id ?? "")
             .then((value) {
+          value.level = levelList[int.parse(value.level)];
           tutorCoursesList.add(value);
         });
       }

@@ -8,6 +8,7 @@ import 'package:one_on_one_learning/views/register_page/active_email.dart';
 import 'package:get/get.dart';
 
 import '../../services/auth_services.dart';
+import 'package:get/get.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -33,7 +34,7 @@ class RegisterPageState extends State<RegisterPage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      description: const Text('Email has already taken'),
+      description: Text('email_already_in_use'.tr),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -56,21 +57,21 @@ class RegisterPageState extends State<RegisterPage> {
                 ),
                 Center(
                   child: Text('register'.tr,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.blue[700],
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
                   child: Theme(
                     data: ThemeData(
-                      primaryColor: Colors.blue,
-                      primaryColorDark: Colors.blue,
+                      primaryColor: Colors.blue[700],
+                      primaryColorDark: Colors.blue[700],
                     ),
                     child: TextFormField(
-                      cursorColor: Colors.blue,
+                      cursorColor: Colors.blue[700],
                       style: const TextStyle(fontSize: 16),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -97,11 +98,11 @@ class RegisterPageState extends State<RegisterPage> {
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
                   child: Theme(
                     data: ThemeData(
-                      primaryColor: Colors.blue,
-                      primaryColorDark: Colors.blue,
+                      primaryColor: Colors.blue[700],
+                      primaryColorDark: Colors.blue[700],
                     ),
                     child: TextFormField(
-                      cursorColor: Colors.blue,
+                      cursorColor: Colors.blue[700],
                       style: const TextStyle(fontSize: 16),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -130,7 +131,7 @@ class RegisterPageState extends State<RegisterPage> {
                               _obscureText
                                   ? Icons.visibility_off
                                   : Icons.visibility,
-                              color: Colors.blue),
+                              color: Colors.blue[700]),
                         ),
                       ),
                       obscureText: _obscureText,
@@ -141,11 +142,11 @@ class RegisterPageState extends State<RegisterPage> {
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
                   child: Theme(
                     data: ThemeData(
-                      primaryColor: Colors.blue,
-                      primaryColorDark: Colors.blue,
+                      primaryColor: Colors.blue[700],
+                      primaryColorDark: Colors.blue[700],
                     ),
                     child: TextFormField(
-                      cursorColor: Colors.blue,
+                      cursorColor: Colors.blue[700],
                       style: const TextStyle(fontSize: 16),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -174,7 +175,7 @@ class RegisterPageState extends State<RegisterPage> {
                               _obscureText
                                   ? Icons.visibility_off
                                   : Icons.visibility,
-                              color: Colors.blue),
+                              color: Colors.blue[700]),
                         ),
                       ),
                       obscureText: _obscureText,
@@ -185,7 +186,7 @@ class RegisterPageState extends State<RegisterPage> {
                   margin: const EdgeInsets.only(top: 20),
                   child: FilledButton(
                     style: FilledButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.blue[700],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -228,8 +229,8 @@ class RegisterPageState extends State<RegisterPage> {
                       },
                       child: Text(
                         'sign_in'.tr,
-                        style: const TextStyle(
-                          color: Colors.blue,
+                        style: TextStyle(
+                          color: Colors.blue[700],
                         ),
                       ),
                     ),
@@ -242,8 +243,10 @@ class RegisterPageState extends State<RegisterPage> {
                     opacity: 0.8,
                     child: Container(
                       color: Colors.white,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.blue[700],
+                        ),
                       ),
                     ),
                   )

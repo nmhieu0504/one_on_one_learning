@@ -11,6 +11,8 @@ import '../../services/user_service.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/ui_data.dart';
 
+import 'package:get/get.dart';
+
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
 
@@ -85,9 +87,9 @@ class _HistoryPageState extends State<HistoryPage> {
         itemBuilder: (context, index) =>
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(children: [
-                const Text(
-                  "Rating: ",
-                  style: TextStyle(
+                Text(
+                  "${'rating'.tr}: ",
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -105,7 +107,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         id: list[index]["id"],
                         bookingId: list[index]["bookingId"]);
                   },
-                  child: const Text("Edit")),
+                  child: Text("edit_rating".tr)),
             ]));
   }
 
@@ -137,7 +139,7 @@ class _HistoryPageState extends State<HistoryPage> {
         context: context,
         builder: (BuildContext context) => Center(
                 child: AlertDialog(
-              title: const Text('Rate for this lesson'),
+              title: Text('rate_for_this_lesson'.tr),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -161,9 +163,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: TextField(
                       controller: contentRating,
                       maxLines: 2,
-                      decoration: const InputDecoration(
-                        labelText: 'Write a review',
-                        border: OutlineInputBorder(
+                      decoration: InputDecoration(
+                        labelText: 'write_your_review'.tr,
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
@@ -330,9 +332,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                 margin:
                                     const EdgeInsets.only(top: 5, bottom: 5),
                                 child: ExpansionTile(
-                                  title: const Text(
-                                    'Lesson request',
-                                    style: TextStyle(
+                                  title: Text(
+                                    'lesson_request'.tr,
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
                                     ),
@@ -370,9 +372,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                 margin:
                                     const EdgeInsets.only(top: 5, bottom: 5),
                                 child: ExpansionTile(
-                                    title: const Text(
-                                      'Lesson review',
-                                      style: TextStyle(
+                                    title: Text(
+                                      'lesson_review'.tr,
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,
                                       ),
@@ -400,13 +402,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                                       left: 10,
                                                       right: 10),
                                                   child: !_dataList[index].classReview
-                                                      ? const Text("No review")
+                                                      ? Text("no_review".tr)
                                                       : Text("Lesson status: " +
                                                           (_dataList[index]
                                                                   .lessonStatus ??
                                                               "") +
-                                                          (_dataList[index].behaviorComment !=
-                                                                  null
+                                                          (_dataList[index].behaviorComment != null
                                                               ? "\nBehavior: ${_dataList[index].behaviorComment}"
                                                               : "") +
                                                           (_dataList[index]
@@ -469,7 +470,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   bookingId:
                                                       _dataList[index].id);
                                             },
-                                            child: const Text("Rating")),
+                                            child: Text("rating".tr)),
                                   ),
                                   Container(
                                     margin: const EdgeInsets.only(
