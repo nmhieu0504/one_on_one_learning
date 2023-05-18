@@ -1,7 +1,15 @@
 String getCountryName(String? code) {
   if (code == null) return "No information";
   if (code.length > 2) return code;
-  return countryList[code] ?? "No information";
+
+  String? result = countryList[code];
+
+  if (result == null) {
+    return "No information";
+  } else {
+    if (result.length <= 20) return result;
+    return "${result.substring(0, 20)}...";
+  }
 }
 
 List<String> getCountriesName() {

@@ -169,41 +169,43 @@ class _TutorCardState extends State<TutorCard> {
                     margin: const EdgeInsets.only(top: 10),
                     child: ListTile(
                         leading: _buildAvatar(),
-                        title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(widget.name,
-                                  style: const TextStyle(fontSize: 18)),
-                              Row(children: <Widget>[
-                                const Icon(
-                                  Icons.flag,
-                                  color: Colors.blue,
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    widget.country == null
-                                        ? 'No information'
-                                        : widget.country!.length > 2
-                                            ? widget.country!
-                                            : getCountryName(widget.country!),
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                              ])
-                            ]),
-                        subtitle: widget.rating == null
-                            ? Container(
-                                margin: const EdgeInsets.only(top: 5),
-                                child: const Text('Rating not available',
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic)),
-                              )
-                            : Row(
-                                children: _showRating(),
+                        title: Text(widget.name,
+                            style: const TextStyle(fontSize: 18)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(                              
+                              children: <Widget>[
+                              const Icon(
+                                Icons.flag,
+                                color: Colors.blue,
                               ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  widget.country == null
+                                      ? 'No information'
+                                      : widget.country!.length > 2
+                                          ? widget.country!
+                                          : getCountryName(widget.country!),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ]),
+                            widget.rating == null
+                                ? Container(
+                                    margin: const EdgeInsets.only(top: 5),
+                                    child: const Text('Rating not available',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic)),
+                                  )
+                                : Row(
+                                    children: _showRating(),
+                                  ),
+                          ],
+                        ),
                         trailing: IconButton(
                           iconSize: 35,
                           icon: Icon(Icons.favorite_sharp,

@@ -1,11 +1,11 @@
-// ignore_for_file: avoid_print, depend_on_referenced_packages
-
+// ignore_for_file: avoid_print, depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:one_on_one_learning/views/register_page/active_email.dart';
+import 'package:get/get.dart';
 
 import '../../services/auth_services.dart';
 
@@ -54,112 +54,142 @@ class RegisterPageState extends State<RegisterPage> {
                   child:
                       Image.asset(UIData.registerImng, width: 200, height: 200),
                 ),
-                const Center(
-                  child: Text('REGISTER',
-                      style: TextStyle(
+                Center(
+                  child: Text('register'.tr,
+                      style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
+                        color: Colors.blue,
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
-                  child: TextFormField(
-                    style: const TextStyle(fontSize: 16),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  child: Theme(
+                    data: ThemeData(
+                      primaryColor: Colors.blue,
+                      primaryColorDark: Colors.blue,
+                    ),
+                    child: TextFormField(
+                      cursorColor: Colors.blue,
+                      style: const TextStyle(fontSize: 16),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'email_empty'.tr;
+                        }
+                        if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                          return 'email_error'.tr;
+                        }
+                        return null;
+                      },
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 'Email',
                       ),
-                      labelText: 'Email',
                     ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
-                  child: TextFormField(
-                    style: const TextStyle(fontSize: 16),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.deepPurple),
-                      ),
+                  child: Theme(
+                    data: ThemeData(
+                      primaryColor: Colors.blue,
+                      primaryColorDark: Colors.blue,
                     ),
-                    obscureText: _obscureText,
+                    child: TextFormField(
+                      cursorColor: Colors.blue,
+                      style: const TextStyle(fontSize: 16),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'password_empty'.tr;
+                        }
+                        if (value.length < 6) {
+                          return 'password_error'.tr;
+                        }
+                        return null;
+                      },
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 'password'.tr,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.blue),
+                        ),
+                      ),
+                      obscureText: _obscureText,
+                    ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
-                  child: TextFormField(
-                    style: const TextStyle(fontSize: 16),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please re-enter your password';
-                      }
-                      if (value != _passwordController.text) {
-                        return 'Password does not match';
-                      }
-                      return null;
-                    },
-                    controller: _rePasswordController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      labelText: 'Re-enter password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.deepPurple),
-                      ),
+                  child: Theme(
+                    data: ThemeData(
+                      primaryColor: Colors.blue,
+                      primaryColorDark: Colors.blue,
                     ),
-                    obscureText: _obscureText,
+                    child: TextFormField(
+                      cursorColor: Colors.blue,
+                      style: const TextStyle(fontSize: 16),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 're_password_empty'.tr;
+                        }
+                        if (value != _passwordController.text) {
+                          return 're_password_error'.tr;
+                        }
+                        return null;
+                      },
+                      controller: _rePasswordController,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 're_enter_password'.tr,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.blue),
+                        ),
+                      ),
+                      obscureText: _obscureText,
+                    ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
                   child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         setState(() {
@@ -183,18 +213,25 @@ class RegisterPageState extends State<RegisterPage> {
                         }
                       }
                     },
-                    child: const Text('Sign Up'),
+                    child: Text(
+                      'sign_up'.tr,
+                    ),
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text('Already have an account?'),
+                    Text('already_have_an_account'.tr),
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Sign In'),
+                      child: Text(
+                        'sign_in'.tr,
+                        style: const TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
                     ),
                   ],
                 ),
