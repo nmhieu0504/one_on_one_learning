@@ -1,8 +1,9 @@
-// ignore_for_file: avoid_print, depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/backend.dart';
@@ -64,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                 body: jsonEncode({"refreshToken": token ?? '', "timezone": 7}));
 
             if (response.statusCode == 200) {
-              print(response.body);
+              debugPrint(response.body);
               var data = jsonDecode(response.body);
               sharePref.saveString(
                   "access_token", data["tokens"]["access"]["token"]);
@@ -267,7 +268,24 @@ class _LoginPageState extends State<LoginPage> {
                                         width: 60,
                                         height: 50,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        final LoginResult result =
+                                            await FacebookAuth.instance.login();
+                                        if (result.status ==
+                                            LoginStatus.success) {
+                                          debugPrint(
+                                              "TOKEN FB: ${result.accessToken}");
+                                          // User successfully signed in with Facebook
+                                          final AccessToken accessToken =
+                                              result.accessToken!;
+                                          // Use the access token to perform further operations
+                                          // such as fetching user data or making API requests
+                                        } else {
+                                          // There was an error during the login process
+                                          debugPrint(
+                                              'Facebook login failed: ${result.message}');
+                                        }
+                                      },
                                       tooltip: "Sign in with Facebook",
                                       icon: const Image(
                                         image: AssetImage(UIData.facebookIcon),
