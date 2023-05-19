@@ -3,6 +3,7 @@ import 'package:one_on_one_learning/views/courses_page/courses_list_page.dart';
 import 'package:one_on_one_learning/views/courses_page/ebook_list_page.dart';
 
 import '../../utils/ui_data.dart';
+import 'package:get/get.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -52,9 +53,9 @@ class _CoursesPageState extends State<CoursesPage>
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Image.asset(UIData.noDataFound, width: 100, height: 100),
               const SizedBox(height: 10),
-              const Text(
-                "No data",
-                style: TextStyle(color: Colors.grey),
+              Text(
+                "no_data".tr,
+                style: const TextStyle(color: Colors.grey),
               ),
             ]),
           )

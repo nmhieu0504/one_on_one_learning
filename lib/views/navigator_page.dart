@@ -89,8 +89,11 @@ class NavigatorStatePage extends State<NavigatorPage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedItemColor: Colors.grey,
         backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: const Icon(

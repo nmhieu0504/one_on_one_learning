@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:one_on_one_learning/utils/share_pref.dart';
+import 'controllers/controller.dart';
 import 'views/login_page/login_page.dart';
 import 'package:one_on_one_learning/controllers/translation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final Controller controller = Get.put<Controller>(
+    Controller(),
+  );
+  SharePref sharePref = SharePref();
+  bool? result = await sharePref.getBool("isEnglish");
+  bool isEnglish = result ?? true;
+  controller.isEnglish = isEnglish;
+  runApp(MyApp(isEnglish: isEnglish));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  bool isEnglish;
+  MyApp({super.key, required this.isEnglish});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       translations: AppTranslations(), // Initialize with custom translations
-      locale: const Locale('vi', 'VN'),
+      locale: isEnglish ? const Locale('en', 'US') : const Locale('vi', 'VN'),
       fallbackLocale: const Locale('en', 'US'),
       supportedLocales: const [
         Locale('en', 'US'),

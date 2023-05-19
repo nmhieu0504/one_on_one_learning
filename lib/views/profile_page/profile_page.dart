@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../models/user.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/ui_data.dart';
+import 'package:get/get.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -30,6 +31,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _birthdayController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _scheduleController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   List<String> levelTittleList = <String>[
     'Pre A1 (Beginner)',
@@ -229,17 +232,19 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text('profile'.tr),
       ),
       floatingActionButton: FilledButton.icon(
         onPressed: () {
-          _saveProfile();
+          if (_formKey.currentState!.validate()) {
+            _saveProfile();
+          }
         },
         icon: const Icon(
           Icons.save,
           size: 24.0,
         ),
-        label: const Text('Save'), // <-- Text
+        label: Text('save'.tr), // <-- Text
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -266,9 +271,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Positioned(
                             bottom: -10,
-                            right: -15,
+                            right: 10,
                             child: IconButton(
-                              icon: const Icon(Icons.edit),
+                              iconSize: 40,
+                              icon: const Icon(Icons.image, color: Colors.blue,),
                               onPressed: () async {
                                 final picker = ImagePicker();
                                 final pickedFile = await picker.pickImage(
@@ -308,21 +314,24 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'please_enter_your_name'.tr;
+                          }
+                          return null;
+                        },
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'name'.tr,
                         ),
-                        labelText: 'Name',
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -354,7 +363,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        labelText: 'Phone',
+                        labelText: 'phone'.tr,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -380,7 +389,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        labelText: 'Birthday',
+                        labelText: 'birthday'.tr,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -392,7 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        labelText: 'Country',
+                        labelText: 'country'.tr,
                       ),
                       value: dropdownCountryValue,
                       icon: const Icon(Icons.arrow_downward),
@@ -421,7 +430,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        labelText: 'Level',
+                        labelText: 'level'.tr,
                       ),
                       value: dropdownLevelValue,
                       icon: const Icon(Icons.arrow_downward),
@@ -443,34 +452,34 @@ class _ProfilePageState extends State<ProfilePage> {
                       }).toList(),
                     ),
                     const SizedBox(height: 40),
-                    const Text(
-                      'Want to learn',
-                      style: TextStyle(
+                    Text(
+                      'want_to_learn'.tr,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
-                      'Topics',
-                      style: TextStyle(
+                    Text(
+                      'topics_capital'.tr,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     _buildLearnTopicsChips(),
-                    const Text(
-                      'Test preparation',
-                      style: TextStyle(
+                    Text(
+                      'test_preparation'.tr,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     _buildTestPreparationsChips(),
                     const SizedBox(height: 20),
-                    const Text(
-                      'Study schedule',
-                      style: TextStyle(
+                    Text(
+                      'study_schedule'.tr,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -481,7 +490,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       enableInteractiveSelection: false,
                       controller: _scheduleController,
                       decoration: InputDecoration(
-                        hintText: "Show us your study schedule",
+                        hintText: "your_study_schedule".tr,
                         contentPadding:
                             const EdgeInsets.fromLTRB(20, 10, 20, 10),
                         border: OutlineInputBorder(

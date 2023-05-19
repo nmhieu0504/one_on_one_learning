@@ -69,13 +69,13 @@ class TutorPageState extends State<TutorPage> {
 
   void _displaySuccessMotionToast(String str) {
     MotionToast.success(
-      title: const Text(
-        'Success',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      description: Text(str),
+      height: 60,
+      width: 300,
+      description: Text(str,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 70, 146, 60))),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -307,8 +307,8 @@ class TutorPageState extends State<TutorPage> {
                                       if (value) {
                                         _displaySuccessMotionToast(
                                             tutor.isFavorite
-                                                ? 'Add to favourite'
-                                                : 'Remove from favourite');
+                                                ? 'add_to_favourite'.tr
+                                                : 'remove_from_favourite'.tr);
                                       }
                                     });
                                     debugPrint('Favourite button pressed.');

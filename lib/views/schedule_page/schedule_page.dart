@@ -149,15 +149,15 @@ class _SchedulePageState extends State<SchedulePage> {
     ).show(context);
   }
 
-  void _displaySuccessMotionToast(String successMessage) {
+  void _displaySuccessMotionToast(String str) {
     MotionToast.success(
-      title: const Text(
-        'Success',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      description: Text(successMessage),
+      height: 60,
+      width: 300,
+      description: Text(str,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 70, 146, 60))),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -248,9 +248,9 @@ class _SchedulePageState extends State<SchedulePage> {
                     children: [
                       Image.asset(UIData.noDataFound, width: 100, height: 100),
                       const SizedBox(height: 10),
-                      const Text(
-                        "No data",
-                        style: TextStyle(color: Colors.grey),
+                      Text(
+                        'no_data'.tr,
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ]),
               )

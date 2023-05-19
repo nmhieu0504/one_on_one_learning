@@ -6,6 +6,8 @@ import 'package:one_on_one_learning/views/courses_page/course_card_component.dar
 import '../../models/course.dart';
 import '../../utils/ui_data.dart';
 
+import 'package:get/get.dart';
+
 class CoursesList extends StatefulWidget {
   const CoursesList({super.key});
   @override
@@ -34,7 +36,7 @@ class _CoursesListState extends State<CoursesList> {
     {"name": "Very Advanced", "isSelected": false}
   ];
 
-  final List<String> _sortingList = ["Ascending", "Descending"];
+  final List<String> _sortingList = ["ascending".tr, "descending".tr];
   String _currentSorting = "";
 
   bool _loading = true;
@@ -119,9 +121,9 @@ class _CoursesListState extends State<CoursesList> {
               children: [
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: const Text(
-                  "Course Name",
-                  style: TextStyle(
+                child: Text(
+                  "course_name".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -136,7 +138,7 @@ class _CoursesListState extends State<CoursesList> {
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30)),
-                      hintText: 'Search',
+                      hintText: 'search'.tr,
                       hintStyle:
                           const TextStyle(color: Colors.grey, fontSize: 16),
                       prefixIcon: Container(
@@ -149,9 +151,9 @@ class _CoursesListState extends State<CoursesList> {
             ),
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: const Text(
-                  "Select Level",
-                  style: TextStyle(
+                child: Text(
+                  "select_level".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -159,9 +161,9 @@ class _CoursesListState extends State<CoursesList> {
             _levelFilter(),
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: const Text(
-                  "Select Category",
-                  style: TextStyle(
+                child: Text(
+                  "select_category".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -169,9 +171,9 @@ class _CoursesListState extends State<CoursesList> {
             _categoryFilter(),
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: const Text(
-                  "Sort by Level",
-                  style: TextStyle(
+                child: Text(
+                  "sort_by_level".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -195,14 +197,15 @@ class _CoursesListState extends State<CoursesList> {
                           _currentSorting = "";
                         });
                       },
-                      child: const Text(
-                        'Reset Filter',
+                      child: Text(
+                        'reset_filter'.tr,
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                   child: FilledButton(
                       onPressed: () {
+                        page = 1;
                         coursesList.clear();
                         setState(() {
                           _isFilter = false;
@@ -213,7 +216,11 @@ class _CoursesListState extends State<CoursesList> {
                           size: size,
                           courseContentCategories: courseContentCategories,
                           levelList: levelList,
-                          sortingOrder: _currentSorting,
+                          sortingOrder: _currentSorting == "ascending".tr
+                              ? false
+                              : _currentSorting == "descending".tr
+                                  ? true
+                                  : null,
                           q: _searchController.text,
                         ).then((value) {
                           setState(() {
@@ -228,8 +235,8 @@ class _CoursesListState extends State<CoursesList> {
                           });
                         });
                       },
-                      child: const Text(
-                        'Apply',
+                      child: Text(
+                        'apply_filter'.tr,
                       )),
                 ),
               ],
@@ -274,7 +281,11 @@ class _CoursesListState extends State<CoursesList> {
           size: size,
           courseContentCategories: courseContentCategories,
           levelList: levelList,
-          sortingOrder: _currentSorting,
+          sortingOrder: _currentSorting == "ascending".tr
+              ? false
+              : _currentSorting == "descending".tr
+                  ? true
+                  : null,
           q: _searchController.text,
         ).then((value) {
           setState(() {
@@ -321,9 +332,9 @@ class _CoursesListState extends State<CoursesList> {
                                 Icons.filter_alt_outlined,
                                 color: Colors.black,
                               ),
-                              label: const Text(
-                                "Filter",
-                                style: TextStyle(
+                              label: Text(
+                                "filter".tr,
+                                style: const TextStyle(
                                     fontSize: 16, color: Colors.black),
                               )),
                         ),
@@ -337,9 +348,9 @@ class _CoursesListState extends State<CoursesList> {
                                 Image.asset(UIData.noDataFound,
                                     width: 100, height: 100),
                                 const SizedBox(height: 10),
-                                const Text(
-                                  "No data",
-                                  style: TextStyle(color: Colors.grey),
+                                Text(
+                                  "no_data".tr,
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ])
                         : GroupedListView<dynamic, String>(

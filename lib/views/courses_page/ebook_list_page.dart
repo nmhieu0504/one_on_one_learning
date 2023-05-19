@@ -4,6 +4,7 @@ import 'package:one_on_one_learning/services/course_service.dart';
 import 'package:one_on_one_learning/views/courses_page/ebook_card_component.dart';
 
 import '../../utils/ui_data.dart';
+import 'package:get/get.dart';
 
 class EBookList extends StatefulWidget {
   const EBookList({super.key});
@@ -34,7 +35,7 @@ class _EBookListState extends State<EBookList> {
     {"name": "Very Advanced", "isSelected": false}
   ];
 
-  final List<String> _sortingList = ["Ascending", "Descending"];
+  final List<String> _sortingList = ["ascending".tr, "descending".tr];
   String _currentSorting = "";
 
   bool _loading = true;
@@ -131,9 +132,9 @@ class _EBookListState extends State<EBookList> {
               children: [
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: const Text(
-                  "Course Name",
-                  style: TextStyle(
+                child: Text(
+                  "course_name".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -148,7 +149,7 @@ class _EBookListState extends State<EBookList> {
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30)),
-                      hintText: 'Search',
+                      hintText: 'search'.tr,
                       hintStyle:
                           const TextStyle(color: Colors.grey, fontSize: 16),
                       prefixIcon: Container(
@@ -161,9 +162,9 @@ class _EBookListState extends State<EBookList> {
             ),
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: const Text(
-                  "Select Level",
-                  style: TextStyle(
+                child: Text(
+                  "select_level".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -171,9 +172,9 @@ class _EBookListState extends State<EBookList> {
             _levelFilter(),
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: const Text(
-                  "Select Category",
-                  style: TextStyle(
+                child: Text(
+                  "select_category".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -181,9 +182,9 @@ class _EBookListState extends State<EBookList> {
             _categoryFilter(),
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: const Text(
-                  "Sort by Level",
-                  style: TextStyle(
+                child: Text(
+                  "sort_by_level".tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -207,40 +208,45 @@ class _EBookListState extends State<EBookList> {
                           _currentSorting = "";
                         });
                       },
-                      child: const Text(
-                        'Reset Filter',
+                      child: Text(
+                        'reset_filter'.tr,
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                   child: FilledButton(
                       onPressed: () {
+                        page = 1;
                         ebookList.clear();
                         setState(() {
                           _isFilter = false;
                           _loading = true;
-                          page = 1;
                         });
                         CoursesService.loadEbookList(
                           page: page++,
                           size: size,
                           courseContentCategories: courseContentCategories,
                           levelList: levelList,
-                          sortingOrder: _currentSorting,
+                          sortingOrder: _currentSorting == "ascending".tr
+                              ? false
+                              : _currentSorting == "descending".tr
+                                  ? true
+                                  : null,
                           q: _searchController.text,
                         ).then((value) {
                           setState(() {
-                            ebookList.addAll(value);
-                            for (var element in ebookList) {
+                            for (var element in value) {
                               element.level =
                                   levelList[int.parse(element.level)]["name"];
                             }
+                            ebookList.addAll(value);
                             _loading = false;
+                            _getMoreData = false;
                           });
                         });
                       },
-                      child: const Text(
-                        'Apply',
+                      child: Text(
+                        'apply_filter'.tr,
                       )),
                 ),
               ],
@@ -283,7 +289,11 @@ class _EBookListState extends State<EBookList> {
           size: size,
           courseContentCategories: courseContentCategories,
           levelList: levelList,
-          sortingOrder: _currentSorting,
+          sortingOrder: _currentSorting == "ascending".tr
+              ? false
+              : _currentSorting == "descending".tr
+                  ? true
+                  : null,
           q: _searchController.text,
         ).then((value) {
           setState(() {
@@ -345,9 +355,9 @@ class _EBookListState extends State<EBookList> {
                               Image.asset(UIData.noDataFound,
                                   width: 100, height: 100),
                               const SizedBox(height: 10),
-                              const Text(
-                                "No data",
-                                style: TextStyle(color: Colors.grey),
+                              Text(
+                                "no_data".tr,
+                                style: const TextStyle(color: Colors.grey),
                               ),
                             ])
                       : ListView.builder(

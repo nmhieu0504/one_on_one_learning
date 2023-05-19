@@ -452,9 +452,10 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     child: _totalTimeLearn == 0
-                        ? const Text(
-                            "Welcome to LetLearn!",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                        ? Text(
+                            "welcome".tr,
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.white),
                           )
                         : Text(
                             "${'total_lesson_time'.tr}${_totalTimeLearn ~/ 60}${'hours'.tr}${_totalTimeLearn % 60}${'minutes'.tr}",
@@ -496,9 +497,9 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 100),
               Image.asset(UIData.noDataFound, width: 100, height: 100),
               const SizedBox(height: 10),
-              const Text(
-                "No tutor found",
-                style: TextStyle(color: Colors.grey),
+              Text(
+                "no_data".tr,
+                style: const TextStyle(color: Colors.grey),
               ),
             ])
           : ListView.builder(

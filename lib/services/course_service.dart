@@ -13,7 +13,7 @@ class CoursesService {
       required int size,
       List<Map<String, dynamic>> courseContentCategories = const [],
       List<Map<String, dynamic>> levelList = const [],
-      String sortingOrder = "",
+      bool? sortingOrder,
       String q = ""}) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
@@ -35,9 +35,9 @@ class CoursesService {
       }
     }
 
-    if (sortingOrder.isNotEmpty) {
+    if (sortingOrder != null) {
       queryURL += "&order[]=level";
-      if (sortingOrder == "Ascending") {
+      if (!sortingOrder) {
         queryURL += "&orderBy[]=ASC";
       } else {
         queryURL += "&orderBy[]=DESC";
@@ -114,7 +114,7 @@ class CoursesService {
       required int size,
       List<Map<String, dynamic>> courseContentCategories = const [],
       List<Map<String, dynamic>> levelList = const [],
-      String sortingOrder = "",
+      bool? sortingOrder,
       String q = ""}) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
@@ -136,9 +136,9 @@ class CoursesService {
       }
     }
 
-    if (sortingOrder.isNotEmpty) {
+    if (sortingOrder != null) {
       queryURL += "&order[]=level";
-      if (sortingOrder == "Ascending") {
+      if (!sortingOrder) {
         queryURL += "&orderBy[]=ASC";
       } else {
         queryURL += "&orderBy[]=DESC";
@@ -190,7 +190,7 @@ class CoursesService {
       var res = jsonDecode(response.body);
       Map<String, dynamic> data = {};
       var element = res["data"];
-      
+
       data["name"] = element["name"];
       data["description"] = element["description"];
       data["level"] = element["level"];

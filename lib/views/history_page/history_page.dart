@@ -222,9 +222,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     children: [
                       Image.asset(UIData.noDataFound, width: 100, height: 100),
                       const SizedBox(height: 10),
-                      const Text(
-                        "No data",
-                        style: TextStyle(color: Colors.grey),
+                      Text(
+                        'no_data'.tr,
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ]),
               )
@@ -471,13 +471,6 @@ class _HistoryPageState extends State<HistoryPage> {
                                                       _dataList[index].id);
                                             },
                                             child: Text("rating".tr)),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 5, right: 5),
-                                    child: TextButton(
-                                        onPressed: () {},
-                                        child: const Text('Report')),
                                   ),
                                 ]),
                           ),

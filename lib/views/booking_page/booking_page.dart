@@ -11,6 +11,7 @@ import 'dart:collection';
 
 import '../../models/user.dart';
 import '../../services/utils_services.dart';
+import 'package:get/get.dart';
 
 class BookingPage extends StatefulWidget {
   final String tutorId;
@@ -111,12 +112,11 @@ class _BookingPageState extends State<BookingPage> {
 
           String time =
               '${DateFormat.Hm().format(startTimestamp)} - ${DateFormat.Hm().format(endTimestamp)}';
-          String tmpStr = element['isBooked'] ? '(Booked)' : '';
           element['isBooked'] = DateTime.now().isAfter(startTimestamp)
               ? true
               : element['isBooked'];
-          Schedule schedule = Schedule("$time $tmpStr", element['isBooked'],
-              element["scheduleDetailIds"],
+          Schedule schedule = Schedule(
+              time, element['isBooked'], element["scheduleDetailIds"],
               startTimestamp: startTimestamp.millisecondsSinceEpoch,
               endTimestamp: endTimestamp.millisecondsSinceEpoch);
           if (kEventSource.containsKey(date)) {
@@ -145,16 +145,16 @@ class _BookingPageState extends State<BookingPage> {
         builder: ((BuildContext context) => Center(
                 child: AlertDialog(
               backgroundColor: Colors.white,
-              title: const Text("Booking details"),
+              title: Text("booking_detail".tr),
               content: SingleChildScrollView(
                 child: Column(children: [
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     child: Column(children: [
-                      Row(children: const [
+                      Row(children: [
                         Text(
-                          'Booking Time',
-                          style: TextStyle(
+                          'booking_time'.tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -177,40 +177,44 @@ class _BookingPageState extends State<BookingPage> {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Balance',
+                            Text(
+                              'balance'.tr,
                               textAlign: TextAlign.start,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
                             ),
-                            Text(
-                                "You have ${int.parse(user.walletInfo["amount"]) ~/ priceOfSession} lessons left")
+                            Text("balance_left".trParams({
+                              "balance":
+                                  (int.parse(user.walletInfo["amount"]) ~/
+                                          priceOfSession)
+                                      .toString()
+                            }))
                           ]),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children: [
                             Text(
-                              'Price',
+                              'price'.tr,
                               textAlign: TextAlign.start,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
                             ),
-                            Text("1 lesson")
+                            Text("1 ${'lesson'.tr}")
                           ]),
                     ]),
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     child: Column(children: [
-                      Row(children: const [
+                      Row(children: [
                         Text(
-                          'Note',
+                          'note'.tr,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -224,10 +228,10 @@ class _BookingPageState extends State<BookingPage> {
                         child: TextField(
                           maxLines: 3,
                           controller: _noteController,
-                          decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
+                          decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(10),
                               border: InputBorder.none,
-                              hintText: "Enter your note here"),
+                              hintText: 'enter_note'.tr),
                         ),
                       )
                     ]),
@@ -236,7 +240,7 @@ class _BookingPageState extends State<BookingPage> {
               ),
               actions: [
                 OutlinedButton(
-                  child: const Text("Cancel"),
+                  child: Text("cancel".tr),
                   onPressed: () {
                     Navigator.of(context).pop();
                     _noteController.clear();
@@ -260,7 +264,7 @@ class _BookingPageState extends State<BookingPage> {
                               });
                             },
                   icon: const Icon(Icons.keyboard_double_arrow_right_outlined),
-                  label: const Text("Book"),
+                  label: Text("book_lesson".tr),
                 ),
               ],
             ))));
@@ -282,7 +286,7 @@ class _BookingPageState extends State<BookingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking Details'),
+        title: Text('booking'.tr),
       ),
       body: _loading
           ? const Center(
@@ -291,6 +295,7 @@ class _BookingPageState extends State<BookingPage> {
           : Column(
               children: [
                 TableCalendar<Schedule>(
+                  locale: 'vi_VN',
                   calendarBuilders:
                       CalendarBuilders(markerBuilder: (context, day, events) {
                     if (events.isEmpty) {

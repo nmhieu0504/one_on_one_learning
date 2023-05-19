@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/login_page/login_page.dart';
 
+import '../../controllers/controller.dart';
 import '../profile_page/profile_page.dart';
+import 'package:get/get.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -13,13 +15,13 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   SharePref sharePref = SharePref();
-  bool _isDarkMode = false;
+  Controller controller = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: Text('settings'.tr),
         ),
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -28,8 +30,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                    child: const Text("General",
-                        style: TextStyle(
+                    child: Text("general".tr,
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                   ListTile(
@@ -37,10 +39,18 @@ class _SettingsPageState extends State<SettingsPage> {
                       Icons.language,
                       size: 30,
                     ),
-                    title: const Text('Language'),
-                    subtitle: const Text('English'),
+                    title: Text('languages'.tr),
+                    subtitle: Text('current_language'.tr),
                     onTap: () {
                       // Handle language selection
+                      controller.isEnglish = !controller.isEnglish;
+                      if (controller.isEnglish) {
+                        sharePref.saveBool('isEnglish', true);
+                        Get.updateLocale(const Locale('en', 'US'));
+                      } else {
+                        sharePref.saveBool('isEnglish', false);
+                        Get.updateLocale(const Locale('vi', 'VN'));
+                      }
                     },
                   ),
                   ListTile(
@@ -48,16 +58,16 @@ class _SettingsPageState extends State<SettingsPage> {
                         Icons.dark_mode,
                         size: 30,
                       ),
-                      title: const Text('Dark mode'),
+                      title: Text('dark_mode'.tr),
                       trailing: Switch(
                         onChanged: (value) {},
-                        value: _isDarkMode,
+                        value: false,
                       )),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
-                    child: const Text("Account",
-                        style: TextStyle(
+                    child: Text("account".tr,
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                   ListTile(
@@ -65,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Icons.person,
                       size: 30,
                     ),
-                    title: const Text('Profile'),
+                    title: Text('profile'.tr),
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
@@ -78,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Icons.logout,
                       size: 30,
                     ),
-                    title: const Text('Sign Out'),
+                    title: Text('sign_out'.tr),
                     onTap: () {
                       sharePref.removeString('access_token');
                       sharePref.removeString('refresh_token');
