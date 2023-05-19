@@ -85,9 +85,12 @@ class NavigatorStatePage extends State<NavigatorPage> {
               ),
             ],
           ),
-          body: SafeArea(
-            child: _widgetOptions.elementAt(_selectedIndex),
-          ),
+          body: Obx(() => Container(
+                color: controller.black_and_grey_300.value,
+                child: SafeArea(
+                  child: _widgetOptions.elementAt(_selectedIndex),
+                ),
+              )),
           bottomNavigationBar: BottomNavigationBar(
             selectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.bold,

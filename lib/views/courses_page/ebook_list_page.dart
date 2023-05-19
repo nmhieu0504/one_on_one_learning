@@ -3,6 +3,7 @@ import 'package:one_on_one_learning/models/ebook.dart';
 import 'package:one_on_one_learning/services/course_service.dart';
 import 'package:one_on_one_learning/views/courses_page/ebook_card_component.dart';
 
+import '../../controllers/controller.dart';
 import '../../utils/ui_data.dart';
 import 'package:get/get.dart';
 
@@ -14,6 +15,8 @@ class EBookList extends StatefulWidget {
 }
 
 class _EBookListState extends State<EBookList> {
+  Controller controller = Get.find();
+
   int page = 1;
   final int size = 10;
 
@@ -329,21 +332,20 @@ class _EBookListState extends State<EBookList> {
                     children: [
                       Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: TextButton.icon(
+                        child: Obx(() => TextButton.icon(
                             onPressed: () {
                               setState(() {
                                 _isFilter = true;
                               });
                             },
-                            icon: const Icon(
-                              Icons.filter_alt_outlined,
-                              color: Colors.black,
-                            ),
-                            label: const Text(
-                              "Filter",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            )),
+                            icon: Icon(Icons.filter_alt_outlined,
+                                color: controller.black_and_white_text.value),
+                            label: Text(
+                              "filter".tr,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: controller.black_and_white_text.value),
+                            ))),
                       ),
                     ],
                   ),

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:one_on_one_learning/models/ebook.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../controllers/controller.dart';
+
 class EbookCardComponent extends StatelessWidget {
+  Controller controller = Get.find();
   final EBook ebook;
 
-  const EbookCardComponent({
+  EbookCardComponent({
     super.key,
     required this.ebook,
   });
@@ -52,7 +56,7 @@ class EbookCardComponent extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 ebook.description,
-                style: TextStyle(fontSize: 16, color: Colors.grey[900]),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
             Container(

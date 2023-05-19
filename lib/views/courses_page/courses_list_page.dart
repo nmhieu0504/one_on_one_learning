@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:one_on_one_learning/controllers/controller.dart';
 import 'package:one_on_one_learning/services/course_service.dart';
 import 'package:one_on_one_learning/views/courses_page/course_card_component.dart';
 
@@ -15,6 +16,7 @@ class CoursesList extends StatefulWidget {
 }
 
 class _CoursesListState extends State<CoursesList> {
+  Controller controller = Get.find();
   int page = 1;
   final int size = 10;
 
@@ -321,22 +323,22 @@ class _CoursesListState extends State<CoursesList> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: TextButton.icon(
+                          margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+                          child: Obx(() => TextButton.icon(
                               onPressed: () {
                                 setState(() {
                                   _isFilter = true;
                                 });
                               },
-                              icon: const Icon(
-                                Icons.filter_alt_outlined,
-                                color: Colors.black,
-                              ),
+                              icon: Icon(Icons.filter_alt_outlined,
+                                  color: controller.black_and_white_text.value),
                               label: Text(
                                 "filter".tr,
-                                style: const TextStyle(
-                                    fontSize: 16, color: Colors.black),
-                              )),
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color:
+                                        controller.black_and_white_text.value),
+                              ))),
                         ),
                       ],
                     ),

@@ -149,6 +149,8 @@ class AppTranslations extends Translations {
           'audio_muted': 'Audio Muted',
           'video_muted': 'Video Muted',
           'audio_only': 'Audio Only',
+          'submit': 'Submit',
+          'no_request': 'No request',
         },
         'vi_VN': {
           'password': 'Mật khẩu',
@@ -248,7 +250,7 @@ class AppTranslations extends Translations {
           'edit_request_error': 'Sửa yêu cầu thất bại',
           'rating': 'Đánh giá',
           'edit_rating': 'Sửa',
-          'rate_for_this_lesson': 'Đánh giá cho buổi học này',
+          'rate_for_this_lesson': 'Đánh giá cho buổi học',
           'write_your_review': 'Viết đánh giá của bạn',
           'no_review': 'Chưa có đánh giá',
           'booking': 'Đặt lịch học',
@@ -296,6 +298,8 @@ class AppTranslations extends Translations {
           'audio_muted': 'Tắt tiếng',
           'video_muted': 'Tắt video',
           'audio_only': 'Chỉ bật audio',
+          'submit': 'Gửi',
+          'no_request': 'Không có yêu cầu',
         },
       };
 }

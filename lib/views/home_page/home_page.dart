@@ -489,31 +489,32 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           )),
-      Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'all_tutors'.tr,
-              style: const TextStyle(
-                  fontSize: 18, decoration: TextDecoration.underline),
+      Obx(() => Container(
+            color: controller.black_and_white_card.value,
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            margin: const EdgeInsets.only(top: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'all_tutors'.tr,
+                  style: const TextStyle(
+                      fontSize: 18, decoration: TextDecoration.underline),
+                ),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isFilter = true;
+                      });
+                    },
+                    child: Obx(() => Text(
+                          '${'filter'.tr} >',
+                          style: TextStyle(
+                              color: controller.blue_700_and_white.value),
+                        )))
+              ],
             ),
-            TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isFilter = true;
-                  });
-                },
-                child: Obx(() => Text(
-                      '${'filter'.tr} >',
-                      style:
-                          TextStyle(color: controller.blue_700_and_white.value),
-                    )))
-          ],
-        ),
-      ),
+          )),
       _tutorList.isEmpty
           ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               const SizedBox(height: 100),
