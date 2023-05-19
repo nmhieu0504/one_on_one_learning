@@ -42,7 +42,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text('languages'.tr),
                     subtitle: Text('current_language'.tr),
                     onTap: () {
-                      // Handle language selection
                       controller.isEnglish = !controller.isEnglish;
                       if (controller.isEnglish) {
                         sharePref.saveBool('isEnglish', true);
@@ -60,8 +59,20 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       title: Text('dark_mode'.tr),
                       trailing: Switch(
-                        onChanged: (value) {},
-                        value: false,
+                        onChanged: (value) {
+                          setState(() {
+                            controller.isDarkTheme = value;
+                          });
+                          if (controller.isDarkTheme) {
+                            sharePref.saveBool('isDarkTheme', true);
+                            Get.changeTheme(ThemeData.dark(useMaterial3: true));
+                          } else {
+                            sharePref.saveBool('isDarkTheme', false);
+                            Get.changeTheme(
+                                ThemeData.light(useMaterial3: true));
+                          }
+                        },
+                        value: controller.isDarkTheme,
                       )),
                   const SizedBox(height: 10),
                   Container(

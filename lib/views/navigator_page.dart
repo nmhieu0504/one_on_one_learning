@@ -44,7 +44,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(        
         automaticallyImplyLeading: false,
         title: Text(
           _appBarTitle,
@@ -54,7 +54,6 @@ class NavigatorStatePage extends State<NavigatorPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
               onPressed: () {

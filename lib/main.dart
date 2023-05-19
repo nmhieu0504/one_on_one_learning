@@ -13,25 +13,28 @@ void main() async {
     Controller(),
   );
   SharePref sharePref = SharePref();
-  bool? result = await sharePref.getBool("isEnglish");
-  bool isEnglish = result ?? true;
+  bool? resultLanguage = await sharePref.getBool("isEnglish");
+  bool? resultTheme = await sharePref.getBool("isDarkTheme");
+  bool isEnglish = resultLanguage ?? true;
+  bool isDarkTheme = resultTheme ?? false;
   controller.isEnglish = isEnglish;
-  runApp(MyApp(isEnglish: isEnglish));
+  controller.isDarkTheme = isDarkTheme;
+  runApp(MyApp(isEnglish: isEnglish, isDarkTheme: isDarkTheme));
 }
 
 class MyApp extends StatelessWidget {
-  bool isEnglish;
-  MyApp({super.key, required this.isEnglish});
+  final bool isEnglish;
+  final bool isDarkTheme;
+  const MyApp({super.key, required this.isEnglish, required this.isDarkTheme});
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return GetMaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: isDarkTheme
+          ? ThemeData.dark(useMaterial3: true)
+          : ThemeData.light(useMaterial3: true),
       debugShowCheckedModeBanner: false,
       translations: AppTranslations(), // Initialize with custom translations
       locale: isEnglish ? const Locale('en', 'US') : const Locale('vi', 'VN'),
