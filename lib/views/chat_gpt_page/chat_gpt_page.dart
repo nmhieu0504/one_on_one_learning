@@ -7,6 +7,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../controllers/controller.dart';
 import '../../models/message.dart';
 import 'package:bubble/bubble.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -24,6 +25,7 @@ class ChatGPTPage extends StatefulWidget {
 enum TtsLanguage { en, vn }
 
 class _ChatGPTPageState extends State<ChatGPTPage> {
+  Controller controller = Get.find<Controller>();
   final textFieldController = TextEditingController();
   final ChatGPTUltils chatGPTUltils = ChatGPTUltils();
   List<Message> messageList = [];
@@ -123,7 +125,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
             leading: const Icon(Icons.play_circle_outline),
             title: Text('auto_tts_reply'.tr),
             trailing: Switch(
-                activeColor: Colors.blue,
+                activeColor: Colors.blue[700],
                 value: isAutoTTS,
                 onChanged: (value) async {
                   setState(() {
@@ -280,7 +282,10 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                 },
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.red)),
-                child: Text('delete_all_messages'.tr)),
+                child: Text(
+                  'delete_all_messages'.tr,
+                  style: const TextStyle(color: Colors.white),
+                )),
           ),
         ],
       ),
@@ -328,7 +333,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                   Container(
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.8),
-                    child: Bubble(
+                    child: Obx(() => Bubble(
                         elevation: 5,
                         margin: const BubbleEdges.only(
                           top: 5,
@@ -336,11 +341,12 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                         ),
                         alignment: Alignment.topLeft,
                         nip: BubbleNip.leftTop,
-                        color: Colors.grey[100],
+                        color: controller.grey_100_and_grey_850.value,
                         child: Text(
                           message.message,
-                          style: const TextStyle(color: Colors.black),
-                        )),
+                          style: TextStyle(
+                              color: controller.black_and_white_text.value),
+                        ))),
                   ),
                   IconButton(
                       onPressed: () {
@@ -363,15 +369,16 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                           }
                         });
                       },
-                      icon: message.state
+                      icon: Obx(() => message.state
                           ? LoadingAnimationWidget.beat(
-                              color: Colors.blue,
+                              color: controller.blue_700_and_white.value ??
+                                  Colors.blue,
                               size: 20,
                             )
-                          : const Icon(
+                          : Icon(
                               Icons.play_circle_outline,
-                              color: Colors.blue,
-                            ))
+                              color: controller.blue_700_and_white.value,
+                            )))
                 ]);
         },
       ),
@@ -406,49 +413,59 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
   }
 
   Widget _buildInputMessage() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(30, 15, 30, 15),
-      child: Theme(
-        data: ThemeData(
-          primaryColor: Colors.blue,
-          primaryColorDark: Colors.blue,
-        ),
-        child: TextField(
-          cursorColor: Colors.blue,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(40.0))),
-            hintText: "start_typing_or_talking".tr,
-            contentPadding:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-            suffixIcon: IconButton(
-              icon: !isButtonDisabled
-                  ? const Icon(
-                      Icons.send,
-                      color: Colors.blue,
-                    )
-                  : LoadingAnimationWidget.discreteCircle(
-                      color: Colors.blue,
-                      size: 20,
-                    ),
-              onPressed: () {
-                if (isButtonDisabled) return;
-                String text = textFieldController.text;
-                setState(() {
-                  isButtonDisabled = true;
-                  messageList.add(Message(
-                      message: text, date: DateTime.now(), isUser: true));
-                });
-                DB_Ultils.insertMessage(
-                    Message(message: text, date: DateTime.now(), isUser: true));
-                _sendRequest(text);
-              },
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.fromLTRB(30, 15, 30, 15),
+        child: Theme(
+            data: ThemeData(
+              useMaterial3: controller.isDarkTheme,
+              primaryColor: controller.blue_700_and_white.value,
+              primaryColorDark: controller.blue_700_and_white.value,
             ),
-          ),
-          controller: textFieldController,
-        ),
+            child: TextField(
+              style: TextStyle(
+                color: controller.black_and_white_text.value,
+              ),
+              cursorColor: controller.blue_700_and_white.value,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(
+                  color: controller.black_and_white_text.value,
+                ),
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                hintText: "start_typing_or_talking".tr,
+                contentPadding: const EdgeInsets.only(
+                    top: 10, bottom: 10, left: 20, right: 20),
+                suffixIcon: Obx(() => IconButton(
+                      icon: !isButtonDisabled
+                          ? Icon(
+                              Icons.send,
+                              color: controller.blue_700_and_white.value,
+                            )
+                          : LoadingAnimationWidget.discreteCircle(
+                              color: Colors.blue,
+                              size: 20,
+                            ),
+                      onPressed: () {
+                        if (isButtonDisabled) return;
+                        String text = textFieldController.text;
+                        setState(() {
+                          isButtonDisabled = true;
+                          messageList.add(Message(
+                              message: text,
+                              date: DateTime.now(),
+                              isUser: true));
+                        });
+                        DB_Ultils.insertMessage(Message(
+                            message: text, date: DateTime.now(), isUser: true));
+                        _sendRequest(text);
+                      },
+                    )),
+              ),
+              controller: textFieldController,
+            )),
       ),
     );
   }
@@ -468,25 +485,27 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
             child: SizedBox(
               height: 80.0,
               width: 80.0,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue)),
-                onPressed: _listen,
-                child: Icon(
-                  _isListening ? Icons.mic : Icons.mic_none,
-                  size: 40,
-                  color: Colors.white,
-                ),
+              child: Obx(
+                () => ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            controller.blue_700_and_white.value)),
+                    onPressed: _listen,
+                    child: Icon(
+                      _isListening ? Icons.mic : Icons.mic_none,
+                      size: 40,
+                      color: controller.black_and_white_card.value,
+                    )),
               ),
             ),
           ),
-          Text(
-            _isListening ? "listening".tr : "tap_to_talk".tr,
-            style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-                color: Colors.blue[600]),
-          )
+          Obx(() => Text(
+                _isListening ? "listening".tr : "tap_to_talk".tr,
+                style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 18,
+                    color: controller.blue_700_and_white.value),
+              ))
         ]),
       ),
     );
@@ -513,7 +532,6 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           centerTitle: true,
           title: const Text("Chat",
               style: TextStyle(
-                color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ))),

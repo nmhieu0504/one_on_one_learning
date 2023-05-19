@@ -17,6 +17,7 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+  bool _isAvatarError = false;
   bool _getMoreData = false;
   bool _loading = true;
   final _reason = [
@@ -262,9 +263,7 @@ class _SchedulePageState extends State<SchedulePage> {
                       ? _buildProgressIndicator()
                       : Container(
                           margin: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 74, 20, 140)),
+                          decoration: BoxDecoration(                         
                             borderRadius: BorderRadius.circular(10),
                           ),
                           padding: const EdgeInsets.all(10),
@@ -306,10 +305,21 @@ class _SchedulePageState extends State<SchedulePage> {
                                   child: Container(
                                     margin: const EdgeInsets.all(15),
                                     child: ListTile(
-                                      leading: Image.network(
-                                        _dataList[index].avatar,
-                                        width: 50,
-                                        height: 50,
+                                      leading: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.grey[50],
+                                        backgroundImage: _isAvatarError
+                                            ? const AssetImage(
+                                                UIData.defaultAvatar)
+                                            : NetworkImage(
+                                                    _dataList[index].avatar)
+                                                as ImageProvider,
+                                        onBackgroundImageError:
+                                            (exception, stackTrace) {
+                                          setState(() {
+                                            _isAvatarError = true;
+                                          });
+                                        },
                                       ),
                                       title: Text(
                                         _dataList[index].name,

@@ -2,12 +2,13 @@
 
 import 'dart:convert';
 
-import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:one_on_one_learning/views/tutor_page/tutor_detail_page.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:http/http.dart' as http;
 
+import '../../controllers/controller.dart';
 import '../../utils/backend.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/share_pref.dart';
@@ -52,9 +53,10 @@ class TutorCard extends StatefulWidget {
 }
 
 class _TutorCardState extends State<TutorCard> {
-  final SharePref sharePref = SharePref();
+  Controller controller = Get.find();
 
-  void onPressed() {}
+  final SharePref sharePref = SharePref();
+  bool _isAvatarError = false;
 
   Future<void> _modifyFavourite() async {
     String? token = await sharePref.getString("access_token");
@@ -92,11 +94,17 @@ class _TutorCardState extends State<TutorCard> {
     if (widget.avatar == null) {
       return Image.asset(UIData.logoLogin);
     } else {
-      return Avatar(
-        sources: [NetworkSource(widget.avatar!)],
-        name: widget.name,
-        shape: AvatarShape.rectangle(
-            50, 50, const BorderRadius.all(Radius.circular(20.0))),
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.grey[50],
+        backgroundImage: _isAvatarError
+            ? const AssetImage(UIData.defaultAvatar)
+            : NetworkImage(widget.avatar!) as ImageProvider,
+        onBackgroundImageError: (exception, stackTrace) {
+          setState(() {
+            _isAvatarError = true;
+          });
+        },
       );
     }
   }
@@ -119,10 +127,11 @@ class _TutorCardState extends State<TutorCard> {
       list.add(Container(
         margin: const EdgeInsets.only(right: 10),
         child: OutlinedButton(
-          onPressed: onPressed,
+          onPressed: () {},
           style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.blue,
-            side: const BorderSide(color: Colors.blue),
+            foregroundColor: controller.blue_700_and_white.value,
+            side: BorderSide(
+                color: controller.blue_700_and_white.value ?? Colors.blue),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
@@ -137,111 +146,110 @@ class _TutorCardState extends State<TutorCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: Column(
-        children: <Widget>[
-          Card(
-            elevation: 0,
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: Theme.of(context).colorScheme.outline,
-              ),
-              borderRadius: const BorderRadius.all(Radius.circular(12)),
-            ),
-            margin: const EdgeInsets.only(bottom: 20),
-            clipBehavior: Clip.hardEdge,
-            child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                    return TutorPage(userId: widget.userId);
-                  }),
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    child: ListTile(
-                        leading: _buildAvatar(),
-                        title: Text(widget.name,
-                            style: const TextStyle(fontSize: 18)),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(                              
-                              children: <Widget>[
-                              const Icon(
-                                Icons.flag,
-                                color: Colors.blue,
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 5),
-                                child: Text(
-                                  widget.country == null
-                                      ? 'No information'
-                                      : widget.country!.length > 2
-                                          ? widget.country!
-                                          : getCountryName(widget.country!),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                            ]),
-                            widget.rating == null
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 5),
-                                    child: const Text('Rating not available',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic)),
-                                  )
-                                : Row(
-                                    children: _showRating(),
+    return Obx(() => Container(
+          margin: const EdgeInsets.only(top: 15),
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Column(
+            children: <Widget>[
+              Card(
+                elevation: 0,
+                color: controller.black_and_white_card.value,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                ),
+                clipBehavior: Clip.hardEdge,
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                        return TutorPage(userId: widget.userId);
+                      }),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: ListTile(
+                            isThreeLine: true,
+                            leading: _buildAvatar(),
+                            title: Text(widget.name,
+                                style: const TextStyle(fontSize: 18)),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(children: <Widget>[
+                                  const Icon(
+                                    Icons.flag,
+                                    color: Colors.blue,
                                   ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          iconSize: 35,
-                          icon: Icon(Icons.favorite_sharp,
-                              color: widget.isFavourite
-                                  ? Colors.red
-                                  : Colors.grey),
-                          onPressed: () {
-                            setState(() {
-                              widget.isFavourite = !widget.isFavourite;
-                            });
-                            _modifyFavourite();
-                            debugPrint('Favourite button pressed.');
-                          },
-                        )),
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 5),
+                                    child: Text(
+                                      widget.country == null
+                                          ? 'No information'
+                                          : widget.country!.length > 2
+                                              ? widget.country!
+                                              : getCountryName(widget.country!),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                ]),
+                                widget.rating == null
+                                    ? Container(
+                                        margin: const EdgeInsets.only(top: 5),
+                                        child: const Text(
+                                            'Rating not available',
+                                            style: TextStyle(
+                                                fontStyle: FontStyle.italic)),
+                                      )
+                                    : Row(
+                                        children: _showRating(),
+                                      ),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              iconSize: 35,
+                              icon: Icon(
+                                  widget.isFavourite
+                                      ? Icons.favorite_sharp
+                                      : Icons.favorite_border,
+                                  color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  widget.isFavourite = !widget.isFavourite;
+                                });
+                                _modifyFavourite();
+                                debugPrint('Favourite button pressed.');
+                              },
+                            )),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 20, right: 20),
+                        child: Wrap(
+                            alignment: WrapAlignment.start,
+                            children: _showSpecialties()),
+                      ),
+                      Container(
+                          padding: const EdgeInsets.all(15),
+                          child: Text.rich(
+                            TextSpan(
+                                text:
+                                    // '${widget.bio.substring(0, 100)}... See more'),
+                                    widget.bio),
+                            textAlign: TextAlign.justify,
+                          ))
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20, right: 20),
-                    child: Wrap(
-                        alignment: WrapAlignment.start,
-                        children: _showSpecialties()),
-                  ),
-                  Container(
-                      padding: const EdgeInsets.all(15),
-                      child: Text.rich(
-                        TextSpan(
-                            text:
-                                // '${widget.bio.substring(0, 100)}... See more'),
-                                widget.bio),
-                        textAlign: TextAlign.justify,
-                      ))
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:intl/intl.dart';
+import 'package:one_on_one_learning/controllers/controller.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
 import 'package:one_on_one_learning/views/meeting_page/meeting_page.dart';
@@ -20,6 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Controller controller = Get.find();
+
   bool _isFilter = false;
   bool _loading = true;
   bool _getMoreData = false;
@@ -125,7 +128,7 @@ class _HomePageState extends State<HomePage> {
           spacing: 10,
           children: _specialtiesList.map((value) {
             return FilterChip(
-              selectedColor: Colors.blue[100],
+              selectedColor: Colors.blue[300],
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               label: Text(specialtiesUltis(value)),
@@ -151,7 +154,7 @@ class _HomePageState extends State<HomePage> {
             spacing: 10,
             children: _nationalityTutorList.asMap().entries.map((value) {
               return FilterChip(
-                  selectedColor: Colors.blue[100],
+                  selectedColor: Colors.blue[300],
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   label: Text(_nationalityTutorList[value.key]),
@@ -211,31 +214,37 @@ class _HomePageState extends State<HomePage> {
               )),
           Container(
             margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: SizedBox(
-              height: 40,
-              child: Theme(
-                data: ThemeData(
-                  primaryColor: Colors.blue,
-                  primaryColorDark: Colors.blue,
-                ),
-                child: TextField(
-                  cursorColor: Colors.blue,
-                  controller: _searchController,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      hintText: 'search'.tr,
-                      hintStyle:
-                          const TextStyle(color: Colors.grey, fontSize: 16),
-                      prefixIcon: Container(
-                        padding: const EdgeInsets.all(15),
-                        width: 18,
-                        child: Image.asset(UIData.searchIcon),
-                      )),
-                ),
-              ),
-            ),
+            child: Obx(() => SizedBox(
+                  height: 40,
+                  child: Theme(
+                    data: ThemeData(
+                      useMaterial3: controller.isDarkTheme,
+                      primaryColor: controller.blue_700_and_white.value,
+                      primaryColorDark: controller.blue_700_and_white.value,
+                    ),
+                    child: TextField(
+                      cursorColor: controller.blue_700_and_white.value,
+                      style: TextStyle(
+                        color: controller.black_and_white_text.value,
+                        decorationColor: controller.blue_700_and_white.value,
+                      ),
+                      controller: _searchController,
+                      textAlignVertical: TextAlignVertical.bottom,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                          hintText: 'search'.tr,
+                          hintStyle:
+                              const TextStyle(color: Colors.grey, fontSize: 16),
+                          prefixIcon: Container(
+                            padding: const EdgeInsets.all(15),
+                            width: 18,
+                            child: Image.asset(UIData.searchIcon,
+                                color: controller.black_and_white_text.value),
+                          )),
+                    ),
+                  ),
+                )),
           ),
           _nationalityTutorFilter(),
           Container(
@@ -249,33 +258,38 @@ class _HomePageState extends State<HomePage> {
               )),
           Container(
             margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: SizedBox(
-              height: 40,
-              child: Theme(
-                data: ThemeData(
-                  primaryColor: Colors.blue,
-                  primaryColorDark: Colors.blue,
-                ),
-                child: TextField(
-                  cursorColor: Colors.blue,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  textAlign: TextAlign.center,
-                  controller: _datePickerController,
-                  onTap: () {
-                    _selectDate(context);
-                  },
-                  decoration: InputDecoration(
-                    suffixIcon: const Icon(Icons.calendar_month_outlined),
-                    hintStyle:
-                        const TextStyle(color: Colors.grey, fontSize: 16),
-                    hintText: "pick_a_date".tr,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
+            child: Obx(() => SizedBox(
+                  height: 40,
+                  child: Theme(
+                    data: ThemeData(
+                      useMaterial3: controller.isDarkTheme,
+                      primaryColor: controller.blue_700_and_white.value,
+                      primaryColorDark: controller.blue_700_and_white.value,
+                    ),
+                    child: TextField(
+                      style: TextStyle(
+                        color: controller.black_and_white_text.value,
+                        decorationColor: controller.blue_700_and_white.value,
+                      ),
+                      cursorColor: controller.blue_700_and_white.value,
+                      textAlignVertical: TextAlignVertical.bottom,
+                      textAlign: TextAlign.center,
+                      controller: _datePickerController,
+                      onTap: () {
+                        _selectDate(context);
+                      },
+                      decoration: InputDecoration(
+                        suffixIcon: const Icon(Icons.calendar_month_outlined),
+                        hintStyle:
+                            const TextStyle(color: Colors.grey, fontSize: 16),
+                        hintText: "pick_a_date".tr,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                      ),
+                      readOnly: true,
+                    ),
                   ),
-                  readOnly: true,
-                ),
-              ),
-            ),
+                )),
           ),
           Container(
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -339,6 +353,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Text(
                       'apply_filter'.tr,
+                      style: const TextStyle(color: Colors.white),
                     )),
               ),
             ],
@@ -355,119 +370,125 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildTutorList() {
     return ListView(controller: _scrollController, children: <Widget>[
-      Container(
-        color: Colors.blue[900],
-        child: Center(
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(20, 40, 20, 40),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: Text(
+      Obx(() => Container(
+            color: controller.bannerBackground.value,
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(20, 40, 20, 40),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          _isUpcoming
+                              ? "upcoming_lesson".tr
+                              : "you_have_no_upcoming_lesson".tr,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: _isUpcoming ? 30 : 24,
+                              color: Colors.white),
+                        ),
+                      ),
                       _isUpcoming
-                          ? "upcoming_lesson".tr
-                          : "you_have_no_upcoming_lesson".tr,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: _isUpcoming ? 30 : 24, color: Colors.white),
-                    ),
-                  ),
-                  _isUpcoming
-                      ? Column(
-                          children: [
-                            Container(
-                                margin: const EdgeInsets.symmetric(vertical: 5),
-                                child: Text(_upcomingLessonTime(),
-                                    style: const TextStyle(
-                                        fontSize: 20, color: Colors.white))),
-                            Center(
-                              child: CountdownTimer(
-                                widgetBuilder: (_, CurrentRemainingTime? time) {
-                                  if (time == null) return Container();
-                                  String days = time.days == null
-                                      ? "00"
-                                      : time.days! < 10
-                                          ? "0${time.days}"
-                                          : "${time.days}";
-                                  String hours = time.hours == null
-                                      ? "00"
-                                      : time.hours! < 10
-                                          ? "0${time.hours}"
-                                          : "${time.hours}";
-                                  String min = time.min == null
-                                      ? "00"
-                                      : time.min! < 10
-                                          ? "0${time.min}"
-                                          : "${time.min}";
-                                  String sec = time.sec == null
-                                      ? "00"
-                                      : time.sec! < 10
-                                          ? "0${time.sec}"
-                                          : "${time.sec}";
-                                  return Text(
-                                      '(${'start_in'.tr}$days : $hours : $min : $sec)',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.yellow[300],
-                                      ));
-                                },
-                                controller: CountdownTimerController(
-                                    endTime: _upComingInfo["startTimestamp"]),
-                                endTime: _upComingInfo["startTimestamp"],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsetsDirectional.symmetric(
-                                  vertical: 10),
-                              child: FilledButton.icon(
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: Colors.white,
+                          ? Column(
+                              children: [
+                                Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: Text(_upcomingLessonTime(),
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white))),
+                                Center(
+                                  child: CountdownTimer(
+                                    widgetBuilder:
+                                        (_, CurrentRemainingTime? time) {
+                                      if (time == null) return Container();
+                                      String days = time.days == null
+                                          ? "00"
+                                          : time.days! < 10
+                                              ? "0${time.days}"
+                                              : "${time.days}";
+                                      String hours = time.hours == null
+                                          ? "00"
+                                          : time.hours! < 10
+                                              ? "0${time.hours}"
+                                              : "${time.hours}";
+                                      String min = time.min == null
+                                          ? "00"
+                                          : time.min! < 10
+                                              ? "0${time.min}"
+                                              : "${time.min}";
+                                      String sec = time.sec == null
+                                          ? "00"
+                                          : time.sec! < 10
+                                              ? "0${time.sec}"
+                                              : "${time.sec}";
+                                      return Text(
+                                          '(${'start_in'.tr}$days : $hours : $min : $sec)',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.yellow[300],
+                                          ));
+                                    },
+                                    controller: CountdownTimerController(
+                                        endTime:
+                                            _upComingInfo["startTimestamp"]),
+                                    endTime: _upComingInfo["startTimestamp"],
                                   ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                        return MeetingPage(
-                                          roomNameOrUrl:
-                                              _upComingInfo["roomNameOrUrl"],
+                                ),
+                                Container(
+                                  margin: const EdgeInsetsDirectional.symmetric(
+                                      vertical: 10),
+                                  child: FilledButton.icon(
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                            return MeetingPage(
+                                              roomNameOrUrl: _upComingInfo[
+                                                  "roomNameOrUrl"],
+                                            );
+                                          }),
                                         );
-                                      }),
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.ondemand_video_sharp,
-                                    color: Colors.blue,
-                                  ),
-                                  label: Text(
-                                    'enter_lesson_room'.tr,
-                                    style: const TextStyle(color: Colors.blue),
-                                  )),
+                                      },
+                                      icon: const Icon(
+                                        Icons.ondemand_video_sharp,
+                                        color: Colors.blue,
+                                      ),
+                                      label: Text(
+                                        'enter_lesson_room'.tr,
+                                        style:
+                                            const TextStyle(color: Colors.blue),
+                                      )),
+                                )
+                              ],
                             )
-                          ],
-                        )
-                      : Container(),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: _totalTimeLearn == 0
-                        ? Text(
-                            "welcome".tr,
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.white),
-                          )
-                        : Text(
-                            "${'total_lesson_time'.tr}${_totalTimeLearn ~/ 60}${'hours'.tr}${_totalTimeLearn % 60}${'minutes'.tr}",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.white),
-                          ),
-                  )
-                ]),
-          ),
-        ),
-      ),
+                          : Container(),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: _totalTimeLearn == 0
+                            ? Text(
+                                "welcome".tr,
+                                style: const TextStyle(
+                                    fontSize: 20, color: Colors.white),
+                              )
+                            : Text(
+                                "${'total_lesson_time'.tr}${_totalTimeLearn ~/ 60}${'hours'.tr}${_totalTimeLearn % 60}${'minutes'.tr}",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    fontSize: 20, color: Colors.white),
+                              ),
+                      )
+                    ]),
+              ),
+            ),
+          )),
       Container(
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
@@ -485,10 +506,11 @@ class _HomePageState extends State<HomePage> {
                     _isFilter = true;
                   });
                 },
-                child: Text(
-                  '${'filter'.tr} >',
-                  style: TextStyle(color: Colors.blue[700]),
-                ))
+                child: Obx(() => Text(
+                      '${'filter'.tr} >',
+                      style:
+                          TextStyle(color: controller.blue_700_and_white.value),
+                    )))
           ],
         ),
       ),
@@ -502,16 +524,19 @@ class _HomePageState extends State<HomePage> {
                 style: const TextStyle(color: Colors.grey),
               ),
             ])
-          : ListView.builder(
-              shrinkWrap: true,
-              physics: const ScrollPhysics(),
-              itemBuilder: (context, index) {
-                return index == _tutorList.length
-                    ? _buildProgressIndicator()
-                    : _tutorList[index];
-              },
-              itemCount: _tutorList.length + 1,
-            ),
+          : Obx(() => Container(
+                color: controller.black_and_grey_300.value,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return index == _tutorList.length
+                        ? _buildProgressIndicator()
+                        : _tutorList[index];
+                  },
+                  itemCount: _tutorList.length + 1,
+                ),
+              )),
     ]);
   }
 

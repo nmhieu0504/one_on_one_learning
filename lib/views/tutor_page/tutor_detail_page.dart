@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print
 
-import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:one_on_one_learning/controllers/controller.dart';
 import 'package:one_on_one_learning/services/course_service.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
 import 'package:one_on_one_learning/views/booking_page/booking_page.dart';
@@ -27,9 +27,11 @@ class TutorPage extends StatefulWidget {
 }
 
 class TutorPageState extends State<TutorPage> {
+  bool _isAvatarError = false;
   late Tutor tutor;
   bool _loadingData = true;
   final TextEditingController _reportController = TextEditingController();
+  Controller controller = Get.find();
 
   List<Course> tutorCoursesList = [];
 
@@ -69,6 +71,7 @@ class TutorPageState extends State<TutorPage> {
 
   void _displaySuccessMotionToast(String str) {
     MotionToast.success(
+      toastDuration: const Duration(milliseconds: 750),
       height: 60,
       width: 300,
       description: Text(str,
@@ -85,12 +88,17 @@ class TutorPageState extends State<TutorPage> {
     if (tutor.user.avatar == null) {
       return Image.asset(UIData.logoLogin);
     } else {
-      return Avatar(
-        loader: Container(),
-        sources: [NetworkSource(tutor.user.avatar ?? "")],
-        name: tutor.user.name,
-        shape: AvatarShape.rectangle(
-            50, 50, const BorderRadius.all(Radius.circular(20.0))),
+      return CircleAvatar(
+        radius: 100,
+        backgroundColor: Colors.grey[50],
+        backgroundImage: _isAvatarError
+            ? const AssetImage(UIData.defaultAvatar)
+            : NetworkImage(tutor.user.avatar!) as ImageProvider,
+        onBackgroundImageError: (exception, stackTrace) {
+          setState(() {
+            _isAvatarError = true;
+          });
+        },
       );
     }
   }
@@ -135,8 +143,10 @@ class TutorPageState extends State<TutorPage> {
         child: OutlinedButton(
           onPressed: () {},
           style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.blue[600],
-            side: const BorderSide(color: Colors.blue),
+            foregroundColor:
+                controller.isDarkTheme ? Colors.white : Colors.blue[700],
+            side: BorderSide(
+                color: controller.isDarkTheme ? Colors.white : Colors.blue),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
@@ -158,8 +168,10 @@ class TutorPageState extends State<TutorPage> {
         child: OutlinedButton(
           onPressed: () {},
           style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.blue[600],
-            side: const BorderSide(color: Colors.blue),
+            foregroundColor:
+                controller.isDarkTheme ? Colors.white : Colors.blue[700],
+            side: BorderSide(
+                color: controller.isDarkTheme ? Colors.white : Colors.blue),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
@@ -189,13 +201,15 @@ class TutorPageState extends State<TutorPage> {
             );
           },
           child: Text(tutor.user.courses[i].name ?? "",
-              style: const TextStyle(color: Colors.black, fontSize: 12)),
+              style: TextStyle(
+                  color: controller.isDarkTheme ? Colors.white : Colors.black,
+                  fontSize: 12)),
         ),
       ));
     }
     if (list.isEmpty) {
-      list.add(const Text("No courses",
-          style: TextStyle(fontStyle: FontStyle.italic)));
+      list.add(Text("no_course".tr,
+          style: const TextStyle(fontStyle: FontStyle.italic)));
     }
     return list;
   }
@@ -226,13 +240,30 @@ class TutorPageState extends State<TutorPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
+      theme: controller.isDarkTheme
+          ? ThemeData.dark(useMaterial3: true)
+          : ThemeData.light(useMaterial3: true),
       debugShowCheckedModeBanner: false,
       home: _loadingData
-          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+          ? Scaffold(
+              body: Center(
+                  child: CircularProgressIndicator(
+              color: Colors.blue[700],
+            )))
           : Scaffold(
+              floatingActionButton: FloatingActionButton.small(
+                backgroundColor: controller.isDarkTheme
+                    ? Colors.grey[900]
+                    : Colors.blue[700],
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ChatPage(tutorId: widget.userId)));
+                },
+                child: const Icon(Icons.chat, color: Colors.white),
+              ),
               appBar: AppBar(
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
@@ -244,7 +275,6 @@ class TutorPageState extends State<TutorPage> {
                 title: Text(
                   tutor.user.name,
                   style: const TextStyle(
-                    color: Colors.black,
                     fontSize: 20,
                     // fontWeight: FontWeight.bold,
                   ),
@@ -265,55 +295,42 @@ class TutorPageState extends State<TutorPage> {
                         top: 20, bottom: 20, left: 10, right: 10),
                     clipBehavior: Clip.hardEdge,
                     child: InkWell(
-                      // splashcolor: Colors.blue[600].withAlpha(30),
-                      // onTap: () {},
                       child: Container(
                         margin: const EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            ListTile(
-                                leading: _buildAvatar(),
-                                title: Text(
-                                  tutor.user.name,
-                                  style: const TextStyle(fontSize: 18),
+                            Center(
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 20),
+                                child: Column(
+                                  children: [
+                                    _buildAvatar(),
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        tutor.user.name,
+                                        style: const TextStyle(
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: Text(
+                                          getCountryName(tutor.user.country),
+                                          style: const TextStyle(
+                                              fontStyle: FontStyle.italic)),
+                                    ),
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: _showRating()),
+                                  ],
                                 ),
-                                subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(children: _showRating()),
-                                      Container(
-                                          margin: const EdgeInsets.only(top: 3),
-                                          child: Text(
-                                              getCountryName(
-                                                  tutor.user.country),
-                                              style: const TextStyle(
-                                                  fontStyle:
-                                                      FontStyle.italic))),
-                                    ]),
-                                trailing: IconButton(
-                                  iconSize: 35,
-                                  icon: Icon(Icons.favorite_sharp,
-                                      color: tutor.isFavorite
-                                          ? Colors.red
-                                          : Colors.grey),
-                                  onPressed: () {
-                                    setState(() {
-                                      tutor.isFavorite = !tutor.isFavorite;
-                                    });
-                                    TutorServices.modifyFavourite(widget.userId)
-                                        .then((value) {
-                                      if (value) {
-                                        _displaySuccessMotionToast(
-                                            tutor.isFavorite
-                                                ? 'add_to_favourite'.tr
-                                                : 'remove_from_favourite'.tr);
-                                      }
-                                    });
-                                    debugPrint('Favourite button pressed.');
-                                  },
-                                )),
+                              ),
+                            ),
                             Center(
                               child: Column(children: <Widget>[
                                 Container(
@@ -324,7 +341,10 @@ class TutorPageState extends State<TutorPage> {
                                     children: <Widget>[
                                       FilledButton(
                                         style: FilledButton.styleFrom(
-                                            backgroundColor: Colors.blue[600]),
+                                            backgroundColor:
+                                                controller.isDarkTheme
+                                                    ? Colors.white
+                                                    : Colors.blue[700]),
                                         onPressed: () {
                                           Navigator.push(
                                               context,
@@ -349,34 +369,54 @@ class TutorPageState extends State<TutorPage> {
                                       MainAxisAlignment.spaceAround,
                                   children: <Widget>[
                                     TextButton(
-                                      child: Column(children: <Widget>[
-                                        Icon(Icons.chat,
-                                            color: Colors.blue[600]),
+                                      child: Column(children: [
+                                        Icon(
+                                            tutor.isFavorite
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: Colors.red),
                                         Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
-                                            child: Text('Chat',
+                                            child: Text('favorite'.tr,
                                                 style: TextStyle(
-                                                    color: Colors.blue[600]))),
+                                                    color: controller
+                                                            .isDarkTheme
+                                                        ? Colors.white
+                                                        : Colors.blue[700]))),
                                       ]),
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ChatPage(
-                                                    tutorId: widget.userId)));
+                                        setState(() {
+                                          tutor.isFavorite = !tutor.isFavorite;
+                                        });
+                                        TutorServices.modifyFavourite(
+                                                widget.userId)
+                                            .then((value) {
+                                          if (value) {
+                                            _displaySuccessMotionToast(tutor
+                                                    .isFavorite
+                                                ? 'add_to_favorite'.tr
+                                                : 'remove_from_favorite'.tr);
+                                          }
+                                        });
+                                        debugPrint('Favourite button pressed.');
                                       },
                                     ),
                                     TextButton(
                                       child: Column(children: <Widget>[
                                         Icon(Icons.star_border_outlined,
-                                            color: Colors.blue[600]),
+                                            color: controller.isDarkTheme
+                                                ? Colors.white
+                                                : Colors.blue[700]),
                                         Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
                                             child: Text('Reviews',
                                                 style: TextStyle(
-                                                    color: Colors.blue[600]))),
+                                                    color: controller
+                                                            .isDarkTheme
+                                                        ? Colors.white
+                                                        : Colors.blue[700]))),
                                       ]),
                                       onPressed: () {
                                         Navigator.push(
@@ -391,13 +431,18 @@ class TutorPageState extends State<TutorPage> {
                                     TextButton(
                                       child: Column(children: <Widget>[
                                         Icon(Icons.report,
-                                            color: Colors.blue[600]),
+                                            color: controller.isDarkTheme
+                                                ? Colors.white
+                                                : Colors.blue[700]),
                                         Container(
                                             margin:
                                                 const EdgeInsets.only(top: 5),
                                             child: Text('report'.tr,
                                                 style: TextStyle(
-                                                    color: Colors.blue[600]))),
+                                                    color: controller
+                                                            .isDarkTheme
+                                                        ? Colors.white
+                                                        : Colors.blue[700]))),
                                       ]),
                                       onPressed: () => showDialog<String>(
                                           context: context,
@@ -405,8 +450,6 @@ class TutorPageState extends State<TutorPage> {
                                               Center(
                                                 child: SingleChildScrollView(
                                                   child: AlertDialog(
-                                                    backgroundColor:
-                                                        Colors.white,
                                                     title: Text(
                                                         '${'report'.tr} ${tutor.user.name}',
                                                         style: const TextStyle(
@@ -435,7 +478,7 @@ class TutorPageState extends State<TutorPage> {
                                                                         .map((item) =>
                                                                             StatefulBuilder(
                                                                               builder: (context, setState) => CheckboxListTile(
-                                                                                  activeColor: Colors.blue[600],
+                                                                                  activeColor: controller.isDarkTheme ? Colors.white : Colors.blue[700],
                                                                                   value: _selectedRepotItems.contains(item),
                                                                                   title: Text(item, style: const TextStyle(fontWeight: FontWeight.normal)),
                                                                                   controlAffinity: ListTileControlAffinity.leading,
@@ -456,17 +499,27 @@ class TutorPageState extends State<TutorPage> {
                                                                     top: 10),
                                                             child: Theme(
                                                               data: ThemeData(
-                                                                primaryColor:
-                                                                    Colors.blue[
-                                                                        600],
+                                                                primaryColor: controller
+                                                                        .isDarkTheme
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors.blue[
+                                                                        700],
                                                                 primaryColorDark:
-                                                                    Colors.blue[
-                                                                        600],
+                                                                    controller
+                                                                            .isDarkTheme
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .blue[700],
                                                               ),
                                                               child: TextField(
-                                                                cursorColor:
-                                                                    Colors.blue[
-                                                                        600],
+                                                                cursorColor: controller
+                                                                        .isDarkTheme
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors.blue[
+                                                                        700],
                                                                 controller:
                                                                     _reportController,
                                                                 maxLines: 3,
@@ -485,7 +538,11 @@ class TutorPageState extends State<TutorPage> {
                                                         style: FilledButton
                                                             .styleFrom(
                                                           backgroundColor:
-                                                              Colors.blue[600],
+                                                              controller
+                                                                      .isDarkTheme
+                                                                  ? Colors.white
+                                                                  : Colors.blue[
+                                                                      700],
                                                           textStyle:
                                                               Theme.of(context)
                                                                   .textTheme
@@ -565,6 +622,7 @@ class TutorPageState extends State<TutorPage> {
                               ]),
                             ),
                             Container(
+                                margin: const EdgeInsets.only(top: 10),
                                 padding: const EdgeInsets.all(10),
                                 child: Text.rich(
                                   TextSpan(text: tutor.bio),
@@ -581,7 +639,9 @@ class TutorPageState extends State<TutorPage> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.blue[600])),
+                                              color: controller.isDarkTheme
+                                                  ? Colors.white
+                                                  : Colors.blue[700])),
                                     ),
                                     Wrap(
                                         alignment: WrapAlignment.start,
@@ -599,7 +659,9 @@ class TutorPageState extends State<TutorPage> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.blue[600])),
+                                              color: controller.isDarkTheme
+                                                  ? Colors.white
+                                                  : Colors.blue[700])),
                                     ),
                                     Container(
                                         margin:
@@ -620,7 +682,9 @@ class TutorPageState extends State<TutorPage> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.blue[600])),
+                                              color: controller.isDarkTheme
+                                                  ? Colors.white
+                                                  : Colors.blue[700])),
                                     ),
                                     Container(
                                         margin:
@@ -641,7 +705,9 @@ class TutorPageState extends State<TutorPage> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.blue[600])),
+                                              color: controller.isDarkTheme
+                                                  ? Colors.white
+                                                  : Colors.blue[700])),
                                     ),
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
@@ -660,7 +726,9 @@ class TutorPageState extends State<TutorPage> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.blue[600])),
+                                              color: controller.isDarkTheme
+                                                  ? Colors.white
+                                                  : Colors.blue[700])),
                                     ),
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 10),
@@ -679,7 +747,9 @@ class TutorPageState extends State<TutorPage> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.blue[600])),
+                                              color: controller.isDarkTheme
+                                                  ? Colors.white
+                                                  : Colors.blue[700])),
                                     ),
                                     Wrap(
                                         alignment: WrapAlignment.start,
@@ -697,7 +767,9 @@ class TutorPageState extends State<TutorPage> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Colors.blue[600])),
+                                              color: controller.isDarkTheme
+                                                  ? Colors.white
+                                                  : Colors.blue[700])),
                                     ),
                                     ..._showCourses()
                                   ]),

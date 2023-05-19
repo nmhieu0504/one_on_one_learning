@@ -9,6 +9,7 @@ import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:collection';
 
+import '../../controllers/controller.dart';
 import '../../models/user.dart';
 import '../../services/utils_services.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,8 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
+  Controller controller = Get.find();
+
   late User user;
   late int priceOfSession;
   bool _loading = true;
@@ -247,6 +250,8 @@ class _BookingPageState extends State<BookingPage> {
                   },
                 ),
                 FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 66, 218, 93)),
                   onPressed:
                       int.parse(user.walletInfo["amount"]) < priceOfSession
                           ? null
@@ -295,7 +300,7 @@ class _BookingPageState extends State<BookingPage> {
           : Column(
               children: [
                 TableCalendar<Schedule>(
-                  locale: 'vi_VN',
+                  locale: controller.isEnglish ? 'en_US' : 'vi_VN',
                   calendarBuilders:
                       CalendarBuilders(markerBuilder: (context, day, events) {
                     if (events.isEmpty) {
@@ -350,6 +355,9 @@ class _BookingPageState extends State<BookingPage> {
                               vertical: 4.0,
                             ),
                             child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 66, 218, 93)),
                               onPressed: value[index].isBooked
                                   ? null
                                   : () {
@@ -358,7 +366,8 @@ class _BookingPageState extends State<BookingPage> {
                                           value[index].startTimestamp,
                                           value[index].endTimestamp);
                                     },
-                              child: Text('${value[index]}'),
+                              child: Text('${value[index]}',
+                                  style: const TextStyle(color: Colors.white)),
                             ),
                           );
                         },

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 import 'package:one_on_one_learning/services/user_service.dart';
+
+import '../../controllers/controller.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomNameOrUrl;
@@ -12,6 +15,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> {
   bool _loading = true;
+  Controller controller = Get.find<Controller>();
 
   @override
   void initState() {
@@ -128,71 +132,83 @@ class _MeetingPageState extends State<MeetingPage> {
   Widget buildMeetConfig() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Join meeting"),
+        title: Text("join_meeting".tr),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 16.0),
-            _buildTextField(
-              labelText: "User Display Name",
-              controller: userDisplayNameText,
-            ),
-            const SizedBox(height: 16.0),
-            CheckboxListTile(
-              title: const Text("Audio Muted"),
-              value: isAudioMuted,
-              onChanged: _onAudioMutedChanged,
-            ),
-            const SizedBox(height: 5),
-            CheckboxListTile(
-              title: const Text("Audio Only"),
-              value: isAudioOnly,
-              onChanged: _onAudioOnlyChanged,
-            ),
-            const SizedBox(height: 5),
-            CheckboxListTile(
-              title: const Text("Video Muted"),
-              value: isVideoMuted,
-              onChanged: _onVideoMutedChanged,
-            ),
-            const Divider(height: 48.0, thickness: 2.0),
-            SizedBox(
-              height: 64.0,
-              width: double.maxFinite,
-              child: ElevatedButton(
-                onPressed: () => _joinMeeting(),
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateColor.resolveWith((states) => Colors.blue),
+        child: Obx(() => Column(
+              children: <Widget>[
+                const SizedBox(height: 16.0),
+                _buildTextField(
+                  labelText: "user_display_name".tr,
+                  textController: userDisplayNameText,
                 ),
-                child: const Text(
-                  "Join Meeting",
-                  style: TextStyle(color: Colors.white),
+                const SizedBox(height: 16.0),
+                CheckboxListTile(
+                  activeColor: controller.blue_700_and_white.value,
+                  title: Text("audio_muted".tr),
+                  value: isAudioMuted,
+                  onChanged: _onAudioMutedChanged,
                 ),
-              ),
-            ),
-            const SizedBox(height: 48.0),
-          ],
-        ),
+                const SizedBox(height: 5),
+                CheckboxListTile(
+                  activeColor: controller.blue_700_and_white.value,
+                  title: Text("audio_only".tr),
+                  value: isAudioOnly,
+                  onChanged: _onAudioOnlyChanged,
+                ),
+                const SizedBox(height: 5),
+                CheckboxListTile(
+                  activeColor: controller.blue_700_and_white.value,
+                  title: Text("video_muted".tr),
+                  value: isVideoMuted,
+                  onChanged: _onVideoMutedChanged,
+                ),
+                const Divider(height: 48.0, thickness: 2.0),
+                SizedBox(
+                  width: double.maxFinite,
+                  child: ElevatedButton(
+                    onPressed: () => _joinMeeting(),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.blue),
+                    ),
+                    child: Text(
+                      "join_meeting".tr,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48.0),
+              ],
+            )),
       ),
     );
   }
 
   Widget _buildTextField({
     required String labelText,
-    required TextEditingController controller,
+    required TextEditingController textController,
     String? hintText,
   }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-          contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          labelText: labelText,
-          hintText: hintText),
+    return Theme(
+      data: ThemeData(
+        useMaterial3: controller.isDarkTheme,
+        primaryColor: controller.blue_700_and_white.value,
+        primaryColorDark: controller.blue_700_and_white.value,
+      ),
+      child: TextField(
+        style: TextStyle(
+          color: controller.black_and_white_text.value,
+        ),
+        controller: textController,
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            labelText: labelText,
+            hintText: hintText),
+      ),
     );
   }
 }

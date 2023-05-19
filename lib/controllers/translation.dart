@@ -142,6 +142,13 @@ class AppTranslations extends Translations {
           'welcome': 'Welcome to LetLearn!',
           'add_to_favorite': 'Added to favorite',
           'remove_from_favorite': 'Removed from favorite',
+          'favorite': 'Favorite',
+          'no_course': 'No course',
+          'join_meeting': 'Join meeting',
+          'user_display_name': 'User Display Name',
+          'audio_muted': 'Audio Muted',
+          'video_muted': 'Video Muted',
+          'audio_only': 'Audio Only',
         },
         'vi_VN': {
           'password': 'Mật khẩu',
@@ -282,6 +289,13 @@ class AppTranslations extends Translations {
           'welcome': 'Chào mừng bạn đến với LetLearn!',
           'add_to_favorite': 'Thêm vào danh sách yêu thích',
           'remove_from_favorite': 'Xóa khỏi danh sách yêu thích',
+          'favorite': 'Yêu thích',
+          'no_course': 'Không có khóa học nào',
+          'join_meeting': 'Tham gia lớp học',
+          'user_display_name': 'Tên hiển thị',
+          'audio_muted': 'Tắt tiếng',
+          'video_muted': 'Tắt video',
+          'audio_only': 'Chỉ bật audio',
         },
       };
 }

@@ -21,6 +21,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  bool _isAvatarError = false;
   late final User user;
   bool _getMoreData = false;
   bool _loading = true;
@@ -290,10 +291,19 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: Container(
                               margin: const EdgeInsets.fromLTRB(0, 15, 15, 15),
                               child: ListTile(
-                                leading: Image.network(
-                                  _dataList[index].avatar,
-                                  width: 50,
-                                  height: 50,
+                                leading: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey[50],
+                                  backgroundImage: _isAvatarError
+                                      ? const AssetImage(UIData.defaultAvatar)
+                                      : NetworkImage(_dataList[index].avatar)
+                                          as ImageProvider,
+                                  onBackgroundImageError:
+                                      (exception, stackTrace) {
+                                    setState(() {
+                                      _isAvatarError = true;
+                                    });
+                                  },
                                 ),
                                 title: Text(
                                   _dataList[index].name,

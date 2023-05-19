@@ -19,6 +19,7 @@ void main() async {
   bool isDarkTheme = resultTheme ?? false;
   controller.isEnglish = isEnglish;
   controller.isDarkTheme = isDarkTheme;
+  controller.onChangeTheme();
   runApp(MyApp(isEnglish: isEnglish, isDarkTheme: isDarkTheme));
 }
 

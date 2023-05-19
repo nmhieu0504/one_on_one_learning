@@ -7,6 +7,8 @@ import 'package:one_on_one_learning/views/settings_page/settings_page.dart';
 import 'package:one_on_one_learning/views/chat_gpt_page/chat_gpt_page.dart';
 import 'package:get/get.dart';
 
+import '../controllers/controller.dart';
+
 class NavigatorPage extends StatefulWidget {
   const NavigatorPage({super.key});
 
@@ -15,6 +17,8 @@ class NavigatorPage extends StatefulWidget {
 }
 
 class NavigatorStatePage extends State<NavigatorPage> {
+  Controller controller = Get.find();
+
   int _selectedIndex = 0;
   String _appBarTitle = 'home'.tr;
 
@@ -43,86 +47,83 @@ class NavigatorStatePage extends State<NavigatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(        
-        automaticallyImplyLeading: false,
-        title: Text(
-          _appBarTitle,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: <Widget>[
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                    return const ChatGPTPage();
-                  }),
-                );
-              },
-              icon: const Icon(
-                Icons.headset_mic,
-                color: Colors.black,
-              )),
-          IconButton(
-            icon: const Icon(
-              Icons.settings,
-              color: Colors.black,
+    return Obx(() => Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Text(
+              _appBarTitle,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return const SettingsPage();
-                }),
-              );
-            },
+            actions: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                        return const ChatGPTPage();
+                      }),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.headset_mic,
+                  )),
+              IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return const SettingsPage();
+                    }),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.home,
+          body: SafeArea(
+            child: _widgetOptions.elementAt(_selectedIndex),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            selectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-            label: 'home'.tr,
+            unselectedItemColor: Colors.grey,
+            backgroundColor: Colors.white,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: const Icon(
+                  Icons.home,
+                ),
+                label: 'home'.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(
+                  Icons.timer_outlined,
+                ),
+                label: 'schedule'.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(
+                  Icons.history,
+                ),
+                label: 'history'.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(
+                  Icons.menu_book_sharp,
+                ),
+                label: 'courses'.tr,
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            selectedItemColor: controller.blue_700_and_white.value,
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.timer_outlined,
-            ),
-            label: 'schedule'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.history,
-            ),
-            label: 'history'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.menu_book_sharp,
-            ),
-            label: 'courses'.tr,
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Colors.blue,
-      ),
-    );
+        ));
   }
 }
