@@ -41,7 +41,6 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.4.53
   table_calendar: ^3.0.8
   jitsi_meet_wrapper: ^0.0.6
-  motion_toast: ^2.6.6
   get: ^4.6.5
   shared_preferences: ^2.1.0
   flutter_launcher_icons: ^0.13.0

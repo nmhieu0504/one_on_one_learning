@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/controllers/controller.dart';
 import '../../models/schedule.dart';
 import '../../services/schedule_services.dart';
@@ -139,31 +137,41 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   void _displayErrorMotionToast(String errorMessage) {
-    MotionToast.error(
-      toastDuration: const Duration(milliseconds: 750),
-      description: Text(errorMessage,
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text(errorMessage,
           style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 221, 31, 31))),
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
-    ).show(context);
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
   }
 
   void _displaySuccessMotionToast(String str) {
-    MotionToast.success(
-      toastDuration: const Duration(milliseconds: 750),
-      height: 60,
-      width: 300,
-      description: Text(str,
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green,
+      duration: const Duration(milliseconds: 750),
+      titleText: const Text("Ok",
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text(str,
           style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 70, 146, 60))),
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
-    ).show(context);
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
   }
 
   void _showCancelDialog(int index) {

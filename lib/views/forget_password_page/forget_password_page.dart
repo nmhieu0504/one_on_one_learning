@@ -1,8 +1,6 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:one_on_one_learning/views/forget_password_page/check_email.dart';
 import 'package:get/get.dart';
@@ -24,16 +22,22 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
 
   void _displayErrorMotionToast() {
-    MotionToast.error(
-      toastDuration: const Duration(milliseconds: 750),
-      description: Text('email_not_found'.tr,
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text('email_not_found'.tr,
           style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 221, 31, 31))),
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
-    ).show(context);
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
   }
 
   @override

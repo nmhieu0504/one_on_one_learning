@@ -4,8 +4,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
@@ -39,17 +37,22 @@ class _LoginPageState extends State<LoginPage> {
   SharePref sharePref = SharePref();
 
   void _displayErrorMotionToast() {
-    MotionToast.error(
-      title: const Text(
-        'Invalid',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      description: Text('wrong_email_or_password'.tr),
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
-    ).show(context);
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text("email_or_password_incorrect".tr,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
   }
 
   @override

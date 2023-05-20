@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/models/schedule.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:intl/intl.dart';
@@ -68,18 +66,22 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   void _displaySuccessMotionToast(String str) {
-    MotionToast.success(
-      toastDuration: const Duration(milliseconds: 750),
-      height: 60,
-      width: 300,
-      description: Text(str,
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green,
+      duration: const Duration(milliseconds: 750),
+      titleText: const Text("Ok",
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text(str,
           style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 70, 146, 60))),
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
-    ).show(context);
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
   }
 
   List<Widget> _showRating(int rating) {
