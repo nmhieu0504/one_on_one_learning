@@ -307,12 +307,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Positioned(
                             bottom: -10,
-                            right: 10,
+                            right: -5,
                             child: IconButton(
                               iconSize: 40,
-                              icon: const Icon(
-                                Icons.image,
-                                color: Colors.blue,
+                              icon: Image.asset(
+                                UIData.imagePicker,
+                                scale: 10,
                               ),
                               onPressed: () async {
                                 final picker = ImagePicker();

@@ -43,7 +43,9 @@ class _ReviewPageState extends State<ReviewPage> {
       child: Center(
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
-          child: const CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: Colors.blue[700],
+          ),
         ),
       ),
     );
@@ -85,31 +87,43 @@ class _ReviewPageState extends State<ReviewPage> {
           title: const Text("Reviews"),
         ),
         body: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(
+                child: CircularProgressIndicator(
+                color: Colors.blue[700],
+              ))
             : ListView.builder(
                 controller: _scrollController,
                 itemCount: reviews.length + 1,
                 itemBuilder: (context, index) {
                   return index == reviews.length
                       ? _buildProgressIndicator()
-                      : ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(reviews[index].avatar),
-                            onBackgroundImageError: (exception, stackTrace) {
-                              print("Error");
-                            },
-                          ),
-                          title: Text(
-                              "${reviews[index].name}   ${reviews[index].createdAt}"),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: _showRating(index),
-                              ),
-                              Text(reviews[index].content)
-                            ],
+                      : Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(reviews[index].avatar),
+                              onBackgroundImageError: (exception, stackTrace) {
+                                print("Error");
+                              },
+                            ),
+                            title: Row(children: [
+                              Text("${reviews[index].name}   "),
+                              Text(
+                                reviews[index].createdAt,
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              )
+                            ]),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: _showRating(index),
+                                ),
+                                Text(reviews[index].content)
+                              ],
+                            ),
                           ),
                         );
                 }));

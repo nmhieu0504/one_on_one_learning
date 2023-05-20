@@ -546,7 +546,7 @@ class _HomePageState extends State<HomePage> {
           )),
       _tutorList.isEmpty
           ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const SizedBox(height: 100),
+              const SizedBox(height: 140),
               Image.asset(UIData.noDataFound, width: 100, height: 100),
               const SizedBox(height: 10),
               Text(

@@ -12,6 +12,8 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/controller.dart';
+
 class ChatPage extends StatefulWidget {
   final String tutorId;
   const ChatPage({super.key, required this.tutorId});
@@ -21,6 +23,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  Controller controller = Get.find();
   bool _loading = true;
   final textFieldController = TextEditingController();
   List<Message> messageList = [];
@@ -103,16 +106,15 @@ class _ChatPageState extends State<ChatPage> {
         centerTitle: true,
         title: const Text("Chat",
             style: TextStyle(
-              color: Colors.black,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             )),
       ),
       body: SafeArea(
           child: _loading
-              ? const Center(
+              ? Center(
                   child: CircularProgressIndicator(
-                  color: Colors.blue,
+                  color: Colors.blue[700],
                 ))
               : Column(children: [
                   Expanded(
@@ -158,13 +160,14 @@ class _ChatPageState extends State<ChatPage> {
                                       : BubbleNip.leftTop,
                                   color: message.sentByMe
                                       ? Colors.blue
-                                      : Colors.grey[200],
+                                      : controller.grey_100_and_grey_850.value,
                                   child: Text(
                                     message.message,
                                     style: TextStyle(
                                         color: message.sentByMe
                                             ? Colors.white
-                                            : Colors.black),
+                                            : controller
+                                                .black_and_white_text.value),
                                   )),
                             ),
                           ]),
@@ -176,10 +179,24 @@ class _ChatPageState extends State<ChatPage> {
                     margin: const EdgeInsets.all(15),
                     child: Theme(
                       data: ThemeData(
-                        primaryColor: Colors.blue,
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
                       ),
                       child: TextField(
-                        cursorColor: Colors.blue,
+                        style: TextStyle(
+                          color: controller.black_and_white_text.value,
+                        ),
+                        cursorColor: controller.blue_700_and_white.value,
                         keyboardType: TextInputType.multiline,
                         minLines: 1,
                         maxLines: 10,
@@ -188,12 +205,15 @@ class _ChatPageState extends State<ChatPage> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(40.0))),
                           hintText: "send_a_meesage".tr,
+                          hintStyle: TextStyle(
+                              color: controller.black_and_white_text.value,
+                              fontWeight: FontWeight.normal),
                           contentPadding: const EdgeInsets.only(
                               top: 10, bottom: 10, left: 20, right: 20),
                           suffixIcon: IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.send,
-                              color: Colors.blue,
+                              color: controller.blue_700_and_white.value,
                             ),
                             onPressed: () {
                               setState(() {
