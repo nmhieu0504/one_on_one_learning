@@ -149,6 +149,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void _showRatingDialog(
       {required int dataListIndex,
       required int feedbackIndex,
+      String tutorId = "",
       int initialRating = 5,
       String content = "",
       bool isEdit = false,
@@ -241,7 +242,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     ScheduleServices.feedbackTutor(
                             id: id,
                             bookingId: bookingId,
-                            userId: user.id,
+                            userId: tutorId,
                             rating: ratingStar,
                             content: contentRating.text,
                             isEdit: isEdit)
@@ -553,6 +554,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                             : TextButton(
                                                 onPressed: () {
                                                   _showRatingDialog(
+                                                      tutorId: _dataList[index]
+                                                          .tutorId,
                                                       dataListIndex: index,
                                                       feedbackIndex: 0,
                                                       bookingId:

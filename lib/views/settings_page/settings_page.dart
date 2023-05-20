@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
+import 'package:one_on_one_learning/views/become_tutor_page/become_tutor_page.dart';
 import 'package:one_on_one_learning/views/login_page/login_page.dart';
 
 import '../../controllers/controller.dart';
@@ -92,6 +93,19 @@ class _SettingsPageState extends State<SettingsPage> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
                     return const ProfilePage();
+                  }));
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.cast_for_education,
+                  size: 30,
+                ),
+                title: Text('become_a_tutor'.tr),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return const BecomeTutorPage();
                   }));
                 },
               ),

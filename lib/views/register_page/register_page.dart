@@ -66,9 +66,18 @@ class RegisterPageState extends State<RegisterPage> {
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
                   child: Theme(
                     data: ThemeData(
-                      useMaterial3: controller.isDarkTheme,
-                      primaryColor: controller.blue_700_and_white.value,
-                      primaryColorDark: controller.blue_700_and_white.value,
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
+                      ),
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
                     ),
                     child: TextFormField(
                       cursorColor: controller.blue_700_and_white.value,
@@ -86,13 +95,14 @@ class RegisterPageState extends State<RegisterPage> {
                       },
                       controller: _emailController,
                       decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        labelText: 'Email',
-                      ),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value)),
                     ),
                   ),
                 ),
@@ -100,9 +110,18 @@ class RegisterPageState extends State<RegisterPage> {
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
                   child: Theme(
                     data: ThemeData(
-                      useMaterial3: controller.isDarkTheme,
-                      primaryColor: controller.blue_700_and_white.value,
-                      primaryColorDark: controller.blue_700_and_white.value,
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
+                      ),
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
                     ),
                     child: TextFormField(
                       cursorColor: controller.blue_700_and_white.value,
@@ -126,6 +145,8 @@ class RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         labelText: 'password'.tr,
+                        labelStyle: TextStyle(
+                            color: controller.black_and_white_text.value),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -147,9 +168,18 @@ class RegisterPageState extends State<RegisterPage> {
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
                   child: Theme(
                     data: ThemeData(
-                      useMaterial3: controller.isDarkTheme,
-                      primaryColor: controller.blue_700_and_white.value,
-                      primaryColorDark: controller.blue_700_and_white.value,
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
+                      ),
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
                     ),
                     child: TextFormField(
                       cursorColor: controller.blue_700_and_white.value,
@@ -173,6 +203,8 @@ class RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         labelText: 're_enter_password'.tr,
+                        labelStyle: TextStyle(
+                            color: controller.black_and_white_text.value),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {

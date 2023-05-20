@@ -528,14 +528,14 @@ class _SchedulePageState extends State<SchedulePage> {
                                                       color: Colors.grey),
                                                   borderRadius:
                                                       BorderRadius.all(
-                                                          Radius.circular(15)),
+                                                          Radius.circular(30)),
                                                 ),
                                                 border: OutlineInputBorder(
                                                   borderSide: BorderSide(
                                                       color: Colors.grey),
                                                   borderRadius:
                                                       BorderRadius.all(
-                                                          Radius.circular(15)),
+                                                          Radius.circular(30)),
                                                 ),
                                               ),
                                             ),

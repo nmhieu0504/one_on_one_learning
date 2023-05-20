@@ -24,17 +24,6 @@ class _LessonPageState extends State<LessonPage> {
       appBar: AppBar(
         iconTheme: const IconThemeData(),
         title: Text(widget.tittle),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.bookmark,
-              semanticLabel: 'Bookmark',
-            ),
-            onPressed: () {
-              _pdfViewerKey.currentState?.openBookmarkView();
-            },
-          ),
-        ],
       ),
       body: SfPdfViewer.network(
         widget.url,

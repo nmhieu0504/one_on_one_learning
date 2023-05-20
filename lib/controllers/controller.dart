@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 class Controller extends GetxController {
   late bool isEnglish;
   late bool isDarkTheme;
+  bool isTutor = false;
+
   var bannerBackground = Colors.blue[900].obs;
   var blue_700_and_white = Colors.blue[700].obs;
   var black_and_white_card = Colors.white.obs;

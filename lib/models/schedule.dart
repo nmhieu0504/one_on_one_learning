@@ -26,9 +26,11 @@ class ScheduleModel {
   final String? scheduleDetailId;
   final bool classReview;
   final List<dynamic> feedbacks;
+  final String tutorId;
 
   ScheduleModel(
       {required this.id,
+      this.tutorId = "",
       required this.date,
       required this.avatar,
       required this.name,
@@ -59,6 +61,7 @@ class ScheduleModel {
   factory ScheduleModel.fromJson(Map<String, dynamic> json) {
     return ScheduleModel(
       id: json['id'],
+      tutorId: json['tutorId'] ?? "",
       date: json['date'],
       avatar: json['avatar'],
       name: json['name'],
@@ -90,6 +93,8 @@ class ScheduleModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'tutorId': tutorId,
       'date': date,
       'avatar': avatar,
       'name': name,

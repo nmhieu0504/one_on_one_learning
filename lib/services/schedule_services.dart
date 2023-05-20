@@ -27,6 +27,8 @@ class ScheduleServices {
         Map<String, dynamic> data = {};
 
         data["id"] = element["id"];
+        data["tutorId"] =
+            element["scheduleDetailInfo"]["scheduleInfo"]["tutorInfo"]["id"];
         data["studentRequest"] = element["studentRequest"];
         data["date"] = DateTime.parse(
             element["scheduleDetailInfo"]["scheduleInfo"]["date"]);

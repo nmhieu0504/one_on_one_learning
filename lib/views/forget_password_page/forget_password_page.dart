@@ -63,9 +63,18 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
                   child: Theme(
                     data: ThemeData(
-                      useMaterial3: controller.isDarkTheme,
-                      primaryColor: controller.blue_700_and_white.value,
-                      primaryColorDark: controller.blue_700_and_white.value,
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
+                      ),
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
                     ),
                     child: TextFormField(
                       cursorColor: controller.blue_700_and_white.value,
@@ -83,13 +92,14 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       },
                       controller: _emailController,
                       decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        labelText: 'Email',
-                      ),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value)),
                     ),
                   ),
                 ),

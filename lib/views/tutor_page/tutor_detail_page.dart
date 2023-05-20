@@ -252,9 +252,8 @@ class TutorPageState extends State<TutorPage> {
             )))
           : Scaffold(
               floatingActionButton: FloatingActionButton.extended(
-                backgroundColor: controller.isDarkTheme
-                    ? Colors.grey[900]
-                    : Colors.blue[700],
+                backgroundColor:
+                    controller.isDarkTheme ? Colors.white : Colors.blue[700],
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -262,11 +261,15 @@ class TutorPageState extends State<TutorPage> {
                           builder: (context) =>
                               ChatPage(tutorId: widget.userId)));
                 },
-                label: const Text(
+                label: Text(
                   "Chat",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color:
+                          controller.isDarkTheme ? Colors.black : Colors.white),
                 ),
-                icon: const Icon(Icons.chat, color: Colors.white),
+                icon: Icon(Icons.chat,
+                    color:
+                        controller.isDarkTheme ? Colors.black : Colors.white),
               ),
               appBar: AppBar(
                 leading: IconButton(
@@ -345,27 +348,32 @@ class TutorPageState extends State<TutorPage> {
                                         CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       FilledButton(
-                                        style: FilledButton.styleFrom(
-                                            backgroundColor:
-                                                controller.isDarkTheme
-                                                    ? Colors.white
-                                                    : Colors.blue[700]),
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BookingPage(
-                                                        tutorId: widget.userId,
-                                                      )));
-                                        },
-                                        child: Container(
+                                          style: FilledButton.styleFrom(
+                                              backgroundColor:
+                                                  controller.isDarkTheme
+                                                      ? Colors.white
+                                                      : Colors.blue[700]),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BookingPage(
+                                                          tutorId:
+                                                              widget.userId,
+                                                        )));
+                                          },
+                                          child: Container(
                                             margin: const EdgeInsets.only(
                                                 top: 10, bottom: 10),
-                                            child: Text(
-                                              'book_a_lesson'.tr,
-                                            )),
-                                      )
+                                            child: Text('book_a_lesson'.tr,
+                                                style: TextStyle(
+                                                    color:
+                                                        controller.isDarkTheme
+                                                            ? Colors.black
+                                                            : Colors.white,
+                                                    fontSize: 16)),
+                                          ))
                                     ],
                                   ),
                                 ),

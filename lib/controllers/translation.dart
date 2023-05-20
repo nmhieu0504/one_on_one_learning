@@ -154,6 +154,7 @@ class AppTranslations extends Translations {
           'update_user_info_success': 'Update info successfully',
           'rating_success': 'Rating successfully',
           'book_success': 'Book successfully',
+          'become_a_tutor': 'Become a Tutor',
         },
         'vi_VN': {
           'password': 'Mật khẩu',
@@ -306,6 +307,7 @@ class AppTranslations extends Translations {
           'update_user_info_success': 'Cập nhật thành công',
           'rating_success': 'Đánh giá thành công',
           'book_success': 'Đặt lịch thành công',
+          'become_a_tutor': 'Trở thành Giảng viên',
         },
       };
 }
