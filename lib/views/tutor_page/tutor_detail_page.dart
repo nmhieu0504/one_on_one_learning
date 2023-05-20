@@ -319,7 +319,8 @@ class TutorPageState extends State<TutorPage> {
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 5),
                                       child: Text(
-                                          getCountryName(tutor.user.country),
+                                          getCountryName(tutor.user.country,
+                                              isTutorPage: true),
                                           style: const TextStyle(
                                               fontStyle: FontStyle.italic)),
                                     ),

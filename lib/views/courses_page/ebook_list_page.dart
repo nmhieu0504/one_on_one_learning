@@ -52,7 +52,9 @@ class _EBookListState extends State<EBookList> {
       child: Center(
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
-          child: const CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: Colors.blue[700],
+          ),
         ),
       ),
     );
@@ -64,17 +66,19 @@ class _EBookListState extends State<EBookList> {
         child: Wrap(
           spacing: 10,
           children: levelList.map((value) {
-            return FilterChip(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              label: Text(value["name"]),
-              onSelected: (bool isSlected) {
-                setState(() {
-                  value["isSelected"] = isSlected;
-                });
-              },
-              selected: value["isSelected"],
-            );
+            return Obx(() => FilterChip(
+                  backgroundColor: controller.black_and_white_card.value,
+                  selectedColor: controller.blue_100_and_blue_400.value,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  label: Text(value["name"]),
+                  onSelected: (bool isSlected) {
+                    setState(() {
+                      value["isSelected"] = isSlected;
+                    });
+                  },
+                  selected: value["isSelected"],
+                ));
           }).toList(),
         ));
   }
@@ -85,17 +89,19 @@ class _EBookListState extends State<EBookList> {
         child: Wrap(
           spacing: 10,
           children: courseContentCategories.map((value) {
-            return FilterChip(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              label: Text(value["title"]),
-              onSelected: (bool isSlected) {
-                setState(() {
-                  value["isSelected"] = isSlected;
-                });
-              },
-              selected: value["isSelected"],
-            );
+            return Obx(() => FilterChip(
+                  backgroundColor: controller.black_and_white_card.value,
+                  selectedColor: controller.blue_100_and_blue_400.value,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  label: Text(value["title"]),
+                  onSelected: (bool isSlected) {
+                    setState(() {
+                      value["isSelected"] = isSlected;
+                    });
+                  },
+                  selected: value["isSelected"],
+                ));
           }).toList(),
         ));
   }
@@ -106,21 +112,23 @@ class _EBookListState extends State<EBookList> {
         child: Wrap(
           spacing: 10,
           children: _sortingList.map((value) {
-            return FilterChip(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              label: Text(value),
-              onSelected: (bool isSlected) {
-                setState(() {
-                  if (isSlected) {
-                    _currentSorting = value;
-                  } else {
-                    _currentSorting = "";
-                  }
-                });
-              },
-              selected: value == _currentSorting,
-            );
+            return Obx(() => FilterChip(
+                  backgroundColor: controller.black_and_white_card.value,
+                  selectedColor: controller.blue_100_and_blue_400.value,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  label: Text(value),
+                  onSelected: (bool isSlected) {
+                    setState(() {
+                      if (isSlected) {
+                        _currentSorting = value;
+                      } else {
+                        _currentSorting = "";
+                      }
+                    });
+                  },
+                  selected: value == _currentSorting,
+                ));
           }).toList(),
         ));
   }
@@ -142,27 +150,39 @@ class _EBookListState extends State<EBookList> {
                     fontWeight: FontWeight.bold,
                   ),
                 )),
-            Container(
-              margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: SizedBox(
-                height: 40,
-                child: TextField(
-                  controller: _searchController,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      hintText: 'search'.tr,
-                      hintStyle:
-                          const TextStyle(color: Colors.grey, fontSize: 16),
-                      prefixIcon: Container(
-                        padding: const EdgeInsets.all(15),
-                        width: 18,
-                        child: Image.asset(UIData.searchIcon),
-                      )),
-                ),
-              ),
-            ),
+            Obx(() => Container(
+                  margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: SizedBox(
+                    height: 40,
+                    child: Theme(
+                      data: ThemeData(
+                        useMaterial3: controller.isDarkTheme,
+                        primaryColor: controller.blue_700_and_white.value,
+                        primaryColorDark: controller.blue_700_and_white.value,
+                      ),
+                      child: TextField(
+                        style: TextStyle(
+                            color: controller.black_and_white_text.value),
+                        cursorColor: controller.blue_700_and_white.value,
+                        controller: _searchController,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            hintText: 'search'.tr,
+                            hintStyle: TextStyle(
+                                color: controller.black_and_white_text.value,
+                                fontSize: 16),
+                            prefixIcon: Container(
+                              padding: const EdgeInsets.all(15),
+                              width: 18,
+                              child: Image.asset(UIData.searchIcon,
+                                  color: controller.black_and_white_text.value),
+                            )),
+                      ),
+                    ),
+                  ),
+                )),
             Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: Text(
@@ -211,13 +231,19 @@ class _EBookListState extends State<EBookList> {
                           _currentSorting = "";
                         });
                       },
-                      child: Text(
-                        'reset_filter'.tr,
-                      )),
+                      child: Obx(() => Text(
+                            'reset_filter'.tr,
+                            style: TextStyle(
+                                color: controller.blue_700_and_white.value),
+                          ))),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                   child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.blue[
+                            700], // backgroundColor: controller.blue_700_and_white.value
+                      ),
                       onPressed: () {
                         page = 1;
                         ebookList.clear();
@@ -250,6 +276,7 @@ class _EBookListState extends State<EBookList> {
                       },
                       child: Text(
                         'apply_filter'.tr,
+                        style: const TextStyle(color: Colors.white),
                       )),
                 ),
               ],
@@ -321,7 +348,10 @@ class _EBookListState extends State<EBookList> {
   @override
   Widget build(BuildContext context) {
     return _loading
-        ? const Center(child: CircularProgressIndicator())
+        ? Center(
+            child: CircularProgressIndicator(
+            color: Colors.blue[700],
+          ))
         : _isFilter
             ? _buildFilter()
             : SingleChildScrollView(
@@ -353,7 +383,7 @@ class _EBookListState extends State<EBookList> {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                              const SizedBox(height: 150),
+                              const SizedBox(height: 200),
                               Image.asset(UIData.noDataFound,
                                   width: 100, height: 100),
                               const SizedBox(height: 10),

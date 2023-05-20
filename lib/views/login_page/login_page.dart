@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 
 import '../../services/auth_services.dart';
 import '../navigator_page.dart';
+import '../../controllers/controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,6 +26,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Controller controller = Get.find();
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
@@ -109,258 +111,276 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.blue[700],
                 ),
               )
-            : Form(
-                key: _formKey,
-                child: Stack(children: [
-                  ListView(
-                    padding: const EdgeInsets.all(40.0),
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        child: Image.asset(UIData.logoLogin,
-                            width: 200, height: 200),
-                      ),
-                      Center(
-                        child: Text('LET LEARN',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue[700],
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 50, bottom: 10),
-                        child: Theme(
-                          data: ThemeData(
-                            primaryColor: Colors.blue[700],
-                            primaryColorDark: Colors.blue[700],
-                          ),
-                          child: TextFormField(
-                            cursorColor: Colors.blue[700],
-                            style: const TextStyle(fontSize: 16),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'email_empty'.tr;
-                              }
-                              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                                return 'email_error'.tr;
-                              }
-                              return null;
-                            },
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
+            : Obx(() => Form(
+                  key: _formKey,
+                  child: Stack(children: [
+                    ListView(
+                      padding: const EdgeInsets.all(40.0),
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.only(top: 30),
+                          child: Image.asset(UIData.logoLogin,
+                              width: 200, height: 200),
+                        ),
+                        Center(
+                          child: Text('LET LEARN',
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: controller.blue_700_and_white.value,
+                              )),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 50, bottom: 10),
+                          child: Theme(
+                            data: ThemeData(
+                              useMaterial3: controller.isDarkTheme,
+                              primaryColor: controller.blue_700_and_white.value,
+                              primaryColorDark:
+                                  controller.blue_700_and_white.value,
+                            ),
+                            child: TextFormField(
+                              cursorColor: controller.blue_700_and_white.value,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: controller.black_and_white_text.value),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'email_empty'.tr;
+                                }
+                                if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                                  return 'email_error'.tr;
+                                }
+                                return null;
+                              },
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                labelText: 'Email',
                               ),
-                              labelText: 'Email',
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: Theme(
-                          data: ThemeData(
-                            primaryColor: Colors.blue[700],
-                            primaryColorDark: Colors.blue[700],
-                          ),
-                          child: TextFormField(
-                            cursorColor: Colors.blue[700],
-                            style: const TextStyle(fontSize: 16),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'password_empty'.tr;
-                              }
-                              if (value.length < 6) {
-                                return 'password_error'.tr;
-                              }
-                              return null;
-                            },
-                            controller: _passwordController,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              labelText: 'password'.tr,
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
-                                },
-                                icon: Icon(
-                                    _obscureText
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.blue[700]),
-                              ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 5, bottom: 5),
+                          child: Theme(
+                            data: ThemeData(
+                              useMaterial3: controller.isDarkTheme,
+                              primaryColor: controller.blue_700_and_white.value,
+                              primaryColorDark:
+                                  controller.blue_700_and_white.value,
                             ),
-                            obscureText: _obscureText,
+                            child: TextFormField(
+                              cursorColor: controller.blue_700_and_white.value,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: controller.black_and_white_text.value),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'password_empty'.tr;
+                                }
+                                if (value.length < 6) {
+                                  return 'password_error'.tr;
+                                }
+                                return null;
+                              },
+                              controller: _passwordController,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                labelText: 'password'.tr,
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                  icon: Icon(
+                                      _obscureText
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color:
+                                          controller.blue_700_and_white.value),
+                                ),
+                              ),
+                              obscureText: _obscureText,
+                            ),
                           ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return const ForgetPasswordPage();
-                                }),
-                              );
-                            },
-                            child: Text('forgot_password'.tr,
-                                style: TextStyle(color: Colors.blue[700])),
-                          ),
-                        ],
-                      ),
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.blue[700],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              _loading = true;
-                            });
-                            bool result = await AuthService.signIn(
-                                _emailController.text,
-                                _passwordController.text);
-                            if (result) {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return const NavigatorPage();
-                                }),
-                              );
-                            } else {
-                              setState(() {
-                                _loading = false;
-                              });
-                              _displayErrorMotionToast();
-                            }
-                          }
-                        },
-                        child: Text('sign_in'.tr,
-                            style: const TextStyle(color: Colors.white)),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('dont_have_an_account'.tr),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return const RegisterPage();
-                                }),
-                              );
-                            },
-                            child: Text('sign_up'.tr,
-                                style: TextStyle(color: Colors.blue[700])),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        child: Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text(
-                              'or_sign_in_with'.tr,
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        right: 10, left: 10),
-                                    child: IconButton(
-                                      constraints:
-                                          const BoxConstraints.tightFor(
-                                        width: 60,
-                                        height: 50,
-                                      ),
-                                      onPressed: () async {
-                                        final LoginResult result =
-                                            await FacebookAuth.instance.login();
-                                        if (result.status ==
-                                            LoginStatus.success) {
-                                          debugPrint(
-                                              "TOKEN FB: ${result.accessToken}");
-                                          // User successfully signed in with Facebook
-                                          final AccessToken accessToken =
-                                              result.accessToken!;
-                                          // Use the access token to perform further operations
-                                          // such as fetching user data or making API requests
-                                        } else {
-                                          // There was an error during the login process
-                                          debugPrint(
-                                              'Facebook login failed: ${result.message}');
-                                        }
-                                      },
-                                      tooltip: "Sign in with Facebook",
-                                      icon: const Image(
-                                        image: AssetImage(UIData.facebookIcon),
-                                        color: null,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        right: 10, left: 10),
-                                    child: IconButton(
-                                      constraints:
-                                          const BoxConstraints.tightFor(
-                                        width: 60,
-                                        height: 50,
-                                      ),
-                                      onPressed: () {},
-                                      tooltip: "Sign in with Google",
-                                      icon: const Image(
-                                        image: AssetImage(UIData.googleIcon),
-                                        color: null,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return const ForgetPasswordPage();
+                                  }),
+                                );
+                              },
+                              child: Text('forgot_password'.tr,
+                                  style: TextStyle(
+                                      color:
+                                          controller.blue_700_and_white.value)),
                             ),
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                  _loading
-                      ? Opacity(
-                          opacity: 0.8,
-                          child: Container(
-                            color: Colors.white,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.blue[700],
-                              ),
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                controller.blue_700_and_white.value,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _loading = true;
+                              });
+                              bool result = await AuthService.signIn(
+                                  _emailController.text,
+                                  _passwordController.text);
+                              if (result) {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return const NavigatorPage();
+                                  }),
+                                );
+                              } else {
+                                setState(() {
+                                  _loading = false;
+                                });
+                                _displayErrorMotionToast();
+                              }
+                            }
+                          },
+                          child: Text('sign_in'.tr,
+                              style: TextStyle(
+                                  color:
+                                      controller.black_and_white_card.value)),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text('dont_have_an_account'.tr),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return const RegisterPage();
+                                  }),
+                                );
+                              },
+                              child: Text('sign_up'.tr,
+                                  style: TextStyle(
+                                      color:
+                                          controller.blue_700_and_white.value)),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'or_sign_in_with'.tr,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          right: 10, left: 10),
+                                      child: IconButton(
+                                        constraints:
+                                            const BoxConstraints.tightFor(
+                                          width: 60,
+                                          height: 50,
+                                        ),
+                                        onPressed: () async {
+                                          final LoginResult result =
+                                              await FacebookAuth.instance
+                                                  .login();
+                                          if (result.status ==
+                                              LoginStatus.success) {
+                                            debugPrint(
+                                                "TOKEN FB: ${result.accessToken}");
+                                            // User successfully signed in with Facebook
+                                            final AccessToken accessToken =
+                                                result.accessToken!;
+                                            // Use the access token to perform further operations
+                                            // such as fetching user data or making API requests
+                                          } else {
+                                            // There was an error during the login process
+                                            debugPrint(
+                                                'Facebook login failed: ${result.message}');
+                                          }
+                                        },
+                                        tooltip: "Sign in with Facebook",
+                                        icon: const Image(
+                                          image:
+                                              AssetImage(UIData.facebookIcon),
+                                          color: null,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          right: 10, left: 10),
+                                      child: IconButton(
+                                        constraints:
+                                            const BoxConstraints.tightFor(
+                                          width: 60,
+                                          height: 50,
+                                        ),
+                                        onPressed: () {},
+                                        tooltip: "Sign in with Google",
+                                        icon: const Image(
+                                          image: AssetImage(UIData.googleIcon),
+                                          color: null,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         )
-                      : const SizedBox(),
-                ]),
-              ),
+                      ],
+                    ),
+                    _loading
+                        ? Opacity(
+                            opacity: 0.8,
+                            child: Container(
+                              color: Colors.white,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.blue[700],
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                  ]),
+                )),
       ),
     );
   }

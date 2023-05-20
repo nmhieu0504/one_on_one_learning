@@ -127,22 +127,23 @@ class _HomePageState extends State<HomePage> {
         child: Wrap(
           spacing: 10,
           children: _specialtiesList.map((value) {
-            return FilterChip(
-              selectedColor: Colors.blue[300],
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              label: Text(specialtiesUltis(value)),
-              onSelected: (bool isSlected) {
-                setState(() {
-                  if (isSlected) {
-                    _selectedSpecialties = value;
-                  } else {
-                    _selectedSpecialties = "";
-                  }
-                });
-              },
-              selected: _selectedSpecialties == value,
-            );
+            return Obx(() => FilterChip(
+                  backgroundColor: controller.black_and_white_card.value,
+                  selectedColor: controller.blue_100_and_blue_400.value,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  label: Text(specialtiesUltis(value)),
+                  onSelected: (bool isSlected) {
+                    setState(() {
+                      if (isSlected) {
+                        _selectedSpecialties = value;
+                      } else {
+                        _selectedSpecialties = "";
+                      }
+                    });
+                  },
+                  selected: _selectedSpecialties == value,
+                ));
           }).toList(),
         ));
   }
@@ -153,8 +154,9 @@ class _HomePageState extends State<HomePage> {
         child: Wrap(
             spacing: 10,
             children: _nationalityTutorList.asMap().entries.map((value) {
-              return FilterChip(
-                  selectedColor: Colors.blue[300],
+              return Obx(() => FilterChip(
+                  backgroundColor: controller.black_and_white_card.value,
+                  selectedColor: controller.blue_100_and_blue_400.value,
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   label: Text(_nationalityTutorList[value.key]),
@@ -177,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                       ? _vietnameseTutorChip
                       : value.key == 1
                           ? _foreignTutorChip
-                          : _nativeTutorChip);
+                          : _nativeTutorChip));
             }).toList()));
   }
 
@@ -198,167 +200,173 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildFilter() {
-    return SingleChildScrollView(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-          Container(
-              margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Text(
-                "tutor_name".tr,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              )),
-          Container(
-            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Obx(() => SizedBox(
-                  height: 40,
-                  child: Theme(
-                    data: ThemeData(
-                      useMaterial3: controller.isDarkTheme,
-                      primaryColor: controller.blue_700_and_white.value,
-                      primaryColorDark: controller.blue_700_and_white.value,
-                    ),
-                    child: TextField(
-                      cursorColor: controller.blue_700_and_white.value,
-                      style: TextStyle(
-                        color: controller.black_and_white_text.value,
-                        decorationColor: controller.blue_700_and_white.value,
+    return Obx(() => Container(
+          height: double.infinity,
+          color: controller.black_and_white_card.value,
+          child: SingleChildScrollView(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Container(
+                    margin: const EdgeInsets.fromLTRB(20, 15, 20, 0),
+                    child: Text(
+                      "tutor_name".tr,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      controller: _searchController,
-                      textAlignVertical: TextAlignVertical.bottom,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          hintText: 'search'.tr,
+                    )),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: SizedBox(
+                    height: 40,
+                    child: Theme(
+                      data: ThemeData(
+                        useMaterial3: controller.isDarkTheme,
+                        primaryColor: controller.blue_700_and_white.value,
+                        primaryColorDark: controller.blue_700_and_white.value,
+                      ),
+                      child: TextField(
+                        cursorColor: controller.blue_700_and_white.value,
+                        style: TextStyle(
+                          color: controller.black_and_white_text.value,
+                          decorationColor: controller.blue_700_and_white.value,
+                        ),
+                        controller: _searchController,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            hintText: 'search'.tr,
+                            hintStyle: const TextStyle(
+                                color: Colors.grey, fontSize: 16),
+                            prefixIcon: Container(
+                              padding: const EdgeInsets.all(15),
+                              width: 18,
+                              child: Image.asset(UIData.searchIcon,
+                                  color: controller.black_and_white_text.value),
+                            )),
+                      ),
+                    ),
+                  ),
+                ),
+                _nationalityTutorFilter(),
+                Container(
+                    margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    child: Text(
+                      "available_time".tr,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: SizedBox(
+                    height: 40,
+                    child: Theme(
+                      data: ThemeData(
+                        useMaterial3: controller.isDarkTheme,
+                        primaryColor: controller.blue_700_and_white.value,
+                        primaryColorDark: controller.blue_700_and_white.value,
+                      ),
+                      child: TextField(
+                        style: TextStyle(
+                          color: controller.black_and_white_text.value,
+                          decorationColor: controller.blue_700_and_white.value,
+                        ),
+                        cursorColor: controller.blue_700_and_white.value,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        textAlign: TextAlign.center,
+                        controller: _datePickerController,
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                        decoration: InputDecoration(
+                          suffixIcon: const Icon(Icons.calendar_month_outlined),
                           hintStyle:
                               const TextStyle(color: Colors.grey, fontSize: 16),
-                          prefixIcon: Container(
-                            padding: const EdgeInsets.all(15),
-                            width: 18,
-                            child: Image.asset(UIData.searchIcon,
-                                color: controller.black_and_white_text.value),
+                          hintText: "pick_a_date".tr,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                        ),
+                        readOnly: true,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                    margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    child: Text(
+                      "specialties".tr,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                _specialtiesFilter(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                      child: OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedSpecialties = "ALL";
+                              _vietnameseTutorChip = false;
+                              _nativeTutorChip = false;
+                              _foreignTutorChip = false;
+                              _datePickerController.text = "";
+                              _selectedDate = null;
+                              _searchController.text = "";
+                            });
+                          },
+                          child: Text(
+                            'reset_filter'.tr,
+                            style: TextStyle(
+                                color: controller.blue_700_and_white.value),
                           )),
                     ),
-                  ),
-                )),
-          ),
-          _nationalityTutorFilter(),
-          Container(
-              margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: Text(
-                "available_time".tr,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              )),
-          Container(
-            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Obx(() => SizedBox(
-                  height: 40,
-                  child: Theme(
-                    data: ThemeData(
-                      useMaterial3: controller.isDarkTheme,
-                      primaryColor: controller.blue_700_and_white.value,
-                      primaryColorDark: controller.blue_700_and_white.value,
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
+                      child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.blue[700],
+                          ),
+                          onPressed: () {
+                            _page = 1;
+                            _tutorList.clear();
+                            setState(() {
+                              _isFilter = false;
+                              _loading = true;
+                            });
+                            TutorServices.loadTutorList(
+                                    _selectedSpecialties,
+                                    _searchController.text,
+                                    checkNationality(),
+                                    _page++,
+                                    _perPage,
+                                    pickedDate: _selectedDate)
+                                .then((value) {
+                              setState(() {
+                                _tutorList.addAll(value
+                                    .map((e) => TutorCard.fromJson(e))
+                                    .toList());
+                                _loading = false;
+                              });
+                            });
+                          },
+                          child: Text(
+                            'apply_filter'.tr,
+                            style: const TextStyle(color: Colors.white),
+                          )),
                     ),
-                    child: TextField(
-                      style: TextStyle(
-                        color: controller.black_and_white_text.value,
-                        decorationColor: controller.blue_700_and_white.value,
-                      ),
-                      cursorColor: controller.blue_700_and_white.value,
-                      textAlignVertical: TextAlignVertical.bottom,
-                      textAlign: TextAlign.center,
-                      controller: _datePickerController,
-                      onTap: () {
-                        _selectDate(context);
-                      },
-                      decoration: InputDecoration(
-                        suffixIcon: const Icon(Icons.calendar_month_outlined),
-                        hintStyle:
-                            const TextStyle(color: Colors.grey, fontSize: 16),
-                        hintText: "pick_a_date".tr,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                      ),
-                      readOnly: true,
-                    ),
-                  ),
-                )),
-          ),
-          Container(
-              margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: Text(
-                "specialties".tr,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              )),
-          _specialtiesFilter(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                child: OutlinedButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedSpecialties = "ALL";
-                        _vietnameseTutorChip = false;
-                        _nativeTutorChip = false;
-                        _foreignTutorChip = false;
-                        _datePickerController.text = "";
-                        _selectedDate = null;
-                        _searchController.text = "";
-                      });
-                    },
-                    child: Text(
-                      'reset_filter'.tr,
-                      style: const TextStyle(color: Colors.blue),
-                    )),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
-                child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                    onPressed: () {
-                      _page = 1;
-                      _tutorList.clear();
-                      setState(() {
-                        _isFilter = false;
-                        _loading = true;
-                      });
-                      TutorServices.loadTutorList(
-                              _selectedSpecialties,
-                              _searchController.text,
-                              checkNationality(),
-                              _page++,
-                              _perPage,
-                              pickedDate: _selectedDate)
-                          .then((value) {
-                        setState(() {
-                          _tutorList.addAll(
-                              value.map((e) => TutorCard.fromJson(e)).toList());
-                          _loading = false;
-                        });
-                      });
-                    },
-                    child: Text(
-                      'apply_filter'.tr,
-                      style: const TextStyle(color: Colors.white),
-                    )),
-              ),
-            ],
-          )
-        ]));
+                  ],
+                )
+              ])),
+        ));
   }
 
   String _upcomingLessonTime() {
@@ -524,9 +532,10 @@ class _HomePageState extends State<HomePage> {
                 "no_data".tr,
                 style: const TextStyle(color: Colors.grey),
               ),
+              const SizedBox(height: 100),
             ])
           : Obx(() => Container(
-                color: controller.black_and_grey_300.value,
+                color: controller.black_and_grey_200.value,
                 child: ListView.builder(
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),

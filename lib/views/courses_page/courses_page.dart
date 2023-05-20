@@ -51,10 +51,10 @@ class _CoursesPageState extends State<CoursesPage>
             controller: _tabController,
             children: <Widget>[
               Container(
-                  color: controller.black_and_white_card.value,
+                  
                   child: const CoursesList()),
               Container(
-                  color: controller.black_and_white_card.value,
+                  
                   child: const EBookList()),
               Center(
                 child: Column(

@@ -1,4 +1,4 @@
-String getCountryName(String? code) {
+String getCountryName(String? code, {bool isTutorPage = false}) {
   if (code == null) return "No information";
   if (code.length > 2) return code;
 
@@ -7,7 +7,7 @@ String getCountryName(String? code) {
   if (result == null) {
     return "No information";
   } else {
-    if (result.length <= 20) return result;
+    if (result.length <= 20 || isTutorPage) return result;
     return "${result.substring(0, 20)}...";
   }
 }

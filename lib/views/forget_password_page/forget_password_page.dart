@@ -7,8 +7,8 @@ import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:one_on_one_learning/views/forget_password_page/check_email.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/controller.dart';
 import '../../services/auth_services.dart';
-import 'package:get/get.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -19,19 +19,18 @@ class ForgetPasswordPage extends StatefulWidget {
 
 class ForgetPasswordPageState extends State<ForgetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
-
+  Controller controller = Get.find();
   bool _loading = false;
   final TextEditingController _emailController = TextEditingController();
 
   void _displayErrorMotionToast() {
     MotionToast.error(
-      title: const Text(
-        'Error',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      description: Text('email_not_found'.tr),
+      toastDuration: const Duration(milliseconds: 750),
+      description: Text('email_not_found'.tr,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 221, 31, 31))),
       animationType: AnimationType.fromTop,
       position: MotionToastPosition.top,
     ).show(context);
@@ -57,19 +56,22 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue[700],
+                        color: controller.blue_700_and_white.value,
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
                   child: Theme(
                     data: ThemeData(
-                      primaryColor: Colors.blue[700],
-                      primaryColorDark: Colors.blue[700],
+                      useMaterial3: controller.isDarkTheme,
+                      primaryColor: controller.blue_700_and_white.value,
+                      primaryColorDark: controller.blue_700_and_white.value,
                     ),
                     child: TextFormField(
-                      cursorColor: Colors.blue[700],
-                      style: const TextStyle(fontSize: 16),
+                      cursorColor: controller.blue_700_and_white.value,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: controller.black_and_white_text.value),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'email_empty'.tr;
@@ -95,7 +97,7 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   margin: const EdgeInsets.only(top: 20),
                   child: FilledButton(
                     style: FilledButton.styleFrom(
-                      backgroundColor: Colors.blue[700],
+                      backgroundColor: controller.blue_700_and_white.value,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -123,9 +125,10 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                         }
                       }
                     },
-                    child: Text(
-                      'send_email'.tr,
-                    ),
+                    child: Text('send_email'.tr,
+                        style: TextStyle(
+                          color: controller.black_and_white_card.value,
+                        )),
                   ),
                 ),
               ],

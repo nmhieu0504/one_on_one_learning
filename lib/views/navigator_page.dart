@@ -86,7 +86,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
             ],
           ),
           body: Obx(() => Container(
-                color: controller.black_and_grey_300.value,
+                color: controller.black_and_grey_200.value,
                 child: SafeArea(
                   child: _widgetOptions.elementAt(_selectedIndex),
                 ),
@@ -96,7 +96,6 @@ class NavigatorStatePage extends State<NavigatorPage> {
               fontWeight: FontWeight.bold,
             ),
             unselectedItemColor: Colors.grey,
-            backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: const Icon(
