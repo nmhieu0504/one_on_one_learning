@@ -187,10 +187,20 @@ class _SchedulePageState extends State<SchedulePage> {
                       margin: const EdgeInsets.only(top: 10),
                       child: Obx(() => Theme(
                             data: ThemeData(
-                              useMaterial3: controller.isDarkTheme,
-                              primaryColor: controller.blue_700_and_white.value,
-                              primaryColorDark:
-                                  controller.blue_700_and_white.value,
+                              useMaterial3: true,
+                              colorScheme: ColorScheme.fromSwatch().copyWith(
+                                primary: controller.blue_700_and_white.value,
+                                secondary:
+                                    controller.black_and_white_text.value,
+                              ),
+                              inputDecorationTheme: InputDecorationTheme(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                      color: controller
+                                          .black_and_white_text.value),
+                                ),
+                              ),
                             ),
                             child: TextField(
                               style: TextStyle(
@@ -201,6 +211,7 @@ class _SchedulePageState extends State<SchedulePage> {
                               maxLines: 3,
                               decoration: InputDecoration(
                                 hintStyle: TextStyle(
+                                  fontWeight: FontWeight.normal,
                                   color: controller.black_and_white_text.value,
                                 ),
                                 border: const OutlineInputBorder(),
@@ -477,12 +488,27 @@ class _SchedulePageState extends State<SchedulePage> {
                                               right: 10),
                                           child: Theme(
                                             data: ThemeData(
-                                              useMaterial3:
-                                                  controller.isDarkTheme,
-                                              primaryColor: controller
-                                                  .blue_700_and_white.value,
-                                              primaryColorDark: controller
-                                                  .blue_700_and_white.value,
+                                              useMaterial3: true,
+                                              colorScheme:
+                                                  ColorScheme.fromSwatch()
+                                                      .copyWith(
+                                                primary: controller
+                                                    .blue_700_and_white.value,
+                                                secondary: controller
+                                                    .black_and_white_text.value,
+                                              ),
+                                              inputDecorationTheme:
+                                                  InputDecorationTheme(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  borderSide: BorderSide(
+                                                      color: controller
+                                                          .black_and_white_text
+                                                          .value),
+                                                ),
+                                              ),
                                             ),
                                             child: TextField(
                                               cursorColor: controller

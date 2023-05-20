@@ -156,9 +156,18 @@ class _EBookListState extends State<EBookList> {
                     height: 40,
                     child: Theme(
                       data: ThemeData(
-                        useMaterial3: controller.isDarkTheme,
-                        primaryColor: controller.blue_700_and_white.value,
-                        primaryColorDark: controller.blue_700_and_white.value,
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
                       ),
                       child: TextField(
                         style: TextStyle(
@@ -172,6 +181,7 @@ class _EBookListState extends State<EBookList> {
                             hintText: 'search'.tr,
                             hintStyle: TextStyle(
                                 color: controller.black_and_white_text.value,
+                                fontWeight: FontWeight.normal,
                                 fontSize: 16),
                             prefixIcon: Container(
                               padding: const EdgeInsets.all(15),

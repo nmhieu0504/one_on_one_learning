@@ -50,12 +50,8 @@ class _CoursesPageState extends State<CoursesPage>
           body: TabBarView(
             controller: _tabController,
             children: <Widget>[
-              Container(
-                  
-                  child: const CoursesList()),
-              Container(
-                  
-                  child: const EBookList()),
+              const CoursesList(),
+              const EBookList(),
               Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

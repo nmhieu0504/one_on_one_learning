@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:intl/intl.dart';
 
+import '../../controllers/controller.dart';
 import '../../models/user.dart';
 import '../../utils/countries_lis.dart';
 import '../../utils/ui_data.dart';
@@ -18,6 +21,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Controller controller = Get.find();
   late File imageFile;
   bool _loading = true;
   bool _isAvatarError = false;
@@ -85,6 +89,21 @@ class _ProfilePageState extends State<ProfilePage> {
     false
   ];
 
+  void _displaySuccessMotionToast(String str) {
+    MotionToast.success(
+      toastDuration: const Duration(milliseconds: 750),
+      height: 60,
+      width: 300,
+      description: Text(str,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 70, 146, 60))),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
+  }
+
   Widget _buildLearnTopicsChips() {
     return Container(
         margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -92,6 +111,8 @@ class _ProfilePageState extends State<ProfilePage> {
           spacing: 10,
           children: List<Widget>.generate(learnTopics.length, (int index) {
             return FilterChip(
+              backgroundColor: controller.black_and_white_card.value,
+              selectedColor: controller.blue_100_and_blue_400.value,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               label: Text(learnTopics[index]["name"].toString()),
@@ -117,6 +138,8 @@ class _ProfilePageState extends State<ProfilePage> {
           spacing: 10,
           children: List<Widget>.generate(testPreparations.length, (int index) {
             return FilterChip(
+              backgroundColor: controller.black_and_white_card.value,
+              selectedColor: controller.blue_100_and_blue_400.value,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               label: Text(testPreparations[index]["name"].toString()),
@@ -171,6 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
       "studySchedule": _scheduleController.text
     }).then((value) {
       setState(() {
+        _displaySuccessMotionToast('update_user_info_success'.tr);
         _loading = false;
       });
     });
@@ -235,19 +259,31 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text('profile'.tr),
       ),
       floatingActionButton: FilledButton.icon(
+        style: FilledButton.styleFrom(
+          backgroundColor: controller.blue_700_and_white.value,
+        ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             _saveProfile();
           }
         },
-        icon: const Icon(
+        icon: Icon(
           Icons.save,
           size: 24.0,
+          color: controller.black_and_white_card.value,
         ),
-        label: Text('save'.tr), // <-- Text
+        label: Text(
+          'save'.tr,
+          style: TextStyle(
+            color: controller.black_and_white_card.value,
+          ),
+        ),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(
+              color: Colors.blue[700],
+            ))
           : SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.all(30),
@@ -274,7 +310,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             right: 10,
                             child: IconButton(
                               iconSize: 40,
-                              icon: const Icon(Icons.image, color: Colors.blue,),
+                              icon: const Icon(
+                                Icons.image,
+                                color: Colors.blue,
+                              ),
                               onPressed: () async {
                                 final picker = ImagePicker();
                                 final pickedFile = await picker.pickImage(
@@ -290,6 +329,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   });
                                   UserService.updateUserAvatar(imageFile)
                                       .then((value) {
+                                    _displaySuccessMotionToast(
+                                        'update_user_info_success'.tr);
                                     _loadData();
                                   });
                                   // Do something with the image file, e.g. upload to server
@@ -316,140 +357,274 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Form(
                       key: _formKey,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please_enter_your_name'.tr;
-                          }
-                          return null;
+                      child: Theme(
+                        data: ThemeData(
+                          useMaterial3: true,
+                          colorScheme: ColorScheme.fromSwatch().copyWith(
+                            primary: controller.blue_700_and_white.value,
+                            secondary: controller.black_and_white_text.value,
+                          ),
+                          inputDecorationTheme: InputDecorationTheme(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(
+                                  color: controller.black_and_white_text.value),
+                            ),
+                          ),
+                        ),
+                        child: TextFormField(
+                          cursorColor: controller.blue_700_and_white.value,
+                          style: TextStyle(
+                            color: controller.black_and_white_text.value,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'please_enter_your_name'.tr;
+                            }
+                            return null;
+                          },
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              labelText: 'name'.tr,
+                              labelStyle: TextStyle(
+                                  color:
+                                      controller.black_and_white_text.value)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Theme(
+                      data: ThemeData(
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
+                      ),
+                      child: TextField(
+                        style: TextStyle(
+                          color: controller.black_and_white_text.value,
+                        ),
+                        enableInteractiveSelection: false,
+                        readOnly: true,
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          filled: true, //<-- SEE HERE
+                          fillColor: controller.isDarkTheme
+                              ? Colors.grey[800]
+                              : Colors.grey[200],
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Theme(
+                      data: ThemeData(
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
+                      ),
+                      child: TextField(
+                        style: TextStyle(
+                          color: controller.black_and_white_text.value,
+                        ),
+                        enableInteractiveSelection: false,
+                        readOnly: true,
+                        controller: _phoneController,
+                        decoration: InputDecoration(
+                          filled: true, //<-- SEE HERE
+                          fillColor: controller.isDarkTheme
+                              ? Colors.grey[800]
+                              : Colors.grey[200],
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'phone'.tr,
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Theme(
+                      data: ThemeData(
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
+                      ),
+                      child: TextField(
+                        style: TextStyle(
+                          color: controller.black_and_white_text.value,
+                        ),
+                        readOnly: true,
+                        onTap: () {
+                          showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                          ).then((value) {
+                            if (value != null) {
+                              _birthdayController.text =
+                                  DateFormat("yyyy-MM-dd").format(value);
+                            }
+                          });
                         },
-                        controller: _nameController,
+                        controller: _birthdayController,
+                        decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            labelText: 'birthday'.tr,
+                            labelStyle: TextStyle(
+                                color: controller.black_and_white_text.value)),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Theme(
+                      data: ThemeData(
+                        useMaterial3: true,
+                        inputDecorationTheme: InputDecorationTheme(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.blue_700_and_white.value ??
+                                    Colors.blue[700]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
+                      ),
+                      child: DropdownButtonFormField<String>(
+                        isExpanded: true,
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.fromLTRB(20, 10, 20, 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          labelText: 'name'.tr,
+                          labelText: 'country'.tr,
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value),
                         ),
+                        value: dropdownCountryValue,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownCountryValue = newValue;
+                          });
+                        },
+                        items: countryTittleList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                  color: controller.black_and_white_text.value,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    TextField(
-                      enableInteractiveSelection: false,
-                      readOnly: true,
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        filled: true, //<-- SEE HERE
-                        fillColor: Colors.grey[200],
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    Theme(
+                      data: ThemeData(
+                        useMaterial3: true,
+                        inputDecorationTheme: InputDecorationTheme(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.blue_700_and_white.value ??
+                                    Colors.blue[700]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
                         ),
-                        labelText: 'Email',
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      enableInteractiveSelection: false,
-                      readOnly: true,
-                      controller: _phoneController,
-                      decoration: InputDecoration(
-                        filled: true, //<-- SEE HERE
-                        fillColor: Colors.grey[200],
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'level'.tr,
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value),
                         ),
-                        labelText: 'phone'.tr,
+                        value: dropdownLevelValue,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownLevelValue = newValue;
+                          });
+                        },
+                        items: levelTittleList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                  color: controller.black_and_white_text.value,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          );
+                        }).toList(),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      readOnly: true,
-                      onTap: () {
-                        showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now(),
-                        ).then((value) {
-                          if (value != null) {
-                            _birthdayController.text =
-                                DateFormat("yyyy-MM-dd").format(value);
-                          }
-                        });
-                      },
-                      controller: _birthdayController,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        labelText: 'birthday'.tr,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    DropdownButtonFormField<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        labelText: 'country'.tr,
-                      ),
-                      value: dropdownCountryValue,
-                      icon: const Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.black),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownCountryValue = newValue;
-                        });
-                      },
-                      items: countryTittleList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value,
-                              style: const TextStyle(color: Colors.black)),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        labelText: 'level'.tr,
-                      ),
-                      value: dropdownLevelValue,
-                      icon: const Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.black),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownLevelValue = newValue;
-                        });
-                      },
-                      items: levelTittleList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value,
-                              style: const TextStyle(color: Colors.black)),
-                        );
-                      }).toList(),
                     ),
                     const SizedBox(height: 40),
                     Text(
@@ -485,16 +660,39 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    TextField(
-                      maxLines: 3,
-                      enableInteractiveSelection: false,
-                      controller: _scheduleController,
-                      decoration: InputDecoration(
-                        hintText: "your_study_schedule".tr,
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    Theme(
+                      data: ThemeData(
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
+                      ),
+                      child: TextField(
+                        cursorColor: controller.blue_700_and_white.value,
+                        style: TextStyle(
+                          color: controller.black_and_white_text.value,
+                        ),
+                        maxLines: 3,
+                        enableInteractiveSelection: false,
+                        controller: _scheduleController,
+                        decoration: InputDecoration(
+                          hintText: "your_study_schedule".tr,
+                          hintStyle: TextStyle(
+                              color: controller.black_and_white_text.value,
+                              fontWeight: FontWeight.normal),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
                       ),
                     ),

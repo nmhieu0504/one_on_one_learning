@@ -3,6 +3,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
 import 'package:one_on_one_learning/services/user_service.dart';
@@ -43,6 +45,21 @@ class _BookingPageState extends State<BookingPage> {
   late LinkedHashMap<DateTime, List<Schedule>> kSchedules;
 
   final TextEditingController _noteController = TextEditingController();
+
+  void _displaySuccessMotionToast(String str) {
+    MotionToast.success(
+      toastDuration: const Duration(milliseconds: 750),
+      height: 60,
+      width: 300,
+      description: Text(str,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 70, 146, 60))),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
+  }
 
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
@@ -147,7 +164,6 @@ class _BookingPageState extends State<BookingPage> {
         context: context,
         builder: ((BuildContext context) => Center(
                 child: AlertDialog(
-              backgroundColor: Colors.white,
               title: Text("booking_detail".tr),
               content: SingleChildScrollView(
                 child: Column(children: [
@@ -159,18 +175,24 @@ class _BookingPageState extends State<BookingPage> {
                           'booking_time'.tr,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: 20,
                           ),
                         ),
                       ]),
                       Container(
+                        padding: const EdgeInsets.all(5),
                         margin: const EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(15)),
+                          color: controller.blue_700_and_white.value,
+                        ),
                         child: Center(
                             child: Text(
-                                "${DateFormat("EEE, dd MMM yyyy").format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))}  ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(endTimestamp))}")),
+                                "${DateFormat("EEE, dd MMM yyyy").format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))}  ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(endTimestamp))}",
+                                style: TextStyle(
+                                    color:
+                                        controller.black_and_white_card.value,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold))),
                       )
                     ]),
                   ),
@@ -188,6 +210,7 @@ class _BookingPageState extends State<BookingPage> {
                                 fontSize: 16,
                               ),
                             ),
+                            const SizedBox(width: 40),
                             Text("balance_left".trParams({
                               "balance":
                                   (int.parse(user.walletInfo["amount"]) ~/
@@ -195,6 +218,7 @@ class _BookingPageState extends State<BookingPage> {
                                       .toString()
                             }))
                           ]),
+                      const SizedBox(height: 10),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -225,16 +249,39 @@ class _BookingPageState extends State<BookingPage> {
                       ]),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(15)),
-                        child: TextField(
-                          maxLines: 3,
-                          controller: _noteController,
-                          decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(10),
-                              border: InputBorder.none,
-                              hintText: 'enter_note'.tr),
+                        child: Theme(
+                          data: ThemeData(
+                            useMaterial3: true,
+                            colorScheme: ColorScheme.fromSwatch().copyWith(
+                              primary: controller.blue_700_and_white.value,
+                              secondary: controller.black_and_white_text.value,
+                            ),
+                            inputDecorationTheme: InputDecorationTheme(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color:
+                                        controller.black_and_white_text.value),
+                              ),
+                            ),
+                          ),
+                          child: TextField(
+                            cursorColor: controller.blue_700_and_white.value,
+                            style: TextStyle(
+                                color: controller.black_and_white_text.value),
+                            maxLines: 3,
+                            controller: _noteController,
+                            decoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                    color:
+                                        controller.black_and_white_text.value,
+                                    fontWeight: FontWeight.normal),
+                                contentPadding: const EdgeInsets.all(10),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: 'enter_note'.tr),
+                          ),
                         ),
                       )
                     ]),
@@ -243,7 +290,11 @@ class _BookingPageState extends State<BookingPage> {
               ),
               actions: [
                 OutlinedButton(
-                  child: Text("cancel".tr),
+                  child: Text(
+                    "cancel".tr,
+                    style:
+                        TextStyle(color: controller.blue_700_and_white.value),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                     _noteController.clear();
@@ -263,13 +314,16 @@ class _BookingPageState extends State<BookingPage> {
                               ScheduleServices.bookAClass(
                                       scheduleDetailIds, _noteController.text)
                                   .then((value) {
+                                _displaySuccessMotionToast('book_success'.tr);
                                 _noteController.clear();
                                 _loadData();
                                 debugPrint("BOOKED");
                               });
                             },
-                  icon: const Icon(Icons.keyboard_double_arrow_right_outlined),
-                  label: Text("book_lesson".tr),
+                  icon: const Icon(Icons.keyboard_double_arrow_right_outlined,
+                      color: Colors.white),
+                  label: Text("book_lesson".tr,
+                      style: const TextStyle(color: Colors.white)),
                 ),
               ],
             ))));
@@ -294,8 +348,8 @@ class _BookingPageState extends State<BookingPage> {
         title: Text('booking'.tr),
       ),
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: CircularProgressIndicator(color: Colors.blue[700]),
             )
           : Column(
               children: [

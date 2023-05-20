@@ -223,9 +223,18 @@ class _HomePageState extends State<HomePage> {
                     height: 40,
                     child: Theme(
                       data: ThemeData(
-                        useMaterial3: controller.isDarkTheme,
-                        primaryColor: controller.blue_700_and_white.value,
-                        primaryColorDark: controller.blue_700_and_white.value,
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
                       ),
                       child: TextField(
                         cursorColor: controller.blue_700_and_white.value,
@@ -267,9 +276,18 @@ class _HomePageState extends State<HomePage> {
                     height: 40,
                     child: Theme(
                       data: ThemeData(
-                        useMaterial3: controller.isDarkTheme,
-                        primaryColor: controller.blue_700_and_white.value,
-                        primaryColorDark: controller.blue_700_and_white.value,
+                        useMaterial3: true,
+                        colorScheme: ColorScheme.fromSwatch().copyWith(
+                          primary: controller.blue_700_and_white.value,
+                          secondary: controller.black_and_white_text.value,
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: controller.black_and_white_text.value),
+                          ),
+                        ),
                       ),
                       child: TextField(
                         style: TextStyle(
@@ -284,7 +302,10 @@ class _HomePageState extends State<HomePage> {
                           _selectDate(context);
                         },
                         decoration: InputDecoration(
-                          suffixIcon: const Icon(Icons.calendar_month_outlined),
+                          suffixIcon: Icon(
+                            Icons.calendar_month_outlined,
+                            color: controller.black_and_white_text.value,
+                          ),
                           hintStyle:
                               const TextStyle(color: Colors.grey, fontSize: 16),
                           hintText: "pick_a_date".tr,

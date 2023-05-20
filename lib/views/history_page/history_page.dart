@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/models/schedule.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:intl/intl.dart';
@@ -65,6 +67,21 @@ class _HistoryPageState extends State<HistoryPage> {
     super.dispose();
   }
 
+  void _displaySuccessMotionToast(String str) {
+    MotionToast.success(
+      toastDuration: const Duration(milliseconds: 750),
+      height: 60,
+      width: 300,
+      description: Text(str,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 70, 146, 60))),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
+  }
+
   List<Widget> _showRating(int rating) {
     List<Widget> list = [];
     for (int i = 0; i < rating; i++) {
@@ -94,7 +111,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   "${'rating'.tr}: ",
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 Row(children: _showRating(list[index]["rating"]))
@@ -113,7 +129,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   child: Obx(() => Text(
                         "edit_rating".tr,
                         style: TextStyle(
-                            color: controller.black_and_white_text.value),
+                            color: controller.blue_700_and_white.value),
                       ))),
             ]));
   }
@@ -176,21 +192,37 @@ class _HistoryPageState extends State<HistoryPage> {
                         primaryColor: controller.blue_700_and_white.value,
                         primaryColorDark: controller.blue_700_and_white.value,
                       ),
-                      child: TextField(
-                        style: TextStyle(
-                          color: controller.black_and_white_text.value,
+                      child: Theme(
+                        data: ThemeData(
+                          useMaterial3: true,
+                          colorScheme: ColorScheme.fromSwatch().copyWith(
+                            primary: controller.blue_700_and_white.value,
+                            secondary: controller.black_and_white_text.value,
+                          ),
+                          inputDecorationTheme: InputDecorationTheme(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(
+                                  color: controller.black_and_white_text.value),
+                            ),
+                          ),
                         ),
-                        cursorColor: controller.blue_700_and_white.value,
-                        controller: contentRating,
-                        maxLines: 2,
-                        decoration: InputDecoration(
-                          labelStyle: TextStyle(
+                        child: TextField(
+                          style: TextStyle(
                             color: controller.black_and_white_text.value,
                           ),
-                          labelText: 'write_your_review'.tr,
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
+                          cursorColor: controller.blue_700_and_white.value,
+                          controller: contentRating,
+                          maxLines: 2,
+                          decoration: InputDecoration(
+                            labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value,
+                            ),
+                            labelText: 'write_your_review'.tr,
+                            border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
                           ),
                         ),
                       ),
@@ -215,6 +247,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             isEdit: isEdit)
                         .then((value) {
                       setState(() {
+                        _displaySuccessMotionToast('rating_success'.tr);
                         if (isEdit) {
                           _dataList[dataListIndex].feedbacks[feedbackIndex]
                               ["rating"] = ratingStar;

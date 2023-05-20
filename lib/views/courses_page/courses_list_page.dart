@@ -146,25 +146,43 @@ class _CoursesListState extends State<CoursesList> {
                         primaryColor: controller.blue_700_and_white.value,
                         primaryColorDark: controller.blue_700_and_white.value,
                       ),
-                      child: TextField(
-                        style: TextStyle(
-                            color: controller.black_and_white_text.value),
-                        cursorColor: controller.blue_700_and_white.value,
-                        controller: _searchController,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                            hintText: 'search'.tr,
-                            hintStyle: TextStyle(
-                                color: controller.black_and_white_text.value,
-                                fontSize: 16),
-                            prefixIcon: Container(
-                              padding: const EdgeInsets.all(15),
-                              width: 18,
-                              child: Image.asset(UIData.searchIcon,
+                      child: Theme(
+                        data: ThemeData(
+                          useMaterial3: true,
+                          colorScheme: ColorScheme.fromSwatch().copyWith(
+                            primary: controller.blue_700_and_white.value,
+                            secondary: controller.black_and_white_text.value,
+                          ),
+                          inputDecorationTheme: InputDecorationTheme(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(
                                   color: controller.black_and_white_text.value),
-                            )),
+                            ),
+                          ),
+                        ),
+                        child: TextField(
+                          style: TextStyle(
+                              color: controller.black_and_white_text.value),
+                          cursorColor: controller.blue_700_and_white.value,
+                          controller: _searchController,
+                          textAlignVertical: TextAlignVertical.bottom,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                              hintText: 'search'.tr,
+                              hintStyle: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: controller.black_and_white_text.value,
+                                  fontSize: 16),
+                              prefixIcon: Container(
+                                padding: const EdgeInsets.all(15),
+                                width: 18,
+                                child: Image.asset(UIData.searchIcon,
+                                    color:
+                                        controller.black_and_white_text.value),
+                              )),
+                        ),
                       ),
                     ),
                   ),
@@ -227,8 +245,7 @@ class _CoursesListState extends State<CoursesList> {
                   margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                   child: FilledButton(
                       style: FilledButton.styleFrom(
-                        backgroundColor: Colors.blue[
-                            700],
+                        backgroundColor: Colors.blue[700],
                       ),
                       onPressed: () {
                         page = 1;

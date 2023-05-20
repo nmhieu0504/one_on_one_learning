@@ -22,16 +22,12 @@ class _LessonPageState extends State<LessonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        backgroundColor: Colors.white,
-        title: Text(widget.tittle, style: const TextStyle(color: Colors.black)),
+        iconTheme: const IconThemeData(),
+        title: Text(widget.tittle),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
               Icons.bookmark,
-              color: Colors.black87,
               semanticLabel: 'Bookmark',
             ),
             onPressed: () {
