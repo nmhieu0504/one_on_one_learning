@@ -1,5 +1,7 @@
 // ignore_for_file: library_prefixes
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +10,6 @@ import 'package:bubble/bubble.dart';
 import 'package:one_on_one_learning/services/chat_service.dart';
 import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:one_on_one_learning/utils/web_socket.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:get/get.dart';
 
@@ -32,23 +33,12 @@ class _ChatPageState extends State<ChatPage> {
   final ScrollController _scrollController = ScrollController();
 
   late final WebSocketChannel channel;
+  var infoLogin;
 
-  void connectToWebSocket() {
-    channel = IOWebSocketChannel.connect(WebSocketChat.SOCKET_URL);
+  void connectToWebSocket() async {
+    infoLogin = await UserService.loadUserInfo(isSocketCall: true);
 
-    UserService.loadUserInfo(isSocketCall: true).then((value) {
-      debugPrint("USER INFO: $value");
-      channel.sink.add(40); // start connection
-      debugPrint("SENDING: 40");
-      List<dynamic> obj = ["connection:login"];
-      obj.add(value);
-
-      String message = "42$obj";
-      debugPrint("LOGIN: $message");
-      channel.sink.add(message);
-      debugPrint("SENDING: 42");
-    });
-
+    channel = WebSocketChannel.connect(Uri.parse(WebSocketChat.SOCKET_URL));
     channel.stream.listen((message) {
       debugPrint("RAW MESSAGE: $message");
       // Define a regular expression pattern to match the number followed by the object
@@ -63,6 +53,35 @@ class _ChatPageState extends State<ChatPage> {
 
         debugPrint('Code: $code');
         debugPrint('Object: $object');
+
+        if (code == "0") {
+          channel.sink.add("40");
+          debugPrint("SENDING: 40");
+        }
+        if (code == "40") {
+          List<dynamic> obj = ["connection:login", infoLogin];
+          String messageLogin = "42${jsonEncode(obj)}";
+          debugPrint("LOGIN: $messageLogin");
+          channel.sink.add(messageLogin);
+          debugPrint("SENDING: 42");
+        }
+        if (code == "2") {
+          channel.sink.add("3");
+          debugPrint("SENDING: 3");
+        }
+        if (code == "42") {
+          List<dynamic> obj = jsonDecode(object!);
+          if (obj[0] == "chat:returnNewMessage" &&
+              obj[1]["message"]["fromId"] == widget.tutorId) {
+            setState(() {
+              messageList.add(Message(
+                  userID: obj[1]["message"]["fromId"],
+                  message: obj[1]["message"]["content"],
+                  date: DateTime.now(),
+                  sentByMe: false));
+            });
+          }
+        }
       }
     });
   }
@@ -222,6 +241,14 @@ class _ChatPageState extends State<ChatPage> {
                                     message: textFieldController.text,
                                     date: DateTime.now(),
                                     sentByMe: true));
+                                channel.sink.add("42${jsonEncode([
+                                      "chat:sendMessage",
+                                      {
+                                        "fromId": infoLogin["user"]["id"],
+                                        "toId": widget.tutorId,
+                                        "content": textFieldController.text
+                                      }
+                                    ])}");
                               });
                               textFieldController.clear();
                             },

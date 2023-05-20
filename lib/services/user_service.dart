@@ -17,6 +17,11 @@ class UserService {
     if (response.statusCode == 200) {
       debugPrint(response.body);
       var res = jsonDecode(response.body);
+
+      if (isSocketCall) {
+        return res;
+      }
+
       Map<String, dynamic> data = {};
 
       data["id"] = res["user"]["id"];
@@ -39,10 +44,6 @@ class UserService {
       data["timezone"] = res["user"]["timezone"];
       data["studySchedule"] = res["user"]["studySchedule"];
       data["canSendMessage"] = res["user"]["canSendMessage"];
-
-      if (isSocketCall) {
-        return data;
-      }
 
       return User.fromJson(data);
     }

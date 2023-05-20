@@ -180,14 +180,16 @@ class _BookingPageState extends State<BookingPage> {
                         ),
                       ]),
                       Container(
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 50),
                         margin: const EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
                           color: controller.blue_700_and_white.value,
+                          borderRadius: BorderRadius.circular(30),
                         ),
                         child: Center(
                             child: Text(
                                 "${DateFormat("EEE, dd MMM yyyy").format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))}  ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(endTimestamp))}",
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color:
                                         controller.black_and_white_card.value,

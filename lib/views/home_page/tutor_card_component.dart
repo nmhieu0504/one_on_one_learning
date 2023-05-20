@@ -93,7 +93,7 @@ class _TutorCardState extends State<TutorCard> {
   Widget _buildAvatar() {
     if (widget.avatar == null) {
       return Image.asset(UIData.logoLogin);
-    } else {
+    } else {    
       return CircleAvatar(
         radius: 30,
         backgroundColor: Colors.grey[50],

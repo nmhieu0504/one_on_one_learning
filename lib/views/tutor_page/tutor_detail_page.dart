@@ -251,7 +251,7 @@ class TutorPageState extends State<TutorPage> {
               color: Colors.blue[700],
             )))
           : Scaffold(
-              floatingActionButton: FloatingActionButton.small(
+              floatingActionButton: FloatingActionButton.extended(
                 backgroundColor: controller.isDarkTheme
                     ? Colors.grey[900]
                     : Colors.blue[700],
@@ -262,7 +262,11 @@ class TutorPageState extends State<TutorPage> {
                           builder: (context) =>
                               ChatPage(tutorId: widget.userId)));
                 },
-                child: const Icon(Icons.chat, color: Colors.white),
+                label: const Text(
+                  "Chat",
+                  style: TextStyle(color: Colors.white),
+                ),
+                icon: const Icon(Icons.chat, color: Colors.white),
               ),
               appBar: AppBar(
                 leading: IconButton(
