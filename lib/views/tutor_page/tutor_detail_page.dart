@@ -466,37 +466,37 @@ class TutorPageState extends State<TutorPage> {
                                       ]),
                                       onPressed: () => showDialog<String>(
                                           context: context,
-                                          builder: (BuildContext context) =>
-                                              Center(
-                                                child: SingleChildScrollView(
-                                                  child: AlertDialog(
-                                                    title: Text(
-                                                        '${'report'.tr} ${tutor.user.name}',
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    content: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                              "help_us_report"
-                                                                  .tr,
-                                                              style: const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          Container(
-                                                              margin:
-                                                                  const EdgeInsets
+                                          builder:
+                                              (BuildContext context) => Center(
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      child: AlertDialog(
+                                                        title: Text(
+                                                            '${'report'.tr} ${tutor.user.name}',
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        content: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text(
+                                                                  "help_us_report"
+                                                                      .tr,
+                                                                  style: const TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              Container(
+                                                                  margin: const EdgeInsets
                                                                           .only(
                                                                       top: 10),
-                                                              child: ListBody(
-                                                                children:
-                                                                    _reportItems
-                                                                        .map((item) =>
-                                                                            StatefulBuilder(
+                                                                  child:
+                                                                      ListBody(
+                                                                    children: _reportItems
+                                                                        .map((item) => StatefulBuilder(
                                                                               builder: (context, setState) => CheckboxListTile(
                                                                                   activeColor: controller.isDarkTheme ? Colors.white : Colors.blue[700],
                                                                                   value: _selectedRepotItems.contains(item),
@@ -511,131 +511,154 @@ class TutorPageState extends State<TutorPage> {
                                                                                       })),
                                                                             ))
                                                                         .toList(),
-                                                              )),
-                                                          Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 10),
-                                                            child: Theme(
-                                                              data: ThemeData(
-                                                                primaryColor: controller
-                                                                        .isDarkTheme
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors.blue[
-                                                                        700],
-                                                                primaryColorDark:
-                                                                    controller
-                                                                            .isDarkTheme
+                                                                  )),
+                                                              Container(
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            10),
+                                                                child: Theme(
+                                                                  data:
+                                                                      ThemeData(
+                                                                    useMaterial3:
+                                                                        true,
+                                                                    colorScheme:
+                                                                        ColorScheme.fromSwatch()
+                                                                            .copyWith(
+                                                                      primary: controller
+                                                                          .blue_700_and_white
+                                                                          .value,
+                                                                      secondary: controller
+                                                                          .black_and_white_text
+                                                                          .value,
+                                                                    ),
+                                                                    inputDecorationTheme:
+                                                                        InputDecorationTheme(
+                                                                      enabledBorder:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(30),
+                                                                        borderSide:
+                                                                            BorderSide(color: controller.black_and_white_text.value),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      TextField(
+                                                                    cursorColor: controller.isDarkTheme
                                                                         ? Colors
                                                                             .white
                                                                         : Colors
                                                                             .blue[700],
+                                                                    controller:
+                                                                        _reportController,
+                                                                    maxLines: 3,
+                                                                    decoration: InputDecoration(
+                                                                        hintStyle: TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.normal,
+                                                                          color: controller
+                                                                              .black_and_white_text
+                                                                              .value,
+                                                                        ),
+                                                                        border: const OutlineInputBorder(),
+                                                                        hintText: 'enter_your_report'.tr),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                              child: TextField(
-                                                                cursorColor: controller
-                                                                        .isDarkTheme
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors.blue[
-                                                                        700],
-                                                                controller:
-                                                                    _reportController,
-                                                                maxLines: 3,
-                                                                decoration: InputDecoration(
-                                                                    border:
-                                                                        const OutlineInputBorder(),
-                                                                    hintText:
-                                                                        'enter_your_report'
-                                                                            .tr),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ]),
-                                                    actions: <Widget>[
-                                                      FilledButton(
-                                                        style: FilledButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              controller
-                                                                      .isDarkTheme
-                                                                  ? Colors.white
-                                                                  : Colors.blue[
-                                                                      700],
-                                                          textStyle:
-                                                              Theme.of(context)
+                                                            ]),
+                                                        actions: <Widget>[
+                                                          FilledButton(
+                                                            style: FilledButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  controller
+                                                                          .isDarkTheme
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors.blue[
+                                                                          700],
+                                                              textStyle: Theme.of(
+                                                                      context)
                                                                   .textTheme
                                                                   .labelLarge,
-                                                        ),
-                                                        child: const Text(
-                                                          'Ok',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        ),
-                                                        onPressed: () {
-                                                          if (_selectedRepotItems
-                                                                  .isEmpty &&
-                                                              _reportController
-                                                                  .text
-                                                                  .isEmpty) {
-                                                            _displayErrorMotionToast(
-                                                                "error_report"
-                                                                    .tr);
-                                                          } else {
-                                                            _selectedRepotItems.add(
-                                                                _reportController
-                                                                    .text);
-                                                            TutorServices.sendReport(
-                                                                    widget
-                                                                        .userId,
-                                                                    _selectedRepotItems)
-                                                                .then((value) {
+                                                            ),
+                                                            child: Text(
+                                                              'Ok',
+                                                              style: TextStyle(
+                                                                  color: controller
+                                                                      .black_and_white_card
+                                                                      .value,
+                                                                  fontSize: 16),
+                                                            ),
+                                                            onPressed: () {
+                                                              if (_selectedRepotItems
+                                                                      .isEmpty &&
+                                                                  _reportController
+                                                                      .text
+                                                                      .isEmpty) {
+                                                                _displayErrorMotionToast(
+                                                                    "error_report"
+                                                                        .tr);
+                                                              } else {
+                                                                _selectedRepotItems.add(
+                                                                    _reportController
+                                                                        .text);
+                                                                TutorServices.sendReport(
+                                                                        widget
+                                                                            .userId,
+                                                                        _selectedRepotItems)
+                                                                    .then(
+                                                                        (value) {
+                                                                  _reportController
+                                                                      .clear();
+                                                                  _selectedRepotItems
+                                                                      .clear();
+                                                                  if (value) {
+                                                                    _displaySuccessMotionToast(
+                                                                        'success_report'
+                                                                            .tr);
+                                                                  }
+                                                                });
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              }
+                                                            },
+                                                          ),
+                                                          FilledButton(
+                                                            style: FilledButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Colors.grey[
+                                                                      400],
+                                                              textStyle: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .labelLarge,
+                                                            ),
+                                                            child: const Text(
+                                                                'Cancel',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        16)),
+                                                            onPressed: () {
                                                               _reportController
                                                                   .clear();
                                                               _selectedRepotItems
                                                                   .clear();
-                                                              if (value) {
-                                                                _displaySuccessMotionToast(
-                                                                    'success_report'
-                                                                        .tr);
-                                                              }
-                                                            });
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          }
-                                                        },
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
                                                       ),
-                                                      FilledButton(
-                                                        style: FilledButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              Colors.grey[400],
-                                                          textStyle:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .labelLarge,
-                                                        ),
-                                                        child: const Text(
-                                                            'Cancel',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16)),
-                                                        onPressed: () {
-                                                          _reportController
-                                                              .clear();
-                                                          _selectedRepotItems
-                                                              .clear();
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )),
+                                                    ),
+                                                  )),
                                     ),
                                   ],
                                 ),

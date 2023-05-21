@@ -309,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Positioned(
                             bottom: -10,
-                            right: -5,
+                            right: 0,
                             child: IconButton(
                               iconSize: 40,
                               icon: Image.asset(

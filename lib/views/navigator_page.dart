@@ -32,10 +32,10 @@ class NavigatorStatePage extends State<NavigatorPage> {
   ];
 
   static final List<String> _appBarTitles = <String>[
-    'home'.tr,
-    'schedule'.tr,
-    'history'.tr,
-    'courses'.tr,
+    'home',
+    'schedule',
+    'history',
+    'courses',
   ];
 
   void _onItemTapped(int index) {
@@ -51,7 +51,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Text(
-              _appBarTitle,
+              _appBarTitle.tr,
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

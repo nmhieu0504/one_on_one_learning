@@ -418,9 +418,18 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
         margin: const EdgeInsets.fromLTRB(30, 15, 30, 15),
         child: Theme(
             data: ThemeData(
-              useMaterial3: controller.isDarkTheme,
-              primaryColor: controller.blue_700_and_white.value,
-              primaryColorDark: controller.blue_700_and_white.value,
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                primary: controller.blue_700_and_white.value,
+                secondary: controller.black_and_white_text.value,
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide:
+                      BorderSide(color: controller.black_and_white_text.value),
+                ),
+              ),
             ),
             child: TextField(
               style: TextStyle(
@@ -431,6 +440,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
               maxLines: null,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
                   color: controller.black_and_white_text.value,
                 ),
                 border: const OutlineInputBorder(
@@ -445,7 +455,9 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                               color: controller.blue_700_and_white.value,
                             )
                           : LoadingAnimationWidget.discreteCircle(
-                              color: Colors.blue,
+                              color: controller.isDarkTheme
+                                  ? Colors.white
+                                  : Colors.blue,
                               size: 20,
                             ),
                       onPressed: () {

@@ -274,7 +274,7 @@ class _BookingPageState extends State<BookingPage> {
                             cursorColor: controller.blue_700_and_white.value,
                             style: TextStyle(
                                 color: controller.black_and_white_text.value),
-                            maxLines: 3,
+                            maxLines: 2,
                             controller: _noteController,
                             decoration: InputDecoration(
                                 hintStyle: TextStyle(
@@ -294,17 +294,6 @@ class _BookingPageState extends State<BookingPage> {
                 ]),
               ),
               actions: [
-                OutlinedButton(
-                  child: Text(
-                    "cancel".tr,
-                    style:
-                        TextStyle(color: controller.blue_700_and_white.value),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _noteController.clear();
-                  },
-                ),
                 FilledButton.icon(
                   style: FilledButton.styleFrom(
                       backgroundColor: controller.green_RGB_and_white.value),
@@ -330,6 +319,17 @@ class _BookingPageState extends State<BookingPage> {
                   label: Text("book_lesson".tr,
                       style: TextStyle(
                           color: controller.black_and_white_card.value)),
+                ),
+                OutlinedButton(
+                  child: Text(
+                    "cancel".tr,
+                    style:
+                        TextStyle(color: controller.blue_700_and_white.value),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _noteController.clear();
+                  },
                 ),
               ],
             ))));

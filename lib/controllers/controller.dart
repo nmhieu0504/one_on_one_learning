@@ -3,9 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../models/user.dart';
+
 class Controller extends GetxController {
   late bool isEnglish;
   late bool isDarkTheme;
+  late User user;
   bool isTutor = false;
 
   var bannerBackground = Colors.blue[900].obs;
@@ -29,7 +32,7 @@ class Controller extends GetxController {
       grey_100_and_grey_850.value = Colors.grey[850];
       blue_700_and_black.value = Colors.black;
       black_and_grey_50.value = Colors.black;
-      blue_100_and_blue_400.value = Colors.blue[400];
+      blue_100_and_blue_400.value = Colors.grey;
       green_RGB_and_white.value = Colors.white;
     } else {
       bannerBackground.value = Colors.blue[900];

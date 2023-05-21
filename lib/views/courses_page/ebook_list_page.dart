@@ -247,48 +247,50 @@ class _EBookListState extends State<EBookList> {
                                 color: controller.blue_700_and_white.value),
                           ))),
                 ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
-                  child: FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.blue[
-                            700], // backgroundColor: controller.blue_700_and_white.value
-                      ),
-                      onPressed: () {
-                        page = 1;
-                        ebookList.clear();
-                        setState(() {
-                          _isFilter = false;
-                          _loading = true;
-                        });
-                        CoursesService.loadEbookList(
-                          page: page++,
-                          size: size,
-                          courseContentCategories: courseContentCategories,
-                          levelList: levelList,
-                          sortingOrder: _currentSorting == "ascending".tr
-                              ? false
-                              : _currentSorting == "descending".tr
-                                  ? true
-                                  : null,
-                          q: _searchController.text,
-                        ).then((value) {
-                          setState(() {
-                            for (var element in value) {
-                              element.level =
-                                  levelList[int.parse(element.level)]["name"];
-                            }
-                            ebookList.addAll(value);
-                            _loading = false;
-                            _getMoreData = false;
-                          });
-                        });
-                      },
-                      child: Text(
-                        'apply_filter'.tr,
-                        style: const TextStyle(color: Colors.white),
-                      )),
-                ),
+                Obx(() => Container(
+                      margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
+                      child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                controller.blue_700_and_white.value,
+                          ),
+                          onPressed: () {
+                            page = 1;
+                            ebookList.clear();
+                            setState(() {
+                              _isFilter = false;
+                              _loading = true;
+                            });
+                            CoursesService.loadEbookList(
+                              page: page++,
+                              size: size,
+                              courseContentCategories: courseContentCategories,
+                              levelList: levelList,
+                              sortingOrder: _currentSorting == "ascending".tr
+                                  ? false
+                                  : _currentSorting == "descending".tr
+                                      ? true
+                                      : null,
+                              q: _searchController.text,
+                            ).then((value) {
+                              setState(() {
+                                for (var element in value) {
+                                  element.level =
+                                      levelList[int.parse(element.level)]
+                                          ["name"];
+                                }
+                                ebookList.addAll(value);
+                                _loading = false;
+                                _getMoreData = false;
+                              });
+                            });
+                          },
+                          child: Text(
+                            'apply_filter'.tr,
+                            style: TextStyle(
+                                color: controller.black_and_white_card.value),
+                          )),
+                    )),
               ],
             )
           ])),

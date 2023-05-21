@@ -7,6 +7,7 @@ import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:intl/intl.dart';
 import 'package:one_on_one_learning/controllers/controller.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
+import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:one_on_one_learning/views/home_page/tutor_card_component.dart';
 import 'package:one_on_one_learning/views/meeting_page/meeting_page.dart';
 import '../../services/tutor_services.dart';
@@ -354,7 +355,8 @@ class _HomePageState extends State<HomePage> {
                       margin: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                       child: FilledButton(
                           style: FilledButton.styleFrom(
-                            backgroundColor: Colors.blue[700],
+                            backgroundColor:
+                                controller.blue_700_and_white.value,
                           ),
                           onPressed: () {
                             _page = 1;
@@ -381,7 +383,8 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Text(
                             'apply_filter'.tr,
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: controller.black_and_white_card.value),
                           )),
                     ),
                   ],
@@ -600,6 +603,10 @@ class _HomePageState extends State<HomePage> {
         _loading = false;
       });
     });
+    UserService.loadUserInfo().then((value) => setState(() {
+          controller.user = value;
+          controller.isTutor = controller.user.roles.contains("tutor");
+        }));
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {

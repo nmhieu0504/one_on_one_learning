@@ -21,10 +21,10 @@ class _SchedulePageState extends State<SchedulePage> {
   bool _getMoreData = false;
   bool _loading = true;
   final _reason = [
-    'cancel_schedule_reason_1'.tr,
-    'cancel_schedule_reason_2'.tr,
-    'cancel_schedule_reason_3'.tr,
-    'cancel_schedule_reason_4'.tr,
+    'cancel_schedule_reason_1',
+    'cancel_schedule_reason_2',
+    'cancel_schedule_reason_3',
+    'cancel_schedule_reason_4',
   ];
   String? _currentReason = 'cancel_schedule_reason_1'.tr;
 
@@ -94,8 +94,8 @@ class _SchedulePageState extends State<SchedulePage> {
     for (var i = 0; i < _reason.length; i++) {
       list.add(
         RadioListTile(
-          activeColor: Colors.blue,
-          title: Text(_reason[i]),
+          activeColor: controller.blue_700_and_white.value,
+          title: Text(_reason[i].tr),
           value: _reason[i],
           groupValue: _currentReason,
           onChanged: (value) {
@@ -232,12 +232,14 @@ class _SchedulePageState extends State<SchedulePage> {
                   actions: <Widget>[
                     FilledButton(
                       style: FilledButton.styleFrom(
-                        backgroundColor: Colors.blue[700],
+                        backgroundColor: controller.blue_700_and_white.value,
                         textStyle: Theme.of(context).textTheme.labelLarge,
                       ),
-                      child: const Text(
+                      child: Text(
                         'Ok',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: controller.black_and_white_card.value),
                       ),
                       onPressed: () {
                         setState(() {

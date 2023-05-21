@@ -236,10 +236,11 @@ class _HistoryPageState extends State<HistoryPage> {
               actions: [
                 FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.blue[700],
+                    backgroundColor: controller.blue_700_and_white.value,
                   ),
                   child: Text('submit'.tr,
-                      style: const TextStyle(color: Colors.white)),
+                      style: TextStyle(
+                          color: controller.black_and_white_card.value)),
                   onPressed: () {
                     ScheduleServices.feedbackTutor(
                             id: id,
