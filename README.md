@@ -8,4 +8,4 @@ Milestone 2 demo video: https://youtu.be/QN6gCwfnxKc
 
 Milestone 3 demo video: https://youtu.be/TzTHjsOTFoQ
 
-Link Google Play: <to be updated>
+Link Google Play: .... to be updated
