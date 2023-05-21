@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:intl/intl.dart';
+import 'package:one_on_one_learning/views/become_tutor_page/register_done.dart';
 
 import '../../controllers/controller.dart';
 import '../../models/user.dart';
@@ -20,6 +21,9 @@ class BecomeTutorPage extends StatefulWidget {
 
 class _BecomeTutorPageState extends State<BecomeTutorPage> {
   Controller controller = Get.find();
+  final _formKey = GlobalKey<FormState>();
+  final _formKeyInfo = GlobalKey<FormState>();
+
   late File imageFile;
   bool _loading = true;
   bool _isAvatarError = false;
@@ -28,64 +32,46 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
       <DropdownMenuEntry<String>>[];
 
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _birthdayController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
-  final TextEditingController _scheduleController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  final List<TextEditingController> _infoController =
+      List.generate(5, (index) => TextEditingController());
 
-  List<String> levelTittleList = <String>[
-    'Pre A1 (Beginner)',
-    'A1 (Higher Beginner)',
-    'A2 (Pre-Intermediate)',
-    'B1 (Intermediate)',
-    'B2 (Upper-Intermediate)',
-    'C1 (Advanced)',
-    'C2 (Proficiency)'
+  final List<String> infoTitleList = <String>[
+    'interests',
+    'education',
+    'experience',
+    'current_or_previous_profession',
+    'introduction'
   ];
-  List<String> levelCodeList = <String>[
-    'BEGINNER',
-    'HIGHER_BEGINNER',
-    'PRE_INTERMEDIATE',
-    'INTERMEDIATE',
-    'UPPER_INTERMEDIATE',
-    'ADVANCED',
-    'PROFICIENCY'
-  ];
+
   late String? dropdownLevelValue;
 
   List<String> countryTittleList = <String>[];
   late String? dropdownCountryValue;
 
-  var learnTopics = [
-    {"id": 4, "key": "business-english", "name": "Business English"},
-    {"id": 3, "key": "english-for-kids", "name": "English for Kids"},
-    {"id": 5, "key": "conversational-english", "name": "Conversational English"}
+  var bestAtTeaching = [
+    "Beginner",
+    "Intermediate",
+    "Advanced",
   ];
-  List<bool> learnTopicsChoices = <bool>[false, false, false];
+  String currentBestAtTeaching = "Beginner";
 
-  var testPreparations = [
-    {"id": 1, "key": "starters", "name": "STARTERS"},
-    {"id": 2, "key": "movers", "name": "MOVERS"},
-    {"id": 3, "key": "flyers", "name": "FLYERS"},
-    {"id": 4, "key": "ket", "name": "KET"},
-    {"id": 5, "key": "pet", "name": "PET"},
-    {"id": 6, "key": "ielts", "name": "IELTS"},
-    {"id": 7, "key": "toefl", "name": "TOEFL"},
-    {"id": 8, "key": "toeic", "name": "TOEIC"}
+  var specialtiesList = [
+    {"key": "english-for-kids", "name": "English for Kids"},
+    {"key": "business-english", "name": "Business English"},
+    {"key": "conversational-english", "name": "Conversational English"},
+    {"key": "starters", "name": "STARTERS"},
+    {"key": "movers", "name": "MOVERS"},
+    {"key": "flyers", "name": "FLYERS"},
+    {"key": "ket", "name": "KET"},
+    {"key": "pet", "name": "PET"},
+    {"key": "ielts", "name": "IELTS"},
+    {"key": "toefl", "name": "TOEFL"},
+    {"key": "toeic", "name": "TOEIC"}
   ];
-  List<bool> testPreparationChoices = <bool>[
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  List<bool> testPreparationChoices = List.generate(11, (index) => false);
 
   void _displaySuccessMotionToast(String str) {
     Get.snackbar(
@@ -106,28 +92,26 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
     );
   }
 
-  Widget _buildLearnTopicsChips() {
+  Widget _buildBestAtTeachingChips() {
     return Container(
         margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
         child: Wrap(
           spacing: 10,
-          children: List<Widget>.generate(learnTopics.length, (int index) {
+          children: List<Widget>.generate(bestAtTeaching.length, (int index) {
             return FilterChip(
               backgroundColor: controller.black_and_white_card.value,
               selectedColor: controller.blue_100_and_blue_400.value,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30))),
-              label: Text(learnTopics[index]["name"].toString()),
+              label: Text(bestAtTeaching[index]),
               onSelected: (bool isSlected) {
                 setState(() {
                   if (isSlected) {
-                    learnTopicsChoices[index] = true;
-                  } else {
-                    learnTopicsChoices[index] = false;
+                    currentBestAtTeaching = bestAtTeaching[index];
                   }
                 });
               },
-              selected: learnTopicsChoices[index],
+              selected: currentBestAtTeaching == bestAtTeaching[index],
             );
           }).toList(),
         ));
@@ -138,13 +122,13 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
         margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
         child: Wrap(
           spacing: 10,
-          children: List<Widget>.generate(testPreparations.length, (int index) {
+          children: List<Widget>.generate(specialtiesList.length, (int index) {
             return FilterChip(
               backgroundColor: controller.black_and_white_card.value,
               selectedColor: controller.blue_100_and_blue_400.value,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30))),
-              label: Text(testPreparations[index]["name"].toString()),
+              label: Text(specialtiesList[index]["name"].toString()),
               onSelected: (bool isSlected) {
                 setState(() {
                   if (isSlected) {
@@ -160,48 +144,6 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
         ));
   }
 
-  void _saveProfile() {
-    setState(() {
-      _loading = true;
-    });
-
-    List<String> learnTopicsList = [];
-    for (int i = 0; i < learnTopicsChoices.length; i++) {
-      if (learnTopicsChoices[i]) {
-        learnTopicsList.add(learnTopics[i]["id"].toString());
-      }
-    }
-
-    List<String> testPreparationsList = [];
-    for (int i = 0; i < testPreparationChoices.length; i++) {
-      if (testPreparationChoices[i]) {
-        testPreparationsList.add(testPreparations[i]["id"].toString());
-      }
-    }
-
-    UserService.updateUserInfo({
-      "name": _nameController.text,
-      "country": dropdownCountryValue == null
-          ? null
-          : countryList.keys
-              .toList()[countryTittleList.indexOf(dropdownCountryValue ?? "")],
-      "phone": _phoneController.text,
-      "birthday":
-          _birthdayController.text.isEmpty ? null : _birthdayController.text,
-      "level": dropdownLevelValue == null
-          ? null
-          : levelCodeList[levelTittleList.indexOf(dropdownLevelValue ?? "")],
-      "learnTopics": learnTopicsList,
-      "testPreparations": testPreparationsList,
-      "studySchedule": _scheduleController.text
-    }).then((value) {
-      setState(() {
-        _displaySuccessMotionToast('update_user_info_success'.tr);
-        _loading = false;
-      });
-    });
-  }
-
   void _loadData() {
     UserService.loadUserInfo().then((value) {
       setState(() {
@@ -209,35 +151,76 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
         _loading = false;
 
         _nameController.text = user.name;
-        _emailController.text = user.email;
         _birthdayController.text = user.birthday ?? "";
         _countryController.text = user.country ?? "";
-        _phoneController.text = user.phone;
-        _scheduleController.text = user.studySchedule ?? "";
 
-        int leveldx = levelCodeList.indexOf(user.level ?? "");
-        dropdownLevelValue = leveldx == -1 ? null : levelTittleList[leveldx];
         dropdownCountryValue = user.country == null
             ? null
             : getCountryName(user.country, isTutorPage: true);
-
-        for (var e in user.learnTopics) {
-          int index =
-              learnTopics.indexWhere((element) => element["id"] == e["id"]);
-          if (index != -1) {
-            learnTopicsChoices[index] = true;
-          }
-        }
-
-        for (var e in user.testPreparations) {
-          int index = testPreparations
-              .indexWhere((element) => element["id"] == e["id"]);
-          if (index != -1) {
-            testPreparationChoices[index] = true;
-          }
-        }
       });
     });
+  }
+
+  void _displayErrorMotionToast(String errorMessage) {
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text(errorMessage,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
+  }
+
+  List<Widget> _buildTutorInfoForm() {
+    List<Widget> list = [];
+    for (var i = 0; i < 5; i++) {
+      list.addAll([
+        Text(
+          infoTitleList[i].tr,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextFormField(
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'this_field_cannot_be_empty'.tr;
+            }
+            return null;
+          },
+          cursorColor: controller.blue_700_and_white.value,
+          style: TextStyle(
+            color: controller.black_and_white_text.value,
+          ),
+          maxLines: 3,
+          enableInteractiveSelection: false,
+          controller: _infoController[i],
+          decoration: InputDecoration(
+            hintText: "let_us_know_more_about_you".tr,
+            hintStyle: TextStyle(
+                color: controller.black_and_white_text.value,
+                fontWeight: FontWeight.normal),
+            contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+      ]);
+    }
+    return list;
   }
 
   @override
@@ -260,27 +243,6 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('become_a_tutor'.tr),
-      ),
-      floatingActionButton: FilledButton.icon(
-        style: FilledButton.styleFrom(
-          backgroundColor: controller.blue_700_and_white.value,
-        ),
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            _saveProfile();
-          }
-        },
-        icon: Icon(
-          Icons.save,
-          size: 24.0,
-          color: controller.black_and_white_card.value,
-        ),
-        label: Text(
-          'save'.tr,
-          style: TextStyle(
-            color: controller.black_and_white_card.value,
-          ),
-        ),
       ),
       body: _loading
           ? Center(
@@ -420,84 +382,6 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
                         style: TextStyle(
                           color: controller.black_and_white_text.value,
                         ),
-                        enableInteractiveSelection: false,
-                        readOnly: true,
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          filled: true, //<-- SEE HERE
-                          fillColor: controller.isDarkTheme
-                              ? Colors.grey[800]
-                              : Colors.grey[200],
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                              color: controller.black_and_white_text.value),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Theme(
-                      data: ThemeData(
-                        useMaterial3: true,
-                        colorScheme: ColorScheme.fromSwatch().copyWith(
-                          primary: controller.blue_700_and_white.value,
-                          secondary: controller.black_and_white_text.value,
-                        ),
-                        inputDecorationTheme: InputDecorationTheme(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: controller.black_and_white_text.value),
-                          ),
-                        ),
-                      ),
-                      child: TextField(
-                        style: TextStyle(
-                          color: controller.black_and_white_text.value,
-                        ),
-                        enableInteractiveSelection: false,
-                        readOnly: true,
-                        controller: _phoneController,
-                        decoration: InputDecoration(
-                          filled: true, //<-- SEE HERE
-                          fillColor: controller.isDarkTheme
-                              ? Colors.grey[800]
-                              : Colors.grey[200],
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          labelText: 'phone'.tr,
-                          labelStyle: TextStyle(
-                              color: controller.black_and_white_text.value),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Theme(
-                      data: ThemeData(
-                        useMaterial3: true,
-                        colorScheme: ColorScheme.fromSwatch().copyWith(
-                          primary: controller.blue_700_and_white.value,
-                          secondary: controller.black_and_white_text.value,
-                        ),
-                        inputDecorationTheme: InputDecorationTheme(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: controller.black_and_white_text.value),
-                          ),
-                        ),
-                      ),
-                      child: TextField(
-                        style: TextStyle(
-                          color: controller.black_and_white_text.value,
-                        ),
                         readOnly: true,
                         onTap: () {
                           showDatePicker(
@@ -579,77 +463,16 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Theme(
-                      data: ThemeData(
-                        useMaterial3: true,
-                        inputDecorationTheme: InputDecorationTheme(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: controller.blue_700_and_white.value ??
-                                    Colors.blue[700]!),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: controller.black_and_white_text.value),
-                          ),
-                        ),
-                      ),
-                      child: DropdownButtonFormField<String>(
-                        dropdownColor: controller.black_and_white_card.value,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          labelText: 'level'.tr,
-                          labelStyle: TextStyle(
-                              color: controller.black_and_white_text.value),
-                        ),
-                        value: dropdownLevelValue,
-                        icon: const Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownLevelValue = newValue;
-                          });
-                        },
-                        items: levelTittleList
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                  color: controller.black_and_white_text.value,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
                     Text(
-                      'want_to_learn'.tr,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'topics_capital'.tr,
+                      'best_teaching_studen_at_level'.tr,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    _buildLearnTopicsChips(),
+                    _buildBestAtTeachingChips(),
                     Text(
-                      'test_preparation'.tr,
+                      'your_specialties'.tr,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -657,47 +480,80 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
                     ),
                     _buildTestPreparationsChips(),
                     const SizedBox(height: 20),
-                    Text(
-                      'study_schedule'.tr,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Form(
+                      key: _formKeyInfo,
+                      child: Theme(
+                        data: ThemeData(
+                          useMaterial3: true,
+                          colorScheme: ColorScheme.fromSwatch().copyWith(
+                            primary: controller.blue_700_and_white.value,
+                            secondary: controller.black_and_white_text.value,
+                          ),
+                          inputDecorationTheme: InputDecorationTheme(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: controller.black_and_white_text.value),
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: _buildTutorInfoForm()),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Theme(
-                      data: ThemeData(
-                        useMaterial3: true,
-                        colorScheme: ColorScheme.fromSwatch().copyWith(
-                          primary: controller.blue_700_and_white.value,
-                          secondary: controller.black_and_white_text.value,
-                        ),
-                        inputDecorationTheme: InputDecorationTheme(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: controller.black_and_white_text.value),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: SizedBox(
+                        width: 200,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                controller.blue_700_and_white.value,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
-                        ),
-                      ),
-                      child: TextField(
-                        cursorColor: controller.blue_700_and_white.value,
-                        style: TextStyle(
-                          color: controller.black_and_white_text.value,
-                        ),
-                        maxLines: 3,
-                        enableInteractiveSelection: false,
-                        controller: _scheduleController,
-                        decoration: InputDecoration(
-                          hintText: "your_study_schedule".tr,
-                          hintStyle: TextStyle(
-                              color: controller.black_and_white_text.value,
-                              fontWeight: FontWeight.normal),
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
+                          onPressed: () async {
+                            if (!testPreparationChoices.contains(true)) {
+                              _displayErrorMotionToast(
+                                  'please_choose_at_least_one_specialty'.tr);
+                            }
+                            if (_formKey.currentState!.validate() &&
+                                _formKeyInfo.currentState!.validate()) {
+                              List<String> specialties = [];
+                              for (var i = 0;
+                                  i < testPreparationChoices.length;
+                                  i++) {
+                                if (testPreparationChoices[i]) {
+                                  specialties.add(
+                                      specialtiesList[i]["key"].toString());
+                                }
+                              }
+                              controller.isBecomingTutor = true;
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CompleteRegister()));
+                              UserService.becomeTutor(
+                                  name: _nameController.text,
+                                  country: dropdownCountryValue ?? "",
+                                  birthday: _birthdayController.text,
+                                  interests: _infoController[0].text,
+                                  education: _infoController[1].text,
+                                  experience: _infoController[2].text,
+                                  profession: _infoController[3].text,
+                                  bio: _infoController[4].text,
+                                  targetStudent: currentBestAtTeaching,
+                                  specialties: specialties,
+                                  avatar: user.avatar);
+                            }
+                          },
+                          child: Text('register'.tr,
+                              style: TextStyle(
+                                  color:
+                                      controller.black_and_white_card.value)),
                         ),
                       ),
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/views/become_tutor_page/become_tutor_page.dart';
+import 'package:one_on_one_learning/views/become_tutor_page/register_done.dart';
 import 'package:one_on_one_learning/views/login_page/login_page.dart';
 
 import '../../controllers/controller.dart';
@@ -109,7 +110,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           onTap: () {
                             Navigator.push(context, MaterialPageRoute(
                                 builder: (BuildContext context) {
-                              return const BecomeTutorPage();
+                              return controller.isBecomingTutor
+                                  ? CompleteRegister()
+                                  : const BecomeTutorPage();
                             }));
                           },
                         ),

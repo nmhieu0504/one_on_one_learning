@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../utils/backend.dart';
-import '../utils/share_pref.dart';
 import 'package:http/http.dart' as http;
 
 class UtilsService {

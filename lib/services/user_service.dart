@@ -102,15 +102,41 @@ class UserService {
     return false;
   }
 
-  static Future<dynamic> becomeTutor(File imageFile) async {
-    debugPrint("File selected: ${imageFile.path}");
+  static Future<dynamic> becomeTutor({
+    required String name,
+    required String country,
+    required String birthday,
+    required String interests,
+    required String education,
+    required String experience,
+    required String profession,
+    required String bio,
+    required String targetStudent,
+    required List<String> specialties,
+    required String avatar,
+  }) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
 
     var request =
         http.MultipartRequest('POST', Uri.parse(API_URL.BECOME_A_TUTOR));
-    request.files
-        .add(await http.MultipartFile.fromPath('avatar', imageFile.path));
+
+    request.fields['name'] = name;
+    request.fields['country'] = country;
+    request.fields['birthday'] = birthday;
+    request.fields['interests'] = interests;
+    request.fields['education'] = education;
+    request.fields['experience'] = experience;
+    request.fields['profession'] = profession;
+    request.fields['bio'] = bio;
+    request.fields['targetStudent'] = targetStudent;
+    request.fields['specialties'] = specialties.toString();
+    request.fields['avatar'] = avatar;
+    request.fields['certificateMapping'] = '';
+    request.fields['video'] = '';
+    request.fields['price'] = '50000';
+    request.fields['certificate'] = '';
+
     request.headers.addAll({
       "Authorization": "Bearer $token",
       "Content-Type":
