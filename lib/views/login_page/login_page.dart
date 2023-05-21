@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
@@ -15,6 +15,8 @@ import 'package:get/get.dart';
 import '../../services/auth_services.dart';
 import '../navigator_page.dart';
 import '../../controllers/controller.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,6 +37,21 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   SharePref sharePref = SharePref();
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  Future<void> _handleSignInWithGoogle() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
 
   void _displayErrorMotionToast() {
     Get.snackbar(
@@ -343,23 +360,23 @@ class _LoginPageState extends State<LoginPage> {
                                           height: 50,
                                         ),
                                         onPressed: () async {
-                                          final LoginResult result =
-                                              await FacebookAuth.instance
-                                                  .login();
-                                          if (result.status ==
-                                              LoginStatus.success) {
-                                            debugPrint(
-                                                "TOKEN FB: ${result.accessToken}");
-                                            // User successfully signed in with Facebook
-                                            final AccessToken accessToken =
-                                                result.accessToken!;
-                                            // Use the access token to perform further operations
-                                            // such as fetching user data or making API requests
-                                          } else {
-                                            // There was an error during the login process
-                                            debugPrint(
-                                                'Facebook login failed: ${result.message}');
-                                          }
+                                          // final LoginResult result =
+                                          //     await FacebookAuth.instance
+                                          //         .login();
+                                          // if (result.status ==
+                                          //     LoginStatus.success) {
+                                          //   debugPrint(
+                                          //       "TOKEN FB: ${result.accessToken}");
+                                          //   // User successfully signed in with Facebook
+                                          //   final AccessToken accessToken =
+                                          //       result.accessToken!;
+                                          //   // Use the access token to perform further operations
+                                          //   // such as fetching user data or making API requests
+                                          // } else {
+                                          //   // There was an error during the login process
+                                          //   debugPrint(
+                                          //       'Facebook login failed: ${result.message}');
+                                          // }
                                         },
                                         tooltip: "Sign in with Facebook",
                                         icon: const Image(
@@ -378,7 +395,9 @@ class _LoginPageState extends State<LoginPage> {
                                           width: 60,
                                           height: 50,
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          // _handleSignInWithGoogle();
+                                        },
                                         tooltip: "Sign in with Google",
                                         icon: const Image(
                                           image: AssetImage(UIData.googleIcon),

@@ -20,7 +20,7 @@ class _CoursesListState extends State<CoursesList> {
   int page = 1;
   final int size = 10;
 
-  bool _getMoreData = false;
+  // bool _getMoreData = false;
   final ScrollController _scrollController = ScrollController();
 
   List<Course> coursesList = [];
@@ -321,7 +321,7 @@ class _CoursesListState extends State<CoursesList> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         setState(() {
-          _getMoreData = true;
+          // _getMoreData = true;
         });
         CoursesService.loadCoursesList(
           page: page++,
@@ -341,7 +341,7 @@ class _CoursesListState extends State<CoursesList> {
             }
             coursesList.addAll(value);
             _loading = false;
-            _getMoreData = false;
+            // _getMoreData = false;
           });
         });
       }

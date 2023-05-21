@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:one_on_one_learning/controllers/controller.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:get/get.dart';

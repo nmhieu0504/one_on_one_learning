@@ -24,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _loading = true;
   bool _isAvatarError = false;
   late User user;
+  String avatarUrl = "";
   final List<DropdownMenuEntry<String>> countryMenuList =
       <DropdownMenuEntry<String>>[];
 
@@ -230,6 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
     UserService.loadUserInfo().then((value) {
       setState(() {
         user = value;
+        avatarUrl = user.avatar;
         _nameController.text = user.name;
         _emailController.text = user.email;
         _birthdayController.text = user.birthday ?? "";
@@ -325,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             backgroundColor: Colors.grey[50],
                             backgroundImage: _isAvatarError
                                 ? const AssetImage(UIData.defaultAvatar)
-                                : NetworkImage(user.avatar) as ImageProvider,
+                                : NetworkImage(avatarUrl) as ImageProvider,
                             onBackgroundImageError: (exception, stackTrace) {
                               setState(() {
                                 _isAvatarError = true;
@@ -358,7 +360,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       .then((value) {
                                     _displaySuccessMotionToast(
                                         'update_user_info_success'.tr);
-                                    _loadData();
+                                    UserService.loadUserInfo().then((value) {
+                                      setState(() {
+                                        _loading = false;
+                                        avatarUrl = value.avatar;
+                                      });
+                                    });
                                   });
                                   // Do something with the image file, e.g. upload to server
                                 } else {

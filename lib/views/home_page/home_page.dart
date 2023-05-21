@@ -463,6 +463,9 @@ class _HomePageState extends State<HomePage> {
                                               color: Colors.white))),
                                   Center(
                                     child: CountdownTimer(
+                                      onEnd: () => setState(() {
+                                        _isUpcoming = false;
+                                      }),
                                       widgetBuilder:
                                           (_, CurrentRemainingTime? time) {
                                         if (time == null) return Container();
