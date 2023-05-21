@@ -36,4 +36,6 @@ class API_URL {
   static const String GET_PRICE_OF_SESSION= "$BASE_URL/payment/price-of-session";
 
   static const String GET_CHAT_MESSAGE = "$BASE_URL/message/get/";
+
+  static const String BECOME_A_TUTOR = "$BASE_URL/tutor/register";
 }

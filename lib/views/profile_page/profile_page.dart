@@ -206,8 +206,6 @@ class _ProfilePageState extends State<ProfilePage> {
     UserService.loadUserInfo().then((value) {
       setState(() {
         user = value;
-        _loading = false;
-
         _nameController.text = user.name;
         _emailController.text = user.email;
         _birthdayController.text = user.birthday ?? "";
@@ -217,8 +215,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
         int leveldx = levelCodeList.indexOf(user.level ?? "");
         dropdownLevelValue = leveldx == -1 ? null : levelTittleList[leveldx];
-        dropdownCountryValue =
-            user.country == null ? null : getCountryName(user.country);
+        dropdownCountryValue = user.country == null
+            ? null
+            : getCountryName(user.country, isTutorPage: true);
 
         for (var e in user.learnTopics) {
           int index =
@@ -235,6 +234,8 @@ class _ProfilePageState extends State<ProfilePage> {
             testPreparationChoices[index] = true;
           }
         }
+
+        _loading = false;
       });
     });
   }
@@ -542,6 +543,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       child: DropdownButtonFormField<String>(
+                        dropdownColor: controller.black_and_white_card.value,
                         isExpanded: true,
                         decoration: InputDecoration(
                           contentPadding:
@@ -595,6 +597,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       child: DropdownButtonFormField<String>(
+                        dropdownColor: controller.black_and_white_card.value,
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.fromLTRB(20, 10, 20, 10),

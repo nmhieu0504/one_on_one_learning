@@ -10,6 +10,7 @@ class Controller extends GetxController {
   late bool isDarkTheme;
   late User user;
   bool isTutor = false;
+  bool isBecomingTutor = false;
 
   var bannerBackground = Colors.blue[900].obs;
   var blue_700_and_white = Colors.blue[700].obs;

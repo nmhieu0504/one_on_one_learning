@@ -5,9 +5,13 @@ import 'package:one_on_one_learning/models/user.dart';
 import '../utils/backend.dart';
 import '../utils/share_pref.dart';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+import 'package:one_on_one_learning/controllers/controller.dart';
 
 class UserService {
   static Future<dynamic> loadUserInfo({bool isSocketCall = false}) async {
+    Controller controller = Get.find();
+
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
 
@@ -17,6 +21,8 @@ class UserService {
     if (response.statusCode == 200) {
       debugPrint(response.body);
       var res = jsonDecode(response.body);
+
+      controller.isBecomingTutor = res["user"]["tutorInfo"] != null;
 
       if (isSocketCall) {
         return res;
@@ -89,6 +95,34 @@ class UserService {
     final response = await request.send();
     String responseBody = await response.stream.transform(utf8.decoder).join();
     debugPrint('Image uploaded with response body: $responseBody');
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<dynamic> becomeTutor(File imageFile) async {
+    debugPrint("File selected: ${imageFile.path}");
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+
+    var request =
+        http.MultipartRequest('POST', Uri.parse(API_URL.BECOME_A_TUTOR));
+    request.files
+        .add(await http.MultipartFile.fromPath('avatar', imageFile.path));
+    request.headers.addAll({
+      "Authorization": "Bearer $token",
+      "Content-Type":
+          "multipart/form-data; boundary=----WebKitFormBoundaryeT9BMeHAeNuJP3MT",
+      "origin": "https://sandbox.api.lettutor.com",
+      "referer": "https://sandbox.api.lettutor.com/"
+    });
+
+    final response = await request.send();
+
+    String responseBody = await response.stream.transform(utf8.decoder).join();
+    debugPrint('Become tutor response body: $responseBody');
 
     if (response.statusCode == 200) {
       return true;

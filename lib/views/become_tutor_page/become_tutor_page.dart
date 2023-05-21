@@ -217,8 +217,9 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
 
         int leveldx = levelCodeList.indexOf(user.level ?? "");
         dropdownLevelValue = leveldx == -1 ? null : levelTittleList[leveldx];
-        dropdownCountryValue =
-            user.country == null ? null : getCountryName(user.country);
+        dropdownCountryValue = user.country == null
+            ? null
+            : getCountryName(user.country, isTutorPage: true);
 
         for (var e in user.learnTopics) {
           int index =
@@ -258,7 +259,7 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('profile'.tr),
+        title: Text('become_a_tutor'.tr),
       ),
       floatingActionButton: FilledButton.icon(
         style: FilledButton.styleFrom(
@@ -542,6 +543,7 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
                         ),
                       ),
                       child: DropdownButtonFormField<String>(
+                        dropdownColor: controller.black_and_white_card.value,
                         isExpanded: true,
                         decoration: InputDecoration(
                           contentPadding:
@@ -595,6 +597,7 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
                         ),
                       ),
                       child: DropdownButtonFormField<String>(
+                        dropdownColor: controller.black_and_white_card.value,
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.fromLTRB(20, 10, 20, 10),
