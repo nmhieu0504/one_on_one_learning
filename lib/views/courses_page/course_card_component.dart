@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:one_on_one_learning/models/course.dart';
 import 'package:one_on_one_learning/views/courses_page/course_detail_page.dart';
 
+import '../../controllers/controller.dart';
+
 class CourseCardComponent extends StatelessWidget {
+  Controller controller = Get.find();
   final Course course;
 
-  const CourseCardComponent({
+  CourseCardComponent({
     super.key,
     required this.course,
   });
@@ -13,6 +17,7 @@ class CourseCardComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: controller.black_and_white_card.value,
       shape: RoundedRectangleBorder(
         side: BorderSide(
           color: Theme.of(context).colorScheme.outline,
@@ -37,7 +42,12 @@ class CourseCardComponent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Image.network(course.imageUrl),
+            Image.network(
+              course.imageUrl,
+              errorBuilder: (context, error, stackTrace) {
+                return Container();
+              },
+            ),
             Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 0, left: 10, right: 10),
@@ -49,7 +59,7 @@ class CourseCardComponent extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 course.description,
-                style: TextStyle(fontSize: 16, color: Colors.grey[900]),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
             Container(

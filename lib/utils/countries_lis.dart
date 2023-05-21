@@ -1,5 +1,15 @@
-String getCountryName(String? code) {
-  return countryList[code] ?? "No information";
+String getCountryName(String? code, {bool isTutorPage = false}) {
+  if (code == null) return "No information";
+  if (code.length > 2) return code;
+
+  String? result = countryList[code];
+
+  if (result == null) {
+    return "No information";
+  } else {
+    if (result.length <= 20 || isTutorPage) return result;
+    return "${result.substring(0, 20)}...";
+  }
 }
 
 List<String> getCountriesName() {

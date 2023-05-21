@@ -5,3 +5,7 @@
 Milestone 1: Widget Tree for screens - https://drive.google.com/file/d/1-QY1-JEyIZOHTCJz7sdt616t-e4NEh8C/view?usp=sharing
 
 Milestone 2 demo video: https://youtu.be/QN6gCwfnxKc
+
+Milestone 3 demo video: https://youtu.be/TzTHjsOTFoQ
+
+Link Google Play: <to be updated>

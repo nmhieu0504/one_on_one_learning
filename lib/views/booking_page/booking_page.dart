@@ -5,8 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:one_on_one_learning/services/schedule_services.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
+import 'package:one_on_one_learning/services/user_service.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:collection';
+
+import '../../controllers/controller.dart';
+import '../../models/user.dart';
+import '../../services/utils_services.dart';
+import 'package:get/get.dart';
 
 class BookingPage extends StatefulWidget {
   final String tutorId;
@@ -17,6 +23,10 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
+  Controller controller = Get.find();
+
+  late User user;
+  late int priceOfSession;
   bool _loading = true;
 
   final kToday = DateTime.now();
@@ -31,6 +41,27 @@ class _BookingPageState extends State<BookingPage> {
   DateTime? _rangeEnd;
 
   late LinkedHashMap<DateTime, List<Schedule>> kSchedules;
+
+  final TextEditingController _noteController = TextEditingController();
+
+  void _displaySuccessMotionToast(String str) {
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green,
+      duration: const Duration(milliseconds: 750),
+      titleText: const Text("Ok",
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text(str,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
+  }
 
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
@@ -75,6 +106,19 @@ class _BookingPageState extends State<BookingPage> {
       if (value == null) {
         return;
       }
+
+      UserService.loadUserInfo().then((value) {
+        setState(() {
+          user = value;
+        });
+      });
+
+      UtilsService.getSessionPrice().then((value) {
+        setState(() {
+          priceOfSession = value;
+        });
+      });
+
       setState(() {
         value
             .sort((a, b) => a['startTimestamp'].compareTo(b['startTimestamp']));
@@ -90,9 +134,13 @@ class _BookingPageState extends State<BookingPage> {
 
           String time =
               '${DateFormat.Hm().format(startTimestamp)} - ${DateFormat.Hm().format(endTimestamp)}';
-          String tmpStr = element['isBooked'] ? '(Booked)' : '';
-          Schedule schedule = Schedule("$time $tmpStr", element['isBooked'],
-              element["scheduleDetailIds"]);
+          element['isBooked'] = DateTime.now().isAfter(startTimestamp)
+              ? true
+              : element['isBooked'];
+          Schedule schedule = Schedule(
+              time, element['isBooked'], element["scheduleDetailIds"],
+              startTimestamp: startTimestamp.millisecondsSinceEpoch,
+              endTimestamp: endTimestamp.millisecondsSinceEpoch);
           if (kEventSource.containsKey(date)) {
             kEventSource[date]!.add(schedule);
           } else {
@@ -112,6 +160,181 @@ class _BookingPageState extends State<BookingPage> {
     });
   }
 
+  void _showBookingDialog(
+      String scheduleDetailIds, int startTimestamp, int endTimestamp) {
+    showDialog(
+        context: context,
+        builder: ((BuildContext context) => Center(
+                child: AlertDialog(
+              title: Text("booking_detail".tr),
+              content: SingleChildScrollView(
+                child: Column(children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(children: [
+                      Row(children: [
+                        Text(
+                          'booking_time'.tr,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ]),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 50),
+                        margin: const EdgeInsets.only(top: 10),
+                        decoration: BoxDecoration(
+                          color: controller.green_RGB_and_white.value,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Center(
+                            child: Text(
+                                "${DateFormat("EEE, dd MMM yyyy").format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))}  ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(endTimestamp))}",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color:
+                                        controller.black_and_white_card.value,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold))),
+                      )
+                    ]),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'balance'.tr,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 40),
+                            Text("balance_left".trParams({
+                              "balance":
+                                  (int.parse(user.walletInfo["amount"]) ~/
+                                          priceOfSession)
+                                      .toString()
+                            }))
+                          ]),
+                      const SizedBox(height: 10),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'price'.tr,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text("1 ${'lesson'.tr}")
+                          ]),
+                    ]),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(children: [
+                      Row(children: [
+                        Text(
+                          'note'.tr,
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ]),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Theme(
+                          data: ThemeData(
+                            useMaterial3: true,
+                            colorScheme: ColorScheme.fromSwatch().copyWith(
+                              primary: controller.blue_700_and_white.value,
+                              secondary: controller.black_and_white_text.value,
+                            ),
+                            inputDecorationTheme: InputDecorationTheme(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color:
+                                        controller.black_and_white_text.value),
+                              ),
+                            ),
+                          ),
+                          child: TextField(
+                            cursorColor: controller.blue_700_and_white.value,
+                            style: TextStyle(
+                                color: controller.black_and_white_text.value),
+                            maxLines: 2,
+                            controller: _noteController,
+                            decoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                    color:
+                                        controller.black_and_white_text.value,
+                                    fontWeight: FontWeight.normal),
+                                contentPadding: const EdgeInsets.all(10),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: 'enter_note'.tr),
+                          ),
+                        ),
+                      )
+                    ]),
+                  ),
+                ]),
+              ),
+              actions: [
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                      backgroundColor: controller.green_RGB_and_white.value),
+                  onPressed:
+                      int.parse(user.walletInfo["amount"]) < priceOfSession
+                          ? null
+                          : () {
+                              Navigator.of(context).pop();
+                              setState(() {
+                                _loading = true;
+                              });
+                              ScheduleServices.bookAClass(
+                                      scheduleDetailIds, _noteController.text)
+                                  .then((value) {
+                                _displaySuccessMotionToast('book_success'.tr);
+                                _noteController.clear();
+                                _loadData();
+                                debugPrint("BOOKED");
+                              });
+                            },
+                  icon: Icon(Icons.keyboard_double_arrow_right_outlined,
+                      color: controller.black_and_white_card.value),
+                  label: Text("book_lesson".tr,
+                      style: TextStyle(
+                          color: controller.black_and_white_card.value)),
+                ),
+                OutlinedButton(
+                  child: Text(
+                    "cancel".tr,
+                    style:
+                        TextStyle(color: controller.blue_700_and_white.value),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _noteController.clear();
+                  },
+                ),
+              ],
+            ))));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -128,15 +351,17 @@ class _BookingPageState extends State<BookingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking Details'),
+        title: Text('booking'.tr),
       ),
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: Obx(() => CircularProgressIndicator(
+                  color: controller.blue_700_and_white.value)),
             )
           : Column(
               children: [
                 TableCalendar<Schedule>(
+                  locale: controller.isEnglish ? 'en_US' : 'vi_VN',
                   calendarBuilders:
                       CalendarBuilders(markerBuilder: (context, day, events) {
                     if (events.isEmpty) {
@@ -191,21 +416,19 @@ class _BookingPageState extends State<BookingPage> {
                               vertical: 4.0,
                             ),
                             child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 66, 218, 93)),
                               onPressed: value[index].isBooked
                                   ? null
                                   : () {
-                                      setState(() {
-                                        _loading = true;
-                                      });
-                                      ScheduleServices.bookAClass(
-                                              value[index].scheduleDetailIds,
-                                              "note")
-                                          .then((value) {
-                                        _loadData();
-                                        debugPrint("BOOKED");
-                                      });
+                                      _showBookingDialog(
+                                          value[index].scheduleDetailIds,
+                                          value[index].startTimestamp,
+                                          value[index].endTimestamp);
                                     },
-                              child: Text('${value[index]}'),
+                              child: Text('${value[index]}',
+                                  style: const TextStyle(color: Colors.white)),
                             ),
                           );
                         },
@@ -224,7 +447,10 @@ class Schedule {
   final String title;
   final bool isBooked;
   final String scheduleDetailIds;
-  const Schedule(this.title, this.isBooked, this.scheduleDetailIds);
+  final int startTimestamp;
+  final int endTimestamp;
+  const Schedule(this.title, this.isBooked, this.scheduleDetailIds,
+      {required this.startTimestamp, required this.endTimestamp});
 
   @override
   String toString() => title;

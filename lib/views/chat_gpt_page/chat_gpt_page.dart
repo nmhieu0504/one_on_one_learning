@@ -1,17 +1,19 @@
 // ignore_for_file: avoid_print
 
 import 'package:one_on_one_learning/services/chat_gpt_service/chat_gpt_ultis.dart';
-import 'package:one_on_one_learning/models/db_ultils.dart';
+import 'package:one_on_one_learning/models/db_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../controllers/controller.dart';
 import '../../models/message.dart';
 import 'package:bubble/bubble.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:get/get.dart';
 
 class ChatGPTPage extends StatefulWidget {
   const ChatGPTPage({super.key});
@@ -23,6 +25,7 @@ class ChatGPTPage extends StatefulWidget {
 enum TtsLanguage { en, vn }
 
 class _ChatGPTPageState extends State<ChatGPTPage> {
+  Controller controller = Get.find<Controller>();
   final textFieldController = TextEditingController();
   final ChatGPTUltils chatGPTUltils = ChatGPTUltils();
   List<Message> messageList = [];
@@ -39,6 +42,8 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
 
+  bool _loading = true;
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +56,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
     setState(() {
       isAutoTTS = prefs.getBool('isAutoTTS') ?? true;
       isEnglish = prefs.getBool('isEnglish') ?? true;
-      isVietnamese = prefs.getBool('isVietnamese') ?? false;
+      isVietnamese = !isEnglish;
     });
     languages = isEnglish ? TtsLanguage.en : TtsLanguage.vn;
     flutterTts.setLanguage(isEnglish ? "en-US" : "vi-VN");
@@ -59,13 +64,17 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
 
   Future<void> _loadMessage() async {
     messageList = await DB_Ultils.loadAll();
+    ChatGPTUltils.totalTokens =
+        (await SharedPreferences.getInstance()).getInt("totalTokens") ?? 0;
     for (var element in messageList) {
       ChatGPTUltils.history.add({
         "role": element.isUser ? "user" : "assistant",
         "content": element.message
       });
     }
-    setState(() {});
+    setState(() {
+      _loading = false;
+    });
   }
 
   void _listen() async {
@@ -96,15 +105,15 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const SizedBox(
+          SizedBox(
             height: 120,
             child: DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   // color: Colors.blue,
                   ),
               child: Text(
-                'Settings',
-                style: TextStyle(
+                'settings'.tr,
+                style: const TextStyle(
                   // color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -114,9 +123,9 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           ),
           ListTile(
             leading: const Icon(Icons.play_circle_outline),
-            title: const Text('Auto TTS reply'),
+            title: Text('auto_tts_reply'.tr),
             trailing: Switch(
-                activeColor: Colors.blue,
+                activeColor: Colors.blue[700],
                 value: isAutoTTS,
                 onChanged: (value) async {
                   setState(() {
@@ -130,7 +139,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           ),
           ListTile(
             leading: const Icon(Icons.language_outlined),
-            title: const Text('Speech Language'),
+            title: Text('speech_language'.tr),
             onTap: () => showDialog<void>(
               context: context,
               builder: (BuildContext context) => Dialog(
@@ -164,7 +173,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                                 height: 50,
                                 child:
                                     Image.asset('assets/images/us_flag.png')),
-                            title: const Text('English (United States)'),
+                            title: Text('english'.tr),
                             trailing: isEnglish
                                 ? const Icon(Icons.check_circle,
                                     color: Colors.green)
@@ -196,7 +205,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                                 height: 50,
                                 child:
                                     Image.asset('assets/images/vn_flag.png')),
-                            title: const Text('Vietnamese'),
+                            title: Text('vietnamese'.tr),
                             trailing: isVietnamese
                                 ? const Icon(Icons.check_circle,
                                     color: Colors.green)
@@ -227,9 +236,8 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Delete all messages'),
-                          content: const Text('This action cannot be undone. '
-                              'Do you want to continue?'),
+                          title: Text('delete_all_messages'.tr),
+                          content: Text('delete_all_messages_confirm'.tr),
                           actions: <Widget>[
                             TextButton(
                               style: TextButton.styleFrom(
@@ -245,6 +253,10 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                                 setState(() {
                                   messageList.clear();
                                   ChatGPTUltils.history.clear();
+                                  ChatGPTUltils.totalTokens = 0;
+                                  SharedPreferences.getInstance().then((prefs) {
+                                    prefs.setInt("totalTokens", 0);
+                                  });
                                 });
                                 DB_Ultils.deleteAll();
                                 Navigator.of(context).pop();
@@ -270,7 +282,10 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                 },
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.red)),
-                child: const Text('Delete all messages')),
+                child: Text(
+                  'delete_all_messages'.tr,
+                  style: const TextStyle(color: Colors.white),
+                )),
           ),
         ],
       ),
@@ -291,7 +306,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           message.date.day,
         ),
         groupHeaderBuilder: (Message message) => Container(
-          margin: const EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(top: 20, bottom: 10),
           child: Align(
             alignment: Alignment.topCenter,
             child: Text(DateFormat.yMMMMEEEEd().format(message.date),
@@ -305,7 +320,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                   elevation: 5,
                   margin: const BubbleEdges.only(
                     top: 5,
-                    bottom: 5,
+                    bottom: 10,
                   ),
                   alignment: Alignment.topRight,
                   nip: BubbleNip.rightTop,
@@ -318,19 +333,20 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                   Container(
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.8),
-                    child: Bubble(
+                    child: Obx(() => Bubble(
                         elevation: 5,
                         margin: const BubbleEdges.only(
                           top: 5,
-                          bottom: 5,
+                          bottom: 10,
                         ),
                         alignment: Alignment.topLeft,
                         nip: BubbleNip.leftTop,
-                        color: Colors.grey[100],
+                        color: controller.grey_100_and_grey_850.value,
                         child: Text(
                           message.message,
-                          style: const TextStyle(color: Colors.black),
-                        )),
+                          style: TextStyle(
+                              color: controller.black_and_white_text.value),
+                        ))),
                   ),
                   IconButton(
                       onPressed: () {
@@ -353,15 +369,16 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
                           }
                         });
                       },
-                      icon: message.state
+                      icon: Obx(() => message.state
                           ? LoadingAnimationWidget.beat(
-                              color: Colors.blue,
+                              color: controller.blue_700_and_white.value ??
+                                  Colors.blue,
                               size: 20,
                             )
-                          : const Icon(
+                          : Icon(
                               Icons.play_circle_outline,
-                              color: Colors.blue,
-                            ))
+                              color: controller.blue_700_and_white.value,
+                            )))
                 ]);
         },
       ),
@@ -396,49 +413,71 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
   }
 
   Widget _buildInputMessage() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(30, 15, 30, 15),
-      child: Theme(
-        data: ThemeData(
-          primaryColor: Colors.blue,
-          primaryColorDark: Colors.blue,
-        ),
-        child: TextField(
-          cursorColor: Colors.blue,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(40.0))),
-            hintText: "Start typing or talking ...",
-            contentPadding:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-            suffixIcon: IconButton(
-              icon: !isButtonDisabled
-                  ? const Icon(
-                      Icons.send,
-                      color: Colors.blue,
-                    )
-                  : LoadingAnimationWidget.discreteCircle(
-                      color: Colors.blue,
-                      size: 20,
-                    ),
-              onPressed: () {
-                if (isButtonDisabled) return;
-                String text = textFieldController.text;
-                setState(() {
-                  isButtonDisabled = true;
-                  messageList.add(Message(
-                      message: text, date: DateTime.now(), isUser: true));
-                });
-                DB_Ultils.insertMessage(
-                    Message(message: text, date: DateTime.now(), isUser: true));
-                _sendRequest(text);
-              },
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.fromLTRB(30, 15, 30, 15),
+        child: Theme(
+            data: ThemeData(
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                primary: controller.blue_700_and_white.value,
+                secondary: controller.black_and_white_text.value,
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide:
+                      BorderSide(color: controller.black_and_white_text.value),
+                ),
+              ),
             ),
-          ),
-          controller: textFieldController,
-        ),
+            child: TextField(
+              style: TextStyle(
+                color: controller.black_and_white_text.value,
+              ),
+              cursorColor: controller.blue_700_and_white.value,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: controller.black_and_white_text.value,
+                ),
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                hintText: "start_typing_or_talking".tr,
+                contentPadding: const EdgeInsets.only(
+                    top: 10, bottom: 10, left: 20, right: 20),
+                suffixIcon: Obx(() => IconButton(
+                      icon: !isButtonDisabled
+                          ? Icon(
+                              Icons.send,
+                              color: controller.blue_700_and_white.value,
+                            )
+                          : LoadingAnimationWidget.discreteCircle(
+                              color: controller.isDarkTheme
+                                  ? Colors.white
+                                  : Colors.blue,
+                              size: 20,
+                            ),
+                      onPressed: () {
+                        if (isButtonDisabled) return;
+                        String text = textFieldController.text;
+                        setState(() {
+                          isButtonDisabled = true;
+                          messageList.add(Message(
+                              message: text,
+                              date: DateTime.now(),
+                              isUser: true));
+                        });
+                        DB_Ultils.insertMessage(Message(
+                            message: text, date: DateTime.now(), isUser: true));
+                        _sendRequest(text);
+                      },
+                    )),
+              ),
+              controller: textFieldController,
+            )),
       ),
     );
   }
@@ -458,25 +497,27 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
             child: SizedBox(
               height: 80.0,
               width: 80.0,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue)),
-                onPressed: _listen,
-                child: Icon(
-                  _isListening ? Icons.mic : Icons.mic_none,
-                  size: 40,
-                  color: Colors.white,
-                ),
+              child: Obx(
+                () => ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            controller.blue_700_and_white.value)),
+                    onPressed: _listen,
+                    child: Icon(
+                      _isListening ? Icons.mic : Icons.mic_none,
+                      size: 40,
+                      color: controller.black_and_white_card.value,
+                    )),
               ),
             ),
           ),
-          Text(
-            _isListening ? "Listening..." : "Tap to Talk",
-            style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-                color: Colors.blue[600]),
-          )
+          Obx(() => Text(
+                _isListening ? "listening".tr : "tap_to_talk".tr,
+                style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 18,
+                    color: controller.blue_700_and_white.value),
+              ))
         ]),
       ),
     );
@@ -503,17 +544,22 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           centerTitle: true,
           title: const Text("Chat",
               style: TextStyle(
-                color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ))),
       endDrawer: _buildDrawer(),
-      body: SafeArea(
-        child: Column(children: [
-          _buildMessageListView(),
-          _buildInputMessage(),
-        ]),
-      ),
+      body: _loading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: controller.blue_700_and_white.value,
+              ),
+            )
+          : SafeArea(
+              child: Column(children: [
+                _buildMessageListView(),
+                _buildInputMessage(),
+              ]),
+            ),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
@@ -521,5 +567,6 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
   @override
   void dispose() {
     super.dispose();
+    flutterTts.stop();
   }
 }

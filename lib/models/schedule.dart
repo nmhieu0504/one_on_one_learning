@@ -1,4 +1,5 @@
 class ScheduleModel {
+  final String id;
   final DateTime date;
   final String avatar;
   final String name;
@@ -24,9 +25,13 @@ class ScheduleModel {
   final String? lessonProgress;
   final String? scheduleDetailId;
   final bool classReview;
+  final List<dynamic> feedbacks;
+  final String tutorId;
 
   ScheduleModel(
-      {required this.date,
+      {required this.id,
+      this.tutorId = "",
+      required this.date,
       required this.avatar,
       required this.name,
       required this.country,
@@ -50,10 +55,13 @@ class ScheduleModel {
       required this.lesson,
       required this.page,
       required this.lessonProgress,
-      this.scheduleDetailId});
+      this.scheduleDetailId,
+      this.feedbacks = const []});
 
   factory ScheduleModel.fromJson(Map<String, dynamic> json) {
     return ScheduleModel(
+      id: json['id'],
+      tutorId: json['tutorId'] ?? "",
       date: json['date'],
       avatar: json['avatar'],
       name: json['name'],
@@ -79,11 +87,14 @@ class ScheduleModel {
       lessonProgress: json['lessonProgress'],
       classReview: json['classReview'],
       scheduleDetailId: json['scheduleDetailId'],
+      feedbacks: json['feedbacks'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'tutorId': tutorId,
       'date': date,
       'avatar': avatar,
       'name': name,
@@ -109,6 +120,7 @@ class ScheduleModel {
       'lessonProgress': lessonProgress,
       'classReview': classReview,
       'scheduleDetailId': scheduleDetailId,
+      'feedbacks': feedbacks,
     };
   }
 }

@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -37,12 +39,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.4.0
   syncfusion_flutter_pdfviewer: ^20.4.53
-  table_calendar: ^3.0.9
+  table_calendar: ^3.0.8
   jitsi_meet_wrapper: ^0.0.6
-  motion_toast: ^2.6.6
   get: ^4.6.5
   shared_preferences: ^2.1.0
-  flutter_launcher_icons: ^0.13.0
+  flutter_launcher_icons: ^0.13.1
   loading_animation_widget: ^1.2.0+4
   avatars: ^3.0.2
   flick_video_player: ^0.5.0
@@ -54,9 +55,19 @@ dependencies:
   chat_gpt_sdk: ^2.0.6
   avatar_glow: ^2.0.2
   rename: ^2.1.1
-  intl: ^0.18.0
+  intl: ^0.17.0
   http: ^0.13.5
   flutter_countdown_timer: ^4.1.0
+  url_launcher: ^6.1.11
+  image_picker: ^0.8.7+5
+  path: ^1.8.2
+  sqflite: ^2.2.8+2
+  video_player: ^2.6.1
+  flutter_rating_bar: ^4.0.1
+  socket_io_client: ^2.0.2
+  web_socket_channel: ^2.4.0
+  flutter_facebook_auth: ^5.0.11
+  google_sign_in: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +79,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

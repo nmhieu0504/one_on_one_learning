@@ -1,15 +1,12 @@
-// ignore_for_file: avoid_print, depend_on_referenced_packages
-
-import 'dart:convert';
+// ignore_for_file: avoid_print, depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
-import 'package:one_on_one_learning/utils/backend.dart';
-import 'package:one_on_one_learning/utils/ui_data.dart';
-import 'package:http/http.dart' as http;
-import 'package:one_on_one_learning/views/register_page/active_email.dart';
 
+import 'package:one_on_one_learning/utils/ui_data.dart';
+import 'package:one_on_one_learning/views/register_page/active_email.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/controller.dart';
 import '../../services/auth_services.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -21,7 +18,7 @@ class RegisterPage extends StatefulWidget {
 
 class RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-
+  Controller controller = Get.find();
   bool _obscureText = true;
   bool _loading = false;
   final TextEditingController _emailController = TextEditingController();
@@ -29,17 +26,22 @@ class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _rePasswordController = TextEditingController();
 
   void _displayDeleteMotionToast() {
-    MotionToast.error(
-      title: const Text(
-        'Error',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      description: const Text('Email has already taken'),
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
-    ).show(context);
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text('email_already_in_use'.tr,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
   }
 
   @override
@@ -57,112 +59,183 @@ class RegisterPageState extends State<RegisterPage> {
                   child:
                       Image.asset(UIData.registerImng, width: 200, height: 200),
                 ),
-                const Center(
-                  child: Text('REGISTER',
+                Center(
+                  child: Text('register'.tr,
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
+                        color: controller.blue_700_and_white.value,
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
-                  child: TextFormField(
-                    style: const TextStyle(fontSize: 16),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  child: Theme(
+                    data: ThemeData(
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
                       ),
-                      labelText: 'Email',
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      cursorColor: controller.blue_700_and_white.value,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: controller.black_and_white_text.value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'email_empty'.tr;
+                        }
+                        if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                          return 'email_error'.tr;
+                        }
+                        return null;
+                      },
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value)),
                     ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
-                  child: TextFormField(
-                    style: const TextStyle(fontSize: 16),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  child: Theme(
+                    data: ThemeData(
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
                       ),
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.deepPurple),
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
                       ),
                     ),
-                    obscureText: _obscureText,
+                    child: TextFormField(
+                      cursorColor: controller.blue_700_and_white.value,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: controller.black_and_white_text.value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'password_empty'.tr;
+                        }
+                        if (value.length < 6) {
+                          return 'password_error'.tr;
+                        }
+                        return null;
+                      },
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 'password'.tr,
+                        labelStyle: TextStyle(
+                            color: controller.black_and_white_text.value),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: controller.blue_700_and_white.value),
+                        ),
+                      ),
+                      obscureText: _obscureText,
+                    ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
-                  child: TextFormField(
-                    style: const TextStyle(fontSize: 16),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please re-enter your password';
-                      }
-                      if (value != _passwordController.text) {
-                        return 'Password does not match';
-                      }
-                      return null;
-                    },
-                    controller: _rePasswordController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  child: Theme(
+                    data: ThemeData(
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
                       ),
-                      labelText: 'Re-enter password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.deepPurple),
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
                       ),
                     ),
-                    obscureText: _obscureText,
+                    child: TextFormField(
+                      cursorColor: controller.blue_700_and_white.value,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: controller.black_and_white_text.value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 're_password_empty'.tr;
+                        }
+                        if (value != _passwordController.text) {
+                          return 're_password_error'.tr;
+                        }
+                        return null;
+                      },
+                      controller: _rePasswordController,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelText: 're_enter_password'.tr,
+                        labelStyle: TextStyle(
+                            color: controller.black_and_white_text.value),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: controller.blue_700_and_white.value),
+                        ),
+                      ),
+                      obscureText: _obscureText,
+                    ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
                   child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: controller.blue_700_and_white.value,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         setState(() {
@@ -186,18 +259,29 @@ class RegisterPageState extends State<RegisterPage> {
                         }
                       }
                     },
-                    child: const Text('Sign Up'),
+                    child: Text(
+                      'sign_up'.tr,
+                      style: TextStyle(
+                        color: controller.black_and_white_card.value,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text('Already have an account?'),
+                    Text('already_have_an_account'.tr),
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Sign In'),
+                      child: Text(
+                        'sign_in'.tr,
+                        style: TextStyle(
+                          color: controller.blue_700_and_white.value,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -207,9 +291,11 @@ class RegisterPageState extends State<RegisterPage> {
                 ? Opacity(
                     opacity: 0.8,
                     child: Container(
-                      color: Colors.white,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+                      color: Colors.grey,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: controller.blue_700_and_white.value,
+                        ),
                       ),
                     ),
                   )

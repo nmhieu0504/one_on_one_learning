@@ -1,8 +1,12 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:one_on_one_learning/models/reviews.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
+
+import '../../controllers/controller.dart';
+import '../../utils/ui_data.dart';
 
 class ReviewPage extends StatefulWidget {
   final String userID;
@@ -13,6 +17,8 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+  Controller controller = Get.find();
+
   List<Reviews> reviews = [];
   bool isLoading = true;
   bool _getMoreData = false;
@@ -43,7 +49,8 @@ class _ReviewPageState extends State<ReviewPage> {
       child: Center(
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
-          child: const CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+              color: controller.blue_700_and_white.value),
         ),
       ),
     );
@@ -85,33 +92,60 @@ class _ReviewPageState extends State<ReviewPage> {
           title: const Text("Reviews"),
         ),
         body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                controller: _scrollController,
-                itemCount: reviews.length + 1,
-                itemBuilder: (context, index) {
-                  return index == reviews.length
-                      ? _buildProgressIndicator()
-                      : ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(reviews[index].avatar),
-                            onBackgroundImageError: (exception, stackTrace) {
-                              print("Error");
-                            },
+            ? Center(
+                child: CircularProgressIndicator(
+                color: controller.blue_700_and_white.value,
+              ))
+            : reviews.isEmpty
+                ? Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(UIData.noDataFound,
+                              width: 100, height: 100),
+                          const SizedBox(height: 10),
+                          Text(
+                            "no_data".tr,
+                            style: const TextStyle(color: Colors.grey),
                           ),
-                          title: Text(
-                              "${reviews[index].name}   ${reviews[index].createdAt}"),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: _showRating(index),
+                        ]),
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: reviews.length + 1,
+                    itemBuilder: (context, index) {
+                      return index == reviews.length
+                          ? _buildProgressIndicator()
+                          : Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(reviews[index].avatar),
+                                  onBackgroundImageError:
+                                      (exception, stackTrace) {
+                                    print("Error");
+                                  },
+                                ),
+                                title: Row(children: [
+                                  Text("${reviews[index].name}   "),
+                                  Text(
+                                    reviews[index].createdAt,
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  )
+                                ]),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: _showRating(index),
+                                    ),
+                                    Text(reviews[index].content)
+                                  ],
+                                ),
                               ),
-                              Text(reviews[index].content)
-                            ],
-                          ),
-                        );
-                }));
+                            );
+                    }));
   }
 }

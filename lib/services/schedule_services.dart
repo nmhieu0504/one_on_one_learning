@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -8,58 +7,6 @@ import '../utils/backend.dart';
 import '../utils/share_pref.dart';
 
 class ScheduleServices {
-  static Future<List<Map<String, dynamic>>> loadTutorList(
-      String selectedSpecialties,
-      String searchKeyWord,
-      Map<dynamic, dynamic> checkNationality,
-      int page,
-      int perPage) async {
-    SharePref sharePref = SharePref();
-    String? token = await sharePref.getString("access_token");
-    String specialtiesChosen;
-    if (selectedSpecialties == "ALL") {
-      specialtiesChosen = "";
-    } else {
-      specialtiesChosen = selectedSpecialties;
-    }
-    var body = {
-      "filters": {
-        "specialties": [specialtiesChosen],
-        "nationality": checkNationality,
-        "tutoringTimeAvailable": []
-      },
-      "search": searchKeyWord,
-      "page": page,
-      "perPage": perPage
-    };
-    print("body: $body");
-    final response = await http.post(Uri.parse(API_URL.SEARCH_TUTOR),
-        headers: <String, String>{
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json"
-        },
-        body: jsonEncode(body));
-    List<Map<String, dynamic>> tutorList = [];
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      var data = jsonDecode(response.body);
-      for (int index = 0; index < data["rows"].length; index++) {
-        tutorList.add({
-          "userId": data["rows"][index]["userId"],
-          "avatar": data["rows"][index]["avatar"],
-          "name": data["rows"][index]["name"],
-          "country": data["rows"][index]["country"],
-          "rating": data["rows"][index]["rating"]?.toInt(),
-          "specialties": data["rows"][index]["specialties"],
-          "bio": data["rows"][index]["bio"],
-          "isFavourite": data["rows"][index]["isfavoritetutor"] == "1"
-        });
-      }
-    }
-    return tutorList;
-  }
-
   static Future<dynamic> loadHistoryData(int page, int perPage) async {
     final SharePref sharePref = SharePref();
     String? token = await sharePref.getString("access_token");
@@ -73,12 +20,15 @@ class ScheduleServices {
         });
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var res = jsonDecode(response.body);
       List<ScheduleModel> dataList = [];
       for (var element in res["data"]["rows"]) {
         Map<String, dynamic> data = {};
 
+        data["id"] = element["id"];
+        data["tutorId"] =
+            element["scheduleDetailInfo"]["scheduleInfo"]["tutorInfo"]["id"];
         data["studentRequest"] = element["studentRequest"];
         data["date"] = DateTime.parse(
             element["scheduleDetailInfo"]["scheduleInfo"]["date"]);
@@ -111,6 +61,7 @@ class ScheduleServices {
         data["page"] = element["classReview"]?["page"];
         data["lessonProgress"] = element["classReview"]?["lessonProgress"];
         data["classReview"] = element["classReview"] != null;
+        data["feedbacks"] = element["feedbacks"];
 
         dataList.add(ScheduleModel.fromJson(data));
       }
@@ -132,12 +83,13 @@ class ScheduleServices {
         });
 
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       var res = jsonDecode(response.body);
       List<ScheduleModel> dataList = [];
       for (var element in res["data"]["rows"]) {
         Map<String, dynamic> data = {};
 
+        data["id"] = element["id"];
         data["scheduleDetailId"] = element["id"];
         data["studentRequest"] = element["studentRequest"];
         data["date"] = DateTime.parse(
@@ -171,6 +123,7 @@ class ScheduleServices {
         data["page"] = element["classReview"]?["page"];
         data["lessonProgress"] = element["classReview"]?["lessonProgress"];
         data["classReview"] = element["classReview"] != null;
+        data["feedbacks"] = element["feedbacks"];
 
         dataList.add(ScheduleModel.fromJson(data));
       }
@@ -193,9 +146,9 @@ class ScheduleServices {
           "cancelInfo": {"cancelReasonId": cancelReasonId, "note": note}
         }));
 
-    print("delete: $scheduleDetailId");
+    debugPrint("delete: $scheduleDetailId");
     if (response.statusCode == 200) {
-      print(response.body);
+      debugPrint(response.body);
       return true;
     }
     return false;
@@ -206,14 +159,15 @@ class ScheduleServices {
     String? token = await sharePref.getString("access_token");
     int date = DateTime.now().millisecondsSinceEpoch;
     final response = await http.get(
-        Uri.parse("${API_URL.GET_NEXT_SCHEDULE}$date"),
+        Uri.parse(
+            "${API_URL.GET_SCHEDULE_INFO}page=1&perPage=10&dateTimeGte=$date&orderBy=meeting&sortBy=asc"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
       Map<String, dynamic> data = {};
-      if (res["data"].length == 0) return null;
-      var element = res["data"][0];
+      if (res["data"]["rows"].length == 0) return null;
+      var element = res["data"]["rows"][0];
 
       data["roomNameOrUrl"] = element["userId"] +
           "-" +
@@ -260,5 +214,62 @@ class ScheduleServices {
       return true;
     }
     return false;
+  }
+
+  static Future<bool> updateScheduleRequest(
+      String id, String studentRequest) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    final response = await http.post(
+        Uri.parse(API_URL.EDIT_SCHEDULE_REQUEST + id),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({"studentRequest": studentRequest}));
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      return true;
+    }
+    return false;
+  }
+
+  static Future<dynamic> feedbackTutor(
+      {required String id,
+      required String bookingId,
+      required String userId,
+      required int rating,
+      required String content,
+      required bool isEdit}) async {
+    final SharePref sharePref = SharePref();
+    String? token = await sharePref.getString("access_token");
+    Map<String, String> headers = {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json"
+    };
+    Map<String, dynamic> body = {};
+    late final http.Response response;
+
+    if (isEdit) {
+      body = {"content": content, "id": id, "rating": rating};
+      response = await http.put(Uri.parse(API_URL.FEEDBACK_TUTOR),
+          headers: headers, body: jsonEncode(body));
+    } else {
+      body = {
+        "bookingId": bookingId,
+        "userId": userId,
+        "rating": rating,
+        "content": content
+      };
+      response = await http.post(Uri.parse(API_URL.FEEDBACK_TUTOR),
+          headers: headers, body: jsonEncode(body));
+    }
+
+    debugPrint(response.body);
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+    }
+    return jsonDecode(response.body);
   }
 }

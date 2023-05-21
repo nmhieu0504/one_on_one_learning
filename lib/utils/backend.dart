@@ -11,6 +11,7 @@ class API_URL {
   static const String GET_TUTOR_LIST = "$BASE_URL/tutor/more?perPage=10&page=";
   static const String GET_TUTOR_DETAIL = "$BASE_URL/tutor/";
   static const String SEARCH_TUTOR = "$BASE_URL/tutor/search";
+  static const String FEEDBACK_TUTOR = "$BASE_URL/user/feedbackTutor";
 
   static const String REPORT_TUTOR = "$BASE_URL/report";
   static const String ADD_TO_FAVOURITE = "$BASE_URL/user/manageFavoriteTutor";
@@ -22,9 +23,19 @@ class API_URL {
   static const String GET_NEXT_SCHEDULE = "$BASE_URL/booking/next?dateTime=";
   static const String GET_TOTAL_TIME_LEARN = "$BASE_URL/call/total";
   static const String BOOK_A_CLASS = "$BASE_URL/booking";
-
-  static const String GET_COURSES_LIST = "$BASE_URL/course?page=1&size=100";
-  static const String GET_COURSE_DETAIL = "$BASE_URL/course";
+  static const String EDIT_SCHEDULE_REQUEST = "$BASE_URL/booking/student-request/";
+  
+  static const String GET_COURSES_LIST = "$BASE_URL/course?";
+  static const String GET_EBOOK_LIST = "$BASE_URL/e-book?";
+  static const String GET_COURSE_DETAIL_BY_ID = "$BASE_URL/course/";
+  static const String GET_COURSE_CATEGORY = "$BASE_URL/content-category";
 
   static const String USER_DETAIL_INFO = "$BASE_URL/user/info";
+  static const String UPDATE_USER_AVATAR = "$BASE_URL/user/uploadAvatar";
+
+  static const String GET_PRICE_OF_SESSION= "$BASE_URL/payment/price-of-session";
+
+  static const String GET_CHAT_MESSAGE = "$BASE_URL/message/get/";
+
+  static const String BECOME_A_TUTOR = "$BASE_URL/tutor/register";
 }

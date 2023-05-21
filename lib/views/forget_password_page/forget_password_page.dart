@@ -1,11 +1,11 @@
-// ignore_for_file: avoid_print, depend_on_referenced_packages
+// ignore_for_file: avoid_print, depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
 import 'package:one_on_one_learning/views/forget_password_page/check_email.dart';
+import 'package:get/get.dart';
 
+import '../../controllers/controller.dart';
 import '../../services/auth_services.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
@@ -17,22 +17,27 @@ class ForgetPasswordPage extends StatefulWidget {
 
 class ForgetPasswordPageState extends State<ForgetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
-
+  Controller controller = Get.find();
   bool _loading = false;
   final TextEditingController _emailController = TextEditingController();
 
   void _displayErrorMotionToast() {
-    MotionToast.error(
-      title: const Text(
-        'Error',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      description: const Text('Email does not exist'),
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
-    ).show(context);
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text('email_not_found'.tr,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
   }
 
   @override
@@ -50,45 +55,72 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   child: Image.asset(UIData.forgetPasswordImg,
                       width: 200, height: 200),
                 ),
-                const Center(
-                  child: Text('Reset your password',
+                Center(
+                  child: Text('reset_password'.tr,
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
+                        color: controller.blue_700_and_white.value,
                       )),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 50, bottom: 10),
-                  child: TextFormField(
-                    style: const TextStyle(fontSize: 16),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  child: Theme(
+                    data: ThemeData(
+                      useMaterial3: true,
+                      colorScheme: ColorScheme.fromSwatch().copyWith(
+                        primary: controller.blue_700_and_white.value,
+                        secondary: controller.black_and_white_text.value,
                       ),
-                      labelText: 'Email',
+                      inputDecorationTheme: InputDecorationTheme(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: controller.black_and_white_text.value),
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      cursorColor: controller.blue_700_and_white.value,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: controller.black_and_white_text.value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'email_empty'.tr;
+                        }
+                        if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                          return 'email_error'.tr;
+                        }
+                        return null;
+                      },
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                              color: controller.black_and_white_text.value)),
                     ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
                   child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: controller.blue_700_and_white.value,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                     onPressed: () async {
-                      setState(() {
-                        _loading = true;
-                      });
                       if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _loading = true;
+                        });
                         bool result =
                             await AuthService.forgetPass(_emailController.text);
                         if (result) {
@@ -107,7 +139,10 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                         }
                       }
                     },
-                    child: const Text('Send email'),
+                    child: Text('send_email'.tr,
+                        style: TextStyle(
+                          color: controller.black_and_white_card.value,
+                        )),
                   ),
                 ),
               ],
@@ -116,9 +151,11 @@ class ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 ? Opacity(
                     opacity: 0.8,
                     child: Container(
-                      color: Colors.white,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+                      color: Colors.grey,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: controller.blue_700_and_white.value,
+                        ),
                       ),
                     ),
                   )
