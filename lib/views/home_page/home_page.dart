@@ -408,6 +408,13 @@ class _HomePageState extends State<HomePage> {
               _tutorList.clear();
               _loading = true;
             });
+            ScheduleServices.loadNextScheduleData().then((value) {
+              if (value == null) return;
+              setState(() {
+                _isUpcoming = true;
+                _upComingInfo = value;
+              });
+            });
             TutorServices.loadTutorList(
                     _selectedSpecialties,
                     _searchController.text,
@@ -512,14 +519,16 @@ class _HomePageState extends State<HomePage> {
                                             }),
                                           );
                                         },
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.ondemand_video_sharp,
-                                          color: Colors.blue,
+                                          color: controller
+                                              .blue_700_and_black.value,
                                         ),
                                         label: Text(
                                           'enter_lesson_room'.tr,
-                                          style: const TextStyle(
-                                              color: Colors.blue),
+                                          style: TextStyle(
+                                              color: controller
+                                                  .blue_700_and_black.value),
                                         )),
                                   )
                                 ],

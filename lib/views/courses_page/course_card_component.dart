@@ -42,7 +42,12 @@ class CourseCardComponent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Image.network(course.imageUrl),
+            Image.network(
+              course.imageUrl,
+              errorBuilder: (context, error, stackTrace) {
+                return Container();
+              },
+            ),
             Container(
               margin: const EdgeInsets.only(
                   top: 10, bottom: 0, left: 10, right: 10),

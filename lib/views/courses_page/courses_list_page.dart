@@ -466,19 +466,19 @@ class _CoursesListState extends State<CoursesList> {
                               ),
                       ]),
                     ),
-                    _getMoreData
-                        ? Opacity(
-                            opacity: 0.8,
-                            child: Container(
-                              color: Colors.grey,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: controller.blue_700_and_white.value,
-                                ),
-                              ),
-                            ),
-                          )
-                        : const SizedBox(),
+                    // _getMoreData
+                    //     ? Opacity(
+                    //         opacity: 0.8,
+                    //         child: Container(
+                    //           color: Colors.grey,
+                    //           child: Center(
+                    //             child: CircularProgressIndicator(
+                    //               color: controller.blue_700_and_white.value,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : const SizedBox(),
                   ]),
                 ));
   }

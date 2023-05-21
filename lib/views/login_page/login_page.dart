@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
       titleText: Text("error".tr,
           style: const TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-      messageText: Text("email_or_password_incorrect".tr,
+      messageText: Text("wrong_email_or_password".tr,
           style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.normal,
@@ -398,7 +398,7 @@ class _LoginPageState extends State<LoginPage> {
                         ? Opacity(
                             opacity: 0.8,
                             child: Container(
-                              color: Colors.white,
+                              color: Colors.grey,
                               child: Center(
                                 child: CircularProgressIndicator(
                                   color: controller.blue_700_and_white.value,

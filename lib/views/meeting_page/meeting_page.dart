@@ -168,13 +168,13 @@ class _MeetingPageState extends State<MeetingPage> {
                   width: double.maxFinite,
                   child: ElevatedButton(
                     onPressed: () => _joinMeeting(),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.blue),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: controller.blue_700_and_white.value,
                     ),
                     child: Text(
                       "join_meeting".tr,
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: controller.black_and_white_card.value),
                     ),
                   ),
                 ),
@@ -192,14 +192,24 @@ class _MeetingPageState extends State<MeetingPage> {
   }) {
     return Theme(
       data: ThemeData(
-        useMaterial3: controller.isDarkTheme,
-        primaryColor: controller.blue_700_and_white.value,
-        primaryColorDark: controller.blue_700_and_white.value,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: controller.blue_700_and_white.value,
+          secondary: controller.black_and_white_text.value,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide:
+                BorderSide(color: controller.black_and_white_text.value),
+          ),
+        ),
       ),
       child: TextField(
         style: TextStyle(
           color: controller.black_and_white_text.value,
         ),
+        cursorColor: controller.blue_700_and_white.value,
         controller: textController,
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -207,6 +217,9 @@ class _MeetingPageState extends State<MeetingPage> {
               borderRadius: BorderRadius.circular(30),
             ),
             labelText: labelText,
+            labelStyle: TextStyle(
+              color: controller.black_and_white_text.value,
+            ),
             hintText: hintText),
       ),
     );

@@ -33,7 +33,6 @@ class _SchedulePageState extends State<SchedulePage> {
   final ScrollController _scrollController = ScrollController();
   final List<ScheduleModel> _dataList = [];
 
-  final TextEditingController _cancelController = TextEditingController();
   late List<TextEditingController> _requestControllerList;
   late List<bool> _isEditList;
 
@@ -98,7 +97,7 @@ class _SchedulePageState extends State<SchedulePage> {
         RadioListTile(
           activeColor: controller.blue_700_and_white.value,
           title: Text(_reason[i].tr),
-          value: _reason[i],
+          value: _reason[i].tr,
           groupValue: _currentReason,
           onChanged: (value) {
             setState(() {
@@ -177,6 +176,7 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   void _showCancelDialog(int index) {
+    TextEditingController cancelController = TextEditingController();
     showDialog<String>(
         context: context,
         builder: (BuildContext context) => Center(
@@ -217,7 +217,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                 color: controller.black_and_white_text.value,
                               ),
                               cursorColor: controller.blue_700_and_white.value,
-                              controller: _cancelController,
+                              controller: cancelController,
                               maxLines: 3,
                               decoration: InputDecoration(
                                 hintStyle: TextStyle(
@@ -247,7 +247,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         setState(() {
                           cancelSchduleService(
                               _dataList[index].scheduleDetailId ?? "",
-                              _cancelController.text,
+                              cancelController.text,
                               _reason.indexOf(_currentReason ?? "") + 1);
                           _loading = true;
                           _dataList.removeAt(index);
@@ -267,8 +267,8 @@ class _SchedulePageState extends State<SchedulePage> {
                           style: const TextStyle(
                               color: Colors.white, fontSize: 16)),
                       onPressed: () {
-                        _cancelController.clear();
-                        _currentReason = _reason[0];
+                        cancelController.clear();
+                        _currentReason = _reason[0].tr;
                         Navigator.of(context).pop();
                       },
                     ),
