@@ -98,7 +98,7 @@ class AppTranslations extends Translations {
           'cancel_schedule_success': 'Cancel schedule successfully',
           'cancel_schedule_error': 'Cancel schedule failed',
           'edit_request_success': 'Edit request successfully',
-          'edit_request_error': 'Edit request failed',
+          'edit_request_error': 'Request must not be empty',
           'rating': 'Rating',
           'edit_rating': 'Edit',
           'rate_for_this_lesson': 'Rate for this lesson',
@@ -165,6 +165,7 @@ class AppTranslations extends Translations {
           'please_choose_at_least_one_specialty': 'Please choose at least one specialty',
           'become_a_tutor_success': "You have done all the steps. Please, wait for the operator's approval",
           'get_back': 'Get back',
+          'please_choose_level': 'Please choose your level',
         },
         'vi_VN': {
           'password': 'Mật khẩu',
@@ -261,7 +262,7 @@ class AppTranslations extends Translations {
           'cancel_schedule_success': 'Hủy lịch học thành công',
           'cancel_schedule_error': 'Hủy lịch học thất bại',
           'edit_request_success': 'Sửa yêu cầu thành công',
-          'edit_request_error': 'Sửa yêu cầu thất bại',
+          'edit_request_error': 'Yêu cầu không được để trống',
           'rating': 'Đánh giá',
           'edit_rating': 'Sửa',
           'rate_for_this_lesson': 'Đánh giá cho buổi học',
@@ -328,6 +329,7 @@ class AppTranslations extends Translations {
           'please_choose_at_least_one_specialty': 'Vui lòng chọn ít nhất một chuyên môn',
           'become_a_tutor_success': "Bạn đã hoàn thành tất cả các bước. Vui lòng chờ phê duyệt từ quản trị viên",
           'get_back': 'Quay lại',
+          'please_choose_level': 'Vui lòng chọn trình độ',
         },
       };
 }

@@ -106,6 +106,25 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _displayErrorMotionToast(String errorMessage) {
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text(errorMessage,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
+  }
+
   Widget _buildLearnTopicsChips() {
     return Container(
         margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -161,6 +180,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _saveProfile() {
+    if (dropdownLevelValue == null) {
+      _displayErrorMotionToast('please_choose_level'.tr);
+      return;
+    }
+
     setState(() {
       _loading = true;
     });
@@ -215,9 +239,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
         int leveldx = levelCodeList.indexOf(user.level ?? "");
         dropdownLevelValue = leveldx == -1 ? null : levelTittleList[leveldx];
-        dropdownCountryValue = user.country == null
-            ? null
-            : getCountryName(user.country, isTutorPage: true);
+
+        String tmp = getCountryName(user.country, isTutorPage: true);
+        dropdownCountryValue = tmp == "No information" ? null : tmp;
 
         for (var e in user.learnTopics) {
           int index =
@@ -285,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: _loading
           ? Center(
               child: CircularProgressIndicator(
-              color: Colors.blue[700],
+              color: controller.blue_700_and_white.value,
             ))
           : SingleChildScrollView(
               child: Container(

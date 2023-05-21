@@ -133,7 +133,7 @@ class _ChatPageState extends State<ChatPage> {
           child: _loading
               ? Center(
                   child: CircularProgressIndicator(
-                  color: Colors.blue[700],
+                  color: controller.blue_700_and_white.value,
                 ))
               : Column(children: [
                   Expanded(

@@ -29,6 +29,7 @@ class _SchedulePageState extends State<SchedulePage> {
   String? _currentReason = 'cancel_schedule_reason_1'.tr;
 
   int _page = 1;
+  final int _perPage = 20;
   final ScrollController _scrollController = ScrollController();
   final List<ScheduleModel> _dataList = [];
 
@@ -39,7 +40,7 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   void initState() {
     super.initState();
-    ScheduleServices.loadScheduleData(_page++, 20).then((value) {
+    ScheduleServices.loadScheduleData(_page++, _perPage).then((value) {
       setState(() {
         _dataList.addAll(value);
         _requestControllerList = List.generate(
@@ -56,7 +57,7 @@ class _SchedulePageState extends State<SchedulePage> {
         setState(() {
           _getMoreData = true;
         });
-        ScheduleServices.loadScheduleData(_page++, 20).then((value) {
+        ScheduleServices.loadScheduleData(_page++, _perPage).then((value) {
           setState(() {
             _dataList.addAll(value);
             _requestControllerList = List.generate(
@@ -82,7 +83,8 @@ class _SchedulePageState extends State<SchedulePage> {
       child: Center(
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
-          child: const CircularProgressIndicator(color: Colors.blue),
+          child: CircularProgressIndicator(
+              color: controller.blue_700_and_white.value),
         ),
       ),
     );
@@ -279,284 +281,345 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return _loading
-        ? const Center(
-            child: CircularProgressIndicator(color: Colors.blue),
+        ? Center(
+            child: CircularProgressIndicator(
+                color: controller.blue_700_and_white.value),
           )
-        : _dataList.isEmpty
-            ? Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(UIData.noDataFound, width: 100, height: 100),
-                      const SizedBox(height: 10),
-                      Text(
-                        'no_data'.tr,
-                        style: const TextStyle(color: Colors.grey),
+        : Obx(() => RefreshIndicator(
+              color: controller.blue_700_and_white.value,
+              onRefresh: () async {
+                setState(() {
+                  _page = 1;
+                  _dataList.clear();
+                  _loading = true;
+                });
+                ScheduleServices.loadScheduleData(_page++, _perPage)
+                    .then((value) {
+                  setState(() {
+                    _dataList.addAll(value);
+                    _requestControllerList = List.generate(
+                        _dataList.length,
+                        (index) => TextEditingController()
+                          ..text = _dataList[index].studentRequest ?? "");
+                    _isEditList =
+                        List.generate(_dataList.length, (index) => false);
+                    _loading = false;
+                  });
+                });
+              },
+              child: _dataList.isEmpty
+                  ? ListView(children: [
+                      const SizedBox(height: 250),
+                      Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(UIData.noDataFound,
+                                  width: 100, height: 100),
+                              const SizedBox(height: 10),
+                              Text(
+                                'no_data'.tr,
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ]),
                       ),
-                    ]),
-              )
-            : ListView.builder(
-                controller: _scrollController,
-                itemCount: _dataList.length + 1,
-                itemBuilder: (context, index) {
-                  return index == _dataList.length
-                      ? _buildProgressIndicator()
-                      : Obx(() => Container(
-                            margin: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: controller.black_and_white_card.value,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              // crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.only(
-                                      bottom: 10, top: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        DateFormat("EEE, dd MMM yyyy")
-                                            .format(_dataList[index].date),
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                    ])
+                  : ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _dataList.length + 1,
+                      itemBuilder: (context, index) {
+                        return index == _dataList.length
+                            ? _buildProgressIndicator()
+                            : Obx(() => Container(
+                                  margin: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        controller.black_and_white_card.value,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                ),
-                                Card(
-                                  color: controller.black_and_white_card.value,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color:
-                                          Theme.of(context).colorScheme.outline,
-                                    ),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(12)),
-                                  ),
-                                  margin: const EdgeInsets.only(bottom: 20),
-                                  clipBehavior: Clip.hardEdge,
-                                  child: InkWell(
-                                      splashColor: Colors.blue.withAlpha(30),
-                                      child: Container(
-                                        margin: const EdgeInsets.all(15),
-                                        child: ListTile(
-                                          leading: CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor: Colors.grey[50],
-                                            backgroundImage: _isAvatarError
-                                                ? const AssetImage(
-                                                    UIData.defaultAvatar)
-                                                : NetworkImage(
-                                                        _dataList[index].avatar)
-                                                    as ImageProvider,
-                                            onBackgroundImageError:
-                                                (exception, stackTrace) {
-                                              setState(() {
-                                                _isAvatarError = true;
-                                              });
-                                            },
-                                          ),
-                                          title: Text(
-                                            _dataList[index].name,
-                                            style:
-                                                const TextStyle(fontSize: 20),
-                                          ),
-                                          subtitle: Container(
-                                            margin:
-                                                const EdgeInsets.only(top: 5),
-                                            child: Row(children: <Widget>[
-                                              const Icon(
-                                                Icons.flag,
-                                                color: Colors.blue,
-                                              ),
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5),
-                                                child: Text(
-                                                  getCountryName(
-                                                      _dataList[index].country),
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontSize: 16),
-                                                ),
-                                              ),
-                                            ]),
-                                          ),
-                                        ),
-                                      )),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.only(
-                                      bottom: 10, top: 10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    // crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10, top: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              "${DateFormat.Hm().format(_dataList[index].startTimestamp)} - ${DateFormat.Hm().format(_dataList[index].endTimestamp)}",
+                                              DateFormat("EEE, dd MMM yyyy")
+                                                  .format(
+                                                      _dataList[index].date),
                                               style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            _dataList[index]
-                                                        .startTimestamp
-                                                        .difference(
-                                                            DateTime.now())
-                                                        .inMinutes <=
-                                                    120
-                                                ? Container()
-                                                : OutlinedButton(
-                                                    style: ButtonStyle(
-                                                      side:
-                                                          MaterialStateProperty
-                                                              .all<BorderSide>(
-                                                        const BorderSide(
-                                                          color: Colors.red,
-                                                        ),
-                                                      ),
-                                                      shape: MaterialStateProperty
-                                                          .all<OutlinedBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    child:
-                                                        Row(children: <Widget>[
-                                                      const Icon(Icons.delete,
-                                                          color: Colors.red),
-                                                      Text('cancel'.tr,
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .red)),
-                                                    ]),
-                                                    onPressed: () {
-                                                      _showCancelDialog(index);
-                                                    }),
-                                          ]),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 15, top: 5, bottom: 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'lesson_request'.tr,
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: controller
-                                                      .black_and_white_text
-                                                      .value),
-                                            ),
-                                            IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _isEditList[index] =
-                                                        !_isEditList[index];
-                                                    if (!_isEditList[index]) {
-                                                      editRequestService(
-                                                          _dataList[index].id,
-                                                          _requestControllerList[
-                                                                  index]
-                                                              .text);
-                                                    }
-                                                  });
-                                                },
-                                                icon: Icon(
-                                                  _isEditList[index]
-                                                      ? Icons.save
-                                                      : Icons.edit,
-                                                  size: 25,
-                                                ))
                                           ],
                                         ),
                                       ),
-                                      Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 0,
-                                              bottom: 0,
-                                              left: 10,
-                                              right: 10),
-                                          child: Theme(
-                                            data: ThemeData(
-                                              useMaterial3: true,
-                                              colorScheme:
-                                                  ColorScheme.fromSwatch()
-                                                      .copyWith(
-                                                primary: controller
-                                                    .blue_700_and_white.value,
-                                                secondary: controller
-                                                    .black_and_white_text.value,
+                                      Card(
+                                        color: controller
+                                            .black_and_white_card.value,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .outline,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(12)),
+                                        ),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 20),
+                                        clipBehavior: Clip.hardEdge,
+                                        child: InkWell(
+                                            splashColor:
+                                                Colors.blue.withAlpha(30),
+                                            child: Container(
+                                              margin: const EdgeInsets.all(15),
+                                              child: ListTile(
+                                                leading: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundColor:
+                                                      Colors.grey[50],
+                                                  backgroundImage: _isAvatarError
+                                                      ? const AssetImage(
+                                                          UIData.defaultAvatar)
+                                                      : NetworkImage(
+                                                              _dataList[index]
+                                                                  .avatar)
+                                                          as ImageProvider,
+                                                  onBackgroundImageError:
+                                                      (exception, stackTrace) {
+                                                    setState(() {
+                                                      _isAvatarError = true;
+                                                    });
+                                                  },
+                                                ),
+                                                title: Text(
+                                                  _dataList[index].name,
+                                                  style: const TextStyle(
+                                                      fontSize: 20),
+                                                ),
+                                                subtitle: Container(
+                                                  margin: const EdgeInsets.only(
+                                                      top: 5),
+                                                  child: Row(children: <Widget>[
+                                                    const Icon(
+                                                      Icons.flag,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 5),
+                                                      child: Text(
+                                                        getCountryName(
+                                                            _dataList[index]
+                                                                .country),
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            fontSize: 16),
+                                                      ),
+                                                    ),
+                                                  ]),
+                                                ),
                                               ),
-                                              inputDecorationTheme:
-                                                  InputDecorationTheme(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                  borderSide: BorderSide(
+                                            )),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10, top: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "${DateFormat.Hm().format(_dataList[index].startTimestamp)} - ${DateFormat.Hm().format(_dataList[index].endTimestamp)}",
+                                                    style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  _dataList[index]
+                                                              .startTimestamp
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now())
+                                                              .inMinutes <=
+                                                          120
+                                                      ? Container()
+                                                      : OutlinedButton(
+                                                          style: ButtonStyle(
+                                                            side: MaterialStateProperty
+                                                                .all<
+                                                                    BorderSide>(
+                                                              const BorderSide(
+                                                                color:
+                                                                    Colors.red,
+                                                              ),
+                                                            ),
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    OutlinedBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          child: Row(children: <
+                                                              Widget>[
+                                                            const Icon(
+                                                                Icons.delete,
+                                                                color:
+                                                                    Colors.red),
+                                                            Text('cancel'.tr,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .red)),
+                                                          ]),
+                                                          onPressed: () {
+                                                            _showCancelDialog(
+                                                                index);
+                                                          }),
+                                                ]),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 15, top: 5, bottom: 0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    'lesson_request'.tr,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: controller
+                                                            .black_and_white_text
+                                                            .value),
+                                                  ),
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _isEditList[index] =
+                                                              !_isEditList[
+                                                                  index];
+                                                          if (!_isEditList[
+                                                              index]) {
+                                                            editRequestService(
+                                                                _dataList[index]
+                                                                    .id,
+                                                                _requestControllerList[
+                                                                        index]
+                                                                    .text);
+                                                          }
+                                                        });
+                                                      },
+                                                      icon: Icon(
+                                                        _isEditList[index]
+                                                            ? Icons.save
+                                                            : Icons.edit,
+                                                        size: 25,
+                                                      ))
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    left: 10,
+                                                    right: 10),
+                                                child: Theme(
+                                                  data: ThemeData(
+                                                    useMaterial3: true,
+                                                    colorScheme:
+                                                        ColorScheme.fromSwatch()
+                                                            .copyWith(
+                                                      primary: controller
+                                                          .blue_700_and_white
+                                                          .value,
+                                                      secondary: controller
+                                                          .black_and_white_text
+                                                          .value,
+                                                    ),
+                                                    inputDecorationTheme:
+                                                        InputDecorationTheme(
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30),
+                                                        borderSide: BorderSide(
+                                                            color: controller
+                                                                .black_and_white_text
+                                                                .value),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: TextField(
+                                                    cursorColor: controller
+                                                        .blue_700_and_white
+                                                        .value,
+                                                    style: TextStyle(
                                                       color: controller
                                                           .black_and_white_text
-                                                          .value),
-                                                ),
-                                              ),
-                                            ),
-                                            child: TextField(
-                                              cursorColor: controller
-                                                  .blue_700_and_white.value,
-                                              style: TextStyle(
-                                                color: controller
-                                                    .black_and_white_text.value,
-                                              ),
-                                              enabled: _isEditList[index],
-                                              maxLines: 2,
-                                              controller:
-                                                  _requestControllerList[index],
-                                              decoration: const InputDecoration(
-                                                disabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.grey),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(30)),
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.grey),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(30)),
-                                                ),
-                                              ),
-                                            ),
-                                          )),
+                                                          .value,
+                                                    ),
+                                                    enabled: _isEditList[index],
+                                                    maxLines: 2,
+                                                    controller:
+                                                        _requestControllerList[
+                                                            index],
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      disabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    30)),
+                                                      ),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    30)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
-                                )
-                              ],
-                            ),
-                          ));
-                },
-              );
+                                ));
+                      },
+                    ),
+            ));
   }
 }

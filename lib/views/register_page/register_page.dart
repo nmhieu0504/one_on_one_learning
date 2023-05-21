@@ -291,10 +291,10 @@ class RegisterPageState extends State<RegisterPage> {
                 ? Opacity(
                     opacity: 0.8,
                     child: Container(
-                      color: Colors.white,
+                      color: Colors.grey,
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: Colors.blue[700],
+                          color: controller.blue_700_and_white.value,
                         ),
                       ),
                     ),

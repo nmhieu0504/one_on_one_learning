@@ -355,7 +355,8 @@ class _BookingPageState extends State<BookingPage> {
       ),
       body: _loading
           ? Center(
-              child: CircularProgressIndicator(color: Colors.blue[700]),
+              child: Obx(() => CircularProgressIndicator(
+                  color: controller.blue_700_and_white.value)),
             )
           : Column(
               children: [

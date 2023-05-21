@@ -56,7 +56,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
     setState(() {
       isAutoTTS = prefs.getBool('isAutoTTS') ?? true;
       isEnglish = prefs.getBool('isEnglish') ?? true;
-      isVietnamese = prefs.getBool('isVietnamese') ?? false;
+      isVietnamese = !isEnglish;
     });
     languages = isEnglish ? TtsLanguage.en : TtsLanguage.vn;
     flutterTts.setLanguage(isEnglish ? "en-US" : "vi-VN");
@@ -549,9 +549,9 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
               ))),
       endDrawer: _buildDrawer(),
       body: _loading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-                color: Colors.blue,
+                color: controller.blue_700_and_white.value,
               ),
             )
           : SafeArea(

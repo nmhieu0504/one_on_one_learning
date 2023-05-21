@@ -255,7 +255,7 @@ class TutorPageState extends State<TutorPage> {
           ? Scaffold(
               body: Center(
                   child: CircularProgressIndicator(
-              color: Colors.blue[700],
+              color: controller.blue_700_and_white.value,
             )))
           : Scaffold(
               floatingActionButton: FloatingActionButton.extended(

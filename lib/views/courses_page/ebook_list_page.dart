@@ -53,7 +53,7 @@ class _EBookListState extends State<EBookList> {
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
           child: CircularProgressIndicator(
-            color: Colors.blue[700],
+            color: controller.blue_700_and_white.value,
           ),
         ),
       ),
@@ -362,58 +362,92 @@ class _EBookListState extends State<EBookList> {
     return _loading
         ? Center(
             child: CircularProgressIndicator(
-            color: Colors.blue[700],
+            color: controller.blue_700_and_white.value,
           ))
         : _isFilter
             ? _buildFilter()
-            : SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Obx(() => TextButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                _isFilter = true;
-                              });
-                            },
-                            icon: Icon(Icons.filter_alt_outlined,
-                                color: controller.black_and_white_text.value),
-                            label: Text(
-                              "filter".tr,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: controller.black_and_white_text.value),
-                            ))),
+            : Obx(() => RefreshIndicator(
+                  color: controller.blue_700_and_white.value,
+                  onRefresh: () async {
+                    setState(() {
+                      _loading = true;
+                      page = 1;
+                      ebookList.clear();
+                    });
+                    CoursesService.loadEbookList(
+                      page: page++,
+                      size: size,
+                      courseContentCategories: courseContentCategories,
+                      levelList: levelList,
+                      sortingOrder: _currentSorting == "ascending".tr
+                          ? false
+                          : _currentSorting == "descending".tr
+                              ? true
+                              : null,
+                      q: _searchController.text,
+                    ).then((value) {
+                      setState(() {
+                        ebookList.addAll(value);
+                        for (var element in ebookList) {
+                          element.level =
+                              levelList[int.parse(element.level)]["name"];
+                        }
+                        _loading = false;
+                      });
+                    });
+                  },
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: Obx(() => TextButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    _isFilter = true;
+                                  });
+                                },
+                                icon: Icon(Icons.filter_alt_outlined,
+                                    color:
+                                        controller.black_and_white_text.value),
+                                label: Text(
+                                  "filter".tr,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: controller
+                                          .black_and_white_text.value),
+                                ))),
+                          ),
+                        ],
                       ),
-                    ],
+                      ebookList.isEmpty
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  const SizedBox(height: 200),
+                                  Image.asset(UIData.noDataFound,
+                                      width: 100, height: 100),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "no_data".tr,
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                ])
+                          : ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: ebookList.length + 1,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return index == ebookList.length
+                                    ? _buildProgressIndicator()
+                                    : EbookCardComponent(
+                                        ebook: ebookList[index]);
+                              })
+                    ]),
                   ),
-                  ebookList.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                              const SizedBox(height: 200),
-                              Image.asset(UIData.noDataFound,
-                                  width: 100, height: 100),
-                              const SizedBox(height: 10),
-                              Text(
-                                "no_data".tr,
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            ])
-                      : ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: ebookList.length + 1,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return index == ebookList.length
-                                ? _buildProgressIndicator()
-                                : EbookCardComponent(ebook: ebookList[index]);
-                          })
-                ]),
-              );
+                ));
   }
 }

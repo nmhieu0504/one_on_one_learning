@@ -247,7 +247,7 @@ class _BecomeTutorPageState extends State<BecomeTutorPage> {
       body: _loading
           ? Center(
               child: CircularProgressIndicator(
-              color: Colors.blue[700],
+              color: controller.blue_700_and_white.value,
             ))
           : SingleChildScrollView(
               child: Container(

@@ -29,13 +29,14 @@ class _HistoryPageState extends State<HistoryPage> {
   bool _loading = true;
 
   int _page = 1;
+  final int _perPage = 20;
   final ScrollController _scrollController = ScrollController();
   final List<ScheduleModel> _dataList = [];
 
   @override
   void initState() {
     super.initState();
-    ScheduleServices.loadHistoryData(_page++, 20).then((value) {
+    ScheduleServices.loadHistoryData(_page++, _perPage).then((value) {
       setState(() {
         _dataList.addAll(value);
         _loading = false;
@@ -50,7 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
         setState(() {
           _getMoreData = true;
         });
-        ScheduleServices.loadHistoryData(_page++, 20).then((value) {
+        ScheduleServices.loadHistoryData(_page++, _perPage).then((value) {
           setState(() {
             _dataList.addAll(value);
             _getMoreData = false;
@@ -142,7 +143,9 @@ class _HistoryPageState extends State<HistoryPage> {
       child: Center(
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
-          child: const CircularProgressIndicator(color: Colors.blue),
+          child: CircularProgressIndicator(
+            color: controller.blue_700_and_white.value,
+          ),
         ),
       ),
     );
@@ -283,301 +286,343 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return _loading
-        ? const Center(
-            child: CircularProgressIndicator(color: Colors.blue),
+        ? Center(
+            child: CircularProgressIndicator(
+              color: controller.blue_700_and_white.value,
+            ),
           )
-        : _dataList.isEmpty
-            ? Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(UIData.noDataFound, width: 100, height: 100),
-                      const SizedBox(height: 10),
-                      Text(
-                        'no_data'.tr,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ]),
-              )
-            : ListView.builder(
-                controller: _scrollController,
-                itemCount: _dataList.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == _dataList.length) {
-                    return _buildProgressIndicator();
-                  }
-                  return Obx(() => Container(
-                        margin: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: controller.black_and_white_card.value,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.all(10),
+        : Obx(() => RefreshIndicator(
+              color: controller.blue_700_and_white.value,
+              onRefresh: () async {
+                setState(() {
+                  _page = 1;
+                  _dataList.clear();
+                  _loading = true;
+                });
+                ScheduleServices.loadHistoryData(_page++, _perPage)
+                    .then((value) {
+                  setState(() {
+                    _dataList.addAll(value);
+                    _loading = false;
+                  });
+                });
+              },
+              child: _dataList.isEmpty
+                  ? ListView(children: [
+                      const SizedBox(height: 250),
+                      Center(
                         child: Column(
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding:
-                                  const EdgeInsets.only(bottom: 10, top: 10),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(UIData.noDataFound,
+                                  width: 100, height: 100),
+                              const SizedBox(height: 10),
+                              Text(
+                                'no_data'.tr,
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ]),
+                      ),
+                    ])
+                  : ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _dataList.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == _dataList.length) {
+                          return _buildProgressIndicator();
+                        }
+                        return Obx(() => Container(
+                              margin: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: controller.black_and_white_card.value,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(10),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
-                                    DateFormat("EEE, dd MMM yyyy")
-                                        .format(_dataList[index].date),
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
                                   Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 5, bottom: 5),
-                                    child: Text(
-                                      "${DateFormat.Hm().format(_dataList[index].startTimestamp)} - ${DateFormat.Hm().format(_dataList[index].endTimestamp)}",
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Card(
-                              color: controller.black_and_white_card.value,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(12)),
-                              ),
-                              margin: const EdgeInsets.only(bottom: 20),
-                              clipBehavior: Clip.hardEdge,
-                              child: InkWell(
-                                splashColor: Colors.blue.withAlpha(30),
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.grey[50],
-                                      backgroundImage: _isAvatarError
-                                          ? const AssetImage(
-                                              UIData.defaultAvatar)
-                                          : NetworkImage(
-                                                  _dataList[index].avatar)
-                                              as ImageProvider,
-                                      onBackgroundImageError:
-                                          (exception, stackTrace) {
-                                        setState(() {
-                                          _isAvatarError = true;
-                                        });
-                                      },
-                                    ),
-                                    title: Text(
-                                      _dataList[index].name,
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                    subtitle: Container(
-                                      margin: const EdgeInsets.only(top: 5),
-                                      child: Row(children: <Widget>[
-                                        const Icon(
-                                          Icons.flag,
-                                          color: Colors.blue,
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10, top: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          DateFormat("EEE, dd MMM yyyy")
+                                              .format(_dataList[index].date),
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                         Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 5),
+                                          margin: const EdgeInsets.only(
+                                              top: 5, bottom: 5),
                                           child: Text(
-                                            getCountryName(
-                                                _dataList[index].country),
+                                            "${DateFormat.Hm().format(_dataList[index].startTimestamp)} - ${DateFormat.Hm().format(_dataList[index].endTimestamp)}",
                                             style: const TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                      ]),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              // padding: const EdgeInsets.only(bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 5, bottom: 5),
-                                    child: ExpansionTile(
-                                      title: Text(
-                                        'lesson_request'.tr,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: controller
-                                              .black_and_white_text.value,
-                                        ),
-                                      ),
-                                      children: [
-                                        Card(
-                                          color: controller
-                                              .black_and_white_card.value,
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .outline,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(12)),
-                                          ),
-                                          child: SizedBox(
-                                            width: double.infinity,
-                                            // height: 100,
-                                            child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 25,
-                                                    bottom: 30,
-                                                    left: 10,
-                                                    right: 10),
-                                                child: Text(_dataList[index]
-                                                        .studentRequest ??
-                                                    "no_request".tr)),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 5, bottom: 5),
-                                    child: ExpansionTile(
-                                        title: Text(
-                                          'lesson_review'.tr,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: controller
-                                                .black_and_white_text.value,
+                                  Card(
+                                    color:
+                                        controller.black_and_white_card.value,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline,
+                                      ),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12)),
+                                    ),
+                                    margin: const EdgeInsets.only(bottom: 20),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: InkWell(
+                                      splashColor: Colors.blue.withAlpha(30),
+                                      child: Container(
+                                        margin: const EdgeInsets.fromLTRB(
+                                            0, 15, 15, 15),
+                                        child: ListTile(
+                                          leading: CircleAvatar(
+                                            radius: 30,
+                                            backgroundColor: Colors.grey[50],
+                                            backgroundImage: _isAvatarError
+                                                ? const AssetImage(
+                                                    UIData.defaultAvatar)
+                                                : NetworkImage(
+                                                        _dataList[index].avatar)
+                                                    as ImageProvider,
+                                            onBackgroundImageError:
+                                                (exception, stackTrace) {
+                                              setState(() {
+                                                _isAvatarError = true;
+                                              });
+                                            },
+                                          ),
+                                          title: Text(
+                                            _dataList[index].name,
+                                            style:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                          subtitle: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 5),
+                                            child: Row(children: <Widget>[
+                                              const Icon(
+                                                Icons.flag,
+                                                color: Colors.blue,
+                                              ),
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 5),
+                                                child: Text(
+                                                  getCountryName(
+                                                      _dataList[index].country),
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      fontSize: 16),
+                                                ),
+                                              ),
+                                            ]),
                                           ),
                                         ),
-                                        children: [
-                                          Card(
-                                              color: controller
-                                                  .black_and_white_card.value,
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                side: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .outline,
-                                                ),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(12)),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    // padding: const EdgeInsets.only(bottom: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              top: 5, bottom: 5),
+                                          child: ExpansionTile(
+                                            title: Text(
+                                              'lesson_request'.tr,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: controller
+                                                    .black_and_white_text.value,
                                               ),
-                                              child: SizedBox(
+                                            ),
+                                            children: [
+                                              Card(
+                                                color: controller
+                                                    .black_and_white_card.value,
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .outline,
+                                                  ),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(12)),
+                                                ),
+                                                child: SizedBox(
                                                   width: double.infinity,
                                                   // height: 100,
                                                   child: Container(
-                                                      margin: const EdgeInsets.only(
-                                                          top: 25,
-                                                          bottom: 30,
-                                                          left: 10,
-                                                          right: 10),
-                                                      child: !_dataList[index]
-                                                              .classReview
-                                                          ? Text("no_review".tr)
-                                                          : Text("Lesson status: " +
-                                                              (_dataList[index]
-                                                                      .lessonStatus ??
-                                                                  "") +
-                                                              (_dataList[index].behaviorComment != null
-                                                                  ? "\nBehavior: ${_dataList[index].behaviorComment}"
-                                                                  : "") +
-                                                              (_dataList[index].listeningComment != null
-                                                                  ? "\nListening: ${_dataList[index].listeningComment}"
-                                                                  : "") +
-                                                              (_dataList[index].speakingComment != null
-                                                                  ? "\nSpeaking : ${_dataList[index].speakingComment}"
-                                                                  : "") +
-                                                              (_dataList[index].vocabularyComment !=
-                                                                      null
-                                                                  ? "\nVocabulary: ${_dataList[index].vocabularyComment}"
-                                                                  : "") +
-                                                              (_dataList[index]
-                                                                          .homeworkComment !=
-                                                                      null
-                                                                  ? "\nHomework: ${_dataList[index].homeworkComment}"
-                                                                  : "") +
-                                                              (_dataList[index]
-                                                                          .overallComment !=
-                                                                      null
-                                                                  ? "\nOverall comment: ${_dataList[index].overallComment}"
-                                                                  : ""))))),
-                                        ]),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 25,
+                                                              bottom: 30,
+                                                              left: 10,
+                                                              right: 10),
+                                                      child: Text(_dataList[
+                                                                  index]
+                                                              .studentRequest ??
+                                                          "no_request".tr)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              top: 5, bottom: 5),
+                                          child: ExpansionTile(
+                                              title: Text(
+                                                'lesson_review'.tr,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: controller
+                                                      .black_and_white_text
+                                                      .value,
+                                                ),
+                                              ),
+                                              children: [
+                                                Card(
+                                                    color: controller
+                                                        .black_and_white_card
+                                                        .value,
+                                                    elevation: 0,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .outline,
+                                                      ),
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                                  .all(
+                                                              Radius.circular(
+                                                                  12)),
+                                                    ),
+                                                    child: SizedBox(
+                                                        width: double.infinity,
+                                                        // height: 100,
+                                                        child: Container(
+                                                            margin:
+                                                                const EdgeInsets.only(
+                                                                    top: 25,
+                                                                    bottom: 30,
+                                                                    left: 10,
+                                                                    right: 10),
+                                                            child: !_dataList[index]
+                                                                    .classReview
+                                                                ? Text("no_review"
+                                                                    .tr)
+                                                                : Text("Lesson status: " +
+                                                                    (_dataList[index].lessonStatus ??
+                                                                        "") +
+                                                                    (_dataList[index].behaviorComment != null
+                                                                        ? "\nBehavior: ${_dataList[index].behaviorComment}"
+                                                                        : "") +
+                                                                    (_dataList[index].listeningComment != null
+                                                                        ? "\nListening: ${_dataList[index].listeningComment}"
+                                                                        : "") +
+                                                                    (_dataList[index].speakingComment != null
+                                                                        ? "\nSpeaking : ${_dataList[index].speakingComment}"
+                                                                        : "") +
+                                                                    (_dataList[index].vocabularyComment != null
+                                                                        ? "\nVocabulary: ${_dataList[index].vocabularyComment}"
+                                                                        : "") +
+                                                                    (_dataList[index].homeworkComment !=
+                                                                            null
+                                                                        ? "\nHomework: ${_dataList[index].homeworkComment}"
+                                                                        : "") +
+                                                                    (_dataList[index].overallComment !=
+                                                                            null
+                                                                        ? "\nOverall comment: ${_dataList[index].overallComment}"
+                                                                        : ""))))),
+                                              ]),
+                                        ),
+                                        _dataList[index].feedbacks.isEmpty
+                                            ? Container()
+                                            : Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 15),
+                                                child: _buildRatingList(
+                                                    _dataList[index].feedbacks,
+                                                    index))
+                                      ],
+                                    ),
                                   ),
-                                  _dataList[index].feedbacks.isEmpty
-                                      ? Container()
-                                      : Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 15),
-                                          child: _buildRatingList(
-                                              _dataList[index].feedbacks,
-                                              index))
+                                  Card(
+                                    color:
+                                        controller.black_and_white_card.value,
+                                    margin: const EdgeInsets.only(bottom: 0),
+                                    elevation: 0,
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      // height: 100,
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 5, right: 5),
+                                              child: _dataList[index]
+                                                      .feedbacks
+                                                      .isNotEmpty
+                                                  ? Container()
+                                                  : TextButton(
+                                                      onPressed: () {
+                                                        _showRatingDialog(
+                                                            tutorId:
+                                                                _dataList[index]
+                                                                    .tutorId,
+                                                            dataListIndex:
+                                                                index,
+                                                            feedbackIndex: 0,
+                                                            bookingId:
+                                                                _dataList[index]
+                                                                    .id);
+                                                      },
+                                                      child: Text(
+                                                        "rating".tr,
+                                                        style: TextStyle(
+                                                            color: controller
+                                                                .blue_700_and_white
+                                                                .value),
+                                                      )),
+                                            ),
+                                          ]),
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                            Card(
-                              color: controller.black_and_white_card.value,
-                              margin: const EdgeInsets.only(bottom: 0),
-                              elevation: 0,
-                              child: SizedBox(
-                                width: double.infinity,
-                                // height: 100,
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 5, right: 5),
-                                        child: _dataList[index]
-                                                .feedbacks
-                                                .isNotEmpty
-                                            ? Container()
-                                            : TextButton(
-                                                onPressed: () {
-                                                  _showRatingDialog(
-                                                      tutorId: _dataList[index]
-                                                          .tutorId,
-                                                      dataListIndex: index,
-                                                      feedbackIndex: 0,
-                                                      bookingId:
-                                                          _dataList[index].id);
-                                                },
-                                                child: Text(
-                                                  "rating".tr,
-                                                  style: TextStyle(
-                                                      color: controller
-                                                          .blue_700_and_white
-                                                          .value),
-                                                )),
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ));
-                });
+                            ));
+                      }),
+            ));
   }
 }

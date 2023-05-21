@@ -359,88 +359,127 @@ class _CoursesListState extends State<CoursesList> {
     return _loading
         ? Center(
             child: CircularProgressIndicator(
-            color: Colors.blue[700],
+            color: controller.blue_700_and_white.value,
           ))
         : _isFilter
             ? _buildFilter()
-            : Stack(children: [
-                SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-                          child: Obx(() => TextButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  _isFilter = true;
-                                });
-                              },
-                              icon: Icon(Icons.filter_alt_outlined,
-                                  color: controller.black_and_white_text.value),
-                              label: Text(
-                                "filter".tr,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color:
-                                        controller.black_and_white_text.value),
-                              ))),
+            : Obx(() => RefreshIndicator(
+                  color: controller.blue_700_and_white.value,
+                  onRefresh: () async {
+                    setState(() {
+                      coursesList.clear();
+                      page = 1;
+                      _loading = true;
+                    });
+                    CoursesService.loadCoursesList(
+                      page: page++,
+                      size: size,
+                      courseContentCategories: courseContentCategories,
+                      levelList: levelList,
+                      sortingOrder: _currentSorting == "ascending".tr
+                          ? false
+                          : _currentSorting == "descending".tr
+                              ? true
+                              : null,
+                      q: _searchController.text,
+                    ).then((value) {
+                      setState(() {
+                        coursesList.addAll(value);
+                        for (var element in coursesList) {
+                          element.level =
+                              levelList[int.parse(element.level)]["name"];
+                          element.topics.sort((a, b) =>
+                              a["orderCourse"].compareTo(b["orderCourse"]));
+                        }
+                        _loading = false;
+                      });
+                    });
+                  },
+                  child: Stack(children: [
+                    SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+                              child: Obx(() => TextButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isFilter = true;
+                                    });
+                                  },
+                                  icon: Icon(Icons.filter_alt_outlined,
+                                      color: controller
+                                          .black_and_white_text.value),
+                                  label: Text(
+                                    "filter".tr,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: controller
+                                            .black_and_white_text.value),
+                                  ))),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    coursesList.isEmpty
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                                const SizedBox(height: 200),
-                                Image.asset(UIData.noDataFound,
-                                    width: 100, height: 100),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "no_data".tr,
-                                  style: const TextStyle(color: Colors.grey),
+                        coursesList.isEmpty
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                    const SizedBox(height: 200),
+                                    Image.asset(UIData.noDataFound,
+                                        width: 100, height: 100),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "no_data".tr,
+                                      style:
+                                          const TextStyle(color: Colors.grey),
+                                    ),
+                                  ])
+                            : GroupedListView<dynamic, String>(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                elements: coursesList,
+                                groupBy: (element) => element.categories,
+                                // groupComparator: (value1, value2) => value2.compareTo(value1),
+                                // itemComparator: (item1, item2) => item1['name'].compareTo(item2['name']),
+                                groupSeparatorBuilder: (String value) =>
+                                    Container(
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  child: Text(
+                                    value,
+                                    textAlign: TextAlign.start,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ])
-                        : GroupedListView<dynamic, String>(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            elements: coursesList,
-                            groupBy: (element) => element.categories,
-                            // groupComparator: (value1, value2) => value2.compareTo(value1),
-                            // itemComparator: (item1, item2) => item1['name'].compareTo(item2['name']),
-                            groupSeparatorBuilder: (String value) => Container(
-                              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                              child: Text(
-                                value,
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                indexedItemBuilder: (context, element, index) {
+                                  return CourseCardComponent(
+                                    course: element,
+                                  );
+                                },
+                              ),
+                      ]),
+                    ),
+                    _getMoreData
+                        ? Opacity(
+                            opacity: 0.8,
+                            child: Container(
+                              color: Colors.grey,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: controller.blue_700_and_white.value,
+                                ),
                               ),
                             ),
-                            indexedItemBuilder: (context, element, index) {
-                              return CourseCardComponent(
-                                course: element,
-                              );
-                            },
-                          ),
+                          )
+                        : const SizedBox(),
                   ]),
-                ),
-                _getMoreData
-                    ? Opacity(
-                        opacity: 0.8,
-                        child: Container(
-                          color: Colors.white,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.blue[700],
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ]);
+                ));
   }
 }

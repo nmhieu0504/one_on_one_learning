@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
         child: _checkRefreshToken
             ? Center(
                 child: CircularProgressIndicator(
-                  color: Colors.blue[700],
+                  color: controller.blue_700_and_white.value,
                 ),
               )
             : Obx(() => Form(
@@ -401,7 +401,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.white,
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  color: Colors.blue[700],
+                                  color: controller.blue_700_and_white.value,
                                 ),
                               ),
                             ),

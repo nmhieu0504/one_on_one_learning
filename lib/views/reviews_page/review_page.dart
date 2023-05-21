@@ -1,8 +1,11 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:one_on_one_learning/models/reviews.dart';
 import 'package:one_on_one_learning/services/tutor_services.dart';
+
+import '../../controllers/controller.dart';
 
 class ReviewPage extends StatefulWidget {
   final String userID;
@@ -13,6 +16,8 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+  Controller controller = Get.find();
+
   List<Reviews> reviews = [];
   bool isLoading = true;
   bool _getMoreData = false;
@@ -44,8 +49,7 @@ class _ReviewPageState extends State<ReviewPage> {
         child: Opacity(
           opacity: _getMoreData ? 1.0 : 00,
           child: CircularProgressIndicator(
-            color: Colors.blue[700],
-          ),
+              color: controller.blue_700_and_white.value),
         ),
       ),
     );
@@ -89,7 +93,7 @@ class _ReviewPageState extends State<ReviewPage> {
         body: isLoading
             ? Center(
                 child: CircularProgressIndicator(
-                color: Colors.blue[700],
+                color: controller.blue_700_and_white.value,
               ))
             : ListView.builder(
                 controller: _scrollController,
