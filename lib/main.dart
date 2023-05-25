@@ -9,14 +9,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final Controller controller = Get.put<Controller>(
-    Controller(),
-  );
+  final Controller controller = Get.put<Controller>(Controller());
   SharePref sharePref = SharePref();
   bool? resultLanguage = await sharePref.getBool("isEnglish");
   bool? resultTheme = await sharePref.getBool("isDarkTheme");
   bool isEnglish = resultLanguage ?? true;
   bool isDarkTheme = resultTheme ?? false;
+
   controller.isEnglish = isEnglish;
   controller.isDarkTheme = isDarkTheme;
   controller.onChangeTheme();

@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:one_on_one_learning/utils/backend.dart';
 import 'package:one_on_one_learning/utils/share_pref.dart';
 import 'package:one_on_one_learning/utils/ui_data.dart';
@@ -47,9 +47,39 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _handleSignInWithGoogle() async {
     try {
-      await _googleSignIn.signIn();
+      await _googleSignIn.signIn().then((value) {
+        value?.authentication.then((googleKey) {
+          String accessToken = googleKey.accessToken!;
+          debugPrint("Access token: $accessToken");
+          setState(() {
+            _loading = true;
+          });
+          AuthService.signInWithGoogle(accessToken).then((value) {
+            if (value) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const NavigatorPage()),
+              );
+            } else {
+              _displayErrorMotionToastWithThirdParty();
+            }
+          });
+        }).catchError((err) {
+          debugPrint('inner error');
+        });
+      });
     } catch (error) {
       debugPrint(error.toString());
+    }
+  }
+
+  void _handleSignInWithFacebook() async {
+    final LoginResult result = await FacebookAuth.instance.login();
+    if (result.status == LoginStatus.success) {
+      final AccessToken accessToken = result.accessToken!;
+      debugPrint("TOKEN FB: ${accessToken.token}");
+    } else {
+      debugPrint('Facebook login failed: ${result.message}');
     }
   }
 
@@ -65,6 +95,25 @@ class _LoginPageState extends State<LoginPage> {
           style: const TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
       messageText: Text("wrong_email_or_password".tr,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white)),
+    );
+  }
+
+  void _displayErrorMotionToastWithThirdParty() {
+    Get.snackbar(
+      "",
+      "",
+      icon: const Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 750),
+      titleText: Text("error".tr,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      messageText: Text("something_went_wrong".tr,
           style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.normal,
@@ -359,24 +408,8 @@ class _LoginPageState extends State<LoginPage> {
                                           width: 60,
                                           height: 50,
                                         ),
-                                        onPressed: () async {
-                                          // final LoginResult result =
-                                          //     await FacebookAuth.instance
-                                          //         .login();
-                                          // if (result.status ==
-                                          //     LoginStatus.success) {
-                                          //   debugPrint(
-                                          //       "TOKEN FB: ${result.accessToken}");
-                                          //   // User successfully signed in with Facebook
-                                          //   final AccessToken accessToken =
-                                          //       result.accessToken!;
-                                          //   // Use the access token to perform further operations
-                                          //   // such as fetching user data or making API requests
-                                          // } else {
-                                          //   // There was an error during the login process
-                                          //   debugPrint(
-                                          //       'Facebook login failed: ${result.message}');
-                                          // }
+                                        onPressed: () {
+                                          _handleSignInWithFacebook();
                                         },
                                         tooltip: "Sign in with Facebook",
                                         icon: const Image(
@@ -396,7 +429,7 @@ class _LoginPageState extends State<LoginPage> {
                                           height: 50,
                                         ),
                                         onPressed: () {
-                                          // _handleSignInWithGoogle();
+                                          _handleSignInWithGoogle();
                                         },
                                         tooltip: "Sign in with Google",
                                         icon: const Image(

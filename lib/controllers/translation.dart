@@ -167,6 +167,7 @@ class AppTranslations extends Translations {
           'get_back': 'Get back',
           'please_choose_level': 'Please choose your level',
           'leson_is_happening': 'Lesson is happening',
+          'something_went_wrong': 'Something went wrong',
         },
         'vi_VN': {
           'password': 'Mật khẩu',
@@ -331,7 +332,8 @@ class AppTranslations extends Translations {
           'become_a_tutor_success': "Bạn đã hoàn thành tất cả các bước. Vui lòng chờ phê duyệt từ quản trị viên",
           'get_back': 'Quay lại',
           'please_choose_level': 'Vui lòng chọn trình độ',
-          'leson_is_happening': 'Buổi học đang diễn ra',      
+          'leson_is_happening': 'Buổi học đang diễn ra',
+          'something_went_wrong': 'Đã xảy ra lỗi',
         },
       };
 }

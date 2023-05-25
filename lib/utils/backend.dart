@@ -38,4 +38,7 @@ class API_URL {
   static const String GET_CHAT_MESSAGE = "$BASE_URL/message/get/";
 
   static const String BECOME_A_TUTOR = "$BASE_URL/tutor/register";
+
+  static const String LOGIN_WITH_GOOGLE = "$BASE_URL/auth/google";
+  static const String LOGIN_WITH_FACEBOOK = "$BASE_URL/auth/facebook";
 }

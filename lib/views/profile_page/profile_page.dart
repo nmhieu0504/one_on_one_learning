@@ -364,6 +364,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       setState(() {
                                         _loading = false;
                                         avatarUrl = value.avatar;
+                                        _isAvatarError = false;
                                       });
                                     });
                                   });

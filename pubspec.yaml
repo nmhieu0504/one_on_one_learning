@@ -68,6 +68,8 @@ dependencies:
   web_socket_channel: ^2.4.0
   flutter_facebook_auth: ^5.0.11
   google_sign_in: ^6.1.0
+  firebase_auth: ^4.6.1
+  firebase_core: ^2.13.0
 
 dev_dependencies:
   flutter_test:

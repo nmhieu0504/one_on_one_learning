@@ -14,7 +14,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "852361442267-st4vu5fsfbru1mvip508t681c9qf1k69.apps.googleusercontent.com",
+          "client_id": "852361442267-4bjino2tb7519npeeqkjlig7hieubhdr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmus.clc.one_on_one_learning",
+            "certificate_hash": "15c43bd37a5dcd843692c5856c4dd2475e66a30b"
+          }
+        },
+        {
+          "client_id": "852361442267-4k3lij3jai11u2ept9h8k83ssgobs334.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmus.clc.one_on_one_learning",
+            "certificate_hash": "1197199abf951437d5b4913a6d5b3a3c62bee23b"
+          }
+        },
+        {
+          "client_id": "852361442267-n3kljj52hop4d5pp5n4ljjdrcn1ttq3a.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +43,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "852361442267-st4vu5fsfbru1mvip508t681c9qf1k69.apps.googleusercontent.com",
+              "client_id": "852361442267-n3kljj52hop4d5pp5n4ljjdrcn1ttq3a.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

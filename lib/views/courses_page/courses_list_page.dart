@@ -336,8 +336,12 @@ class _CoursesListState extends State<CoursesList> {
           q: _searchController.text,
         ).then((value) {
           setState(() {
-            for (var element in value) {
+            List<Course> result = [];
+            result.addAll(value);
+            for (var element in result) {
               element.level = levelList[int.parse(element.level)]["name"];
+              element.topics
+                  .sort((a, b) => a["orderCourse"].compareTo(b["orderCourse"]));
             }
             coursesList.addAll(value);
             _loading = false;
