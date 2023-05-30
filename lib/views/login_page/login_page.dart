@@ -78,6 +78,19 @@ class _LoginPageState extends State<LoginPage> {
     if (result.status == LoginStatus.success) {
       final AccessToken accessToken = result.accessToken!;
       debugPrint("TOKEN FB: ${accessToken.token}");
+      setState(() {
+        _loading = true;
+      });
+      AuthService.signInWithFacebook(accessToken.token).then((value) {
+        if (value) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const NavigatorPage()),
+          );
+        } else {
+          _displayErrorMotionToastWithThirdParty();
+        }
+      });
     } else {
       debugPrint('Facebook login failed: ${result.message}');
     }
