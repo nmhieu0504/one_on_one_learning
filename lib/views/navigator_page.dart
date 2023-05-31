@@ -92,6 +92,7 @@ class NavigatorStatePage extends State<NavigatorPage> {
                 ),
               )),
           bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: controller.black_and_white_card.value,
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
